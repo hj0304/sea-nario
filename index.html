@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>씨나리오 기획안</title>
+<style>
+:root{--bg:#ffffff;--text:#1f2328;--muted:#59636e;--line:#d1d9e0;--soft:#f6f8fa;--accent:#1f6feb;--accent-tint:rgba(31,111,235,.12);--tint:#eef1f4}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0d1117;--text:#e6edf3;--muted:#9198a1;--line:#3d444d;--soft:#151b23;--accent:#4493f8;--accent-tint:rgba(68,147,248,.16);--tint:#1c2229}}
+:root[data-theme="dark"]{--bg:#0d1117;--text:#e6edf3;--muted:#9198a1;--line:#3d444d;--soft:#151b23;--accent:#4493f8;--accent-tint:rgba(68,147,248,.16);--tint:#1c2229}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;line-height:1.7;font-size:16px}
+main{max-width:860px;margin:0 auto;padding:48px 16px 80px}
+h1{font-size:2rem;line-height:1.3;margin:0 0 8px}
+h1+p{color:var(--muted);margin-top:0}
+h2{font-size:1.45rem;margin:56px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{font-size:1.12rem;margin:32px 0 8px}
+a{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:.92rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:8px 12px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-weight:600}
+figure{margin:24px 0;padding:16px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}
+figcaption{color:var(--muted);font-size:.85rem;text-align:center;margin-top:8px}
+svg.loop{width:100%;height:auto;display:block}
+svg .ink{fill:var(--text)} svg .quiet{fill:var(--muted)} svg .edge{stroke:var(--muted)} svg .arrowhead{fill:var(--muted)}
+svg .tint{fill:var(--tint)} svg .accent{fill:var(--accent-tint);stroke:var(--accent)}
+li{margin:4px 0}
+@media print{main{max-width:none;padding:0}h2{break-after:avoid}table,figure{break-inside:avoid}}
+</style>
+</head>
+<body>
+<main>
+<h1>씨나리오 (SEA-nario) 기획안</h1>
+<p>2026-10-05 · SSAFY 해양 X AI 아이디어 해커톤 · 주제 2</p>
+<p>씨나리오는 실제 바다의 위험한 순간을 자율운항 AI의 시험 문제로 출제하는 공공 문제은행입니다. 주제 2의 산업 이슈 세 가지(충돌 회피, 항로 최적화, 고장 예측)를 시험 3과목으로 다루고, 「자율운항선박 AI 데이터플랫폼 사업」의 데이터를 출제 재료로 씁니다.</p>
+<h2>한눈에 보기</h2>
+<figure><svg class="loop" viewBox="0 0 760 316" role="img" aria-label="위험한 순간은 시험 문제가 되고, AI의 실수는 다시 문제가 된다" font-size="13">
+<defs><marker id="loop-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="arrowhead"/></marker></defs>
+<text x="24" y="34" font-size="15" font-weight="600" class="ink">위험한 순간은 시험 문제가 되고, AI의 실수는 다시 문제가 된다</text>
+<g fill="none" class="edge" stroke-width="1.25">
+<path d="M130 128V160" marker-end="url(#loop-arrow)"/>
+<path d="M235 196H275" marker-end="url(#loop-arrow)"/>
+<path d="M485 196H525" marker-end="url(#loop-arrow)"/>
+<path d="M630 232V272H130V232" marker-end="url(#loop-arrow)"/>
+</g>
+<rect x="25" y="56" width="210" height="72" rx="8" class="tint edge" stroke-width="1.25"/>
+<text x="130" y="80" text-anchor="middle" font-weight="600" class="ink">입력 데이터</text>
+<text x="130" y="96" text-anchor="middle" font-size="11.5" class="ink">정부 플랫폼 실운항 데이터</text>
+<text x="130" y="112" text-anchor="middle" font-size="11.5" class="ink">+ V-Pass 어선 위치</text>
+<rect x="25" y="160" width="210" height="72" rx="8" fill="none" class="edge" stroke-width="1.25"/>
+<text x="130" y="184" text-anchor="middle" font-weight="600" class="ink">① 출제</text>
+<text x="130" y="200" text-anchor="middle" font-size="11.5" class="ink">충돌·기상·고장 순간 발굴</text>
+<text x="130" y="216" text-anchor="middle" font-size="11.5" class="ink">생성형 AI로 문제 변형</text>
+<rect x="275" y="160" width="210" height="72" rx="8" fill="none" class="edge" stroke-width="1.25"/>
+<text x="380" y="184" text-anchor="middle" font-weight="600" class="ink">② 채점</text>
+<text x="380" y="200" text-anchor="middle" font-size="11.5" class="ink">어느 시험장에서든 시험</text>
+<text x="380" y="216" text-anchor="middle" font-size="11.5" class="ink">성적표 · MASS Code 자료</text>
+<rect x="525" y="160" width="210" height="72" rx="8" class="accent" stroke-width="2"/>
+<text x="630" y="184" text-anchor="middle" font-weight="600" class="ink">③ 오답노트</text>
+<text x="630" y="200" text-anchor="middle" font-size="11.5" class="ink">AI 판단 근거 기록</text>
+<text x="630" y="216" text-anchor="middle" font-size="11.5" class="ink">사고 재현 · 위험 점수</text>
+<text x="255" y="148" text-anchor="middle" font-size="11.5" class="quiet">문제 세트</text>
+<text x="505" y="148" text-anchor="middle" font-size="11.5" class="quiet">검증된 AI가 실제 바다로</text>
+<text x="380" y="292" text-anchor="middle" font-size="11.5" class="quiet">AI가 망설이거나 실수한 순간 → 새 시험 문제로</text>
+</svg><figcaption>씨나리오 루프 · 출제 → 채점 → 오답노트</figcaption></figure>
+<p>시뮬레이터(KRISO 테스트베드, Wärtsilä, Kongsberg)가 시험장이라면, 씨나리오는 그 시험장에 넣을 문제를 만드는 문제은행입니다. 오답노트가 새 문제를 만들어 루프가 닫힙니다.</p>
+<table>
+<thead>
+<tr>
+<th>시험 과목</th>
+<th>주제 2 산업 이슈</th>
+<th>다루는 상황</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① 충돌 회피</td>
+<td>충돌 회피</td>
+<td>복잡한 해상 교통, AIS 없는 어선</td>
+</tr>
+<tr>
+<td>② 항로·기상</td>
+<td>항로 최적화</td>
+<td>기상 변화 속에서 안전하고 효율적인 운항</td>
+</tr>
+<tr>
+<td>③ 고장 대응</td>
+<td>고장 예측</td>
+<td>기관·센서 고장 상황에서의 대처</td>
+</tr>
+</tbody>
+</table>
+<h2>배경</h2>
+<p>정부는 자율운항선박 경쟁력이 데이터에서 결정된다고 보고 2026년 5월 AI 데이터플랫폼 사업을 시작했습니다(<a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">보도자료 원문</a>). 데이터는 이제 모이기 시작했고, 그다음 과제는 그 데이터를 AI의 안전성으로 바꾸는 일입니다.</p>
+<h3>해커톤</h3>
+<ul>
+<li>주제 2 주요 문제/배경: 복잡한 해상 교통과 기상 변화에 대응하며 안전하고 효율적인 운항 필요</li>
+<li>주제 2 산업 이슈: 충돌 회피, 항로 최적화, 고장 예측 (자율운항선박)</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>시상</th>
+<th>심사기준</th>
+<th>씨나리오가 노리는 지점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1등 Best Solution</td>
+<td>문제 해결 관점이 뛰어난 아이디어</td>
+<td>상용화 최대 난관인 비정형 상황 데이터 부족을 정면으로 해결, 산업 이슈 3가지를 모두 시험 과목으로</td>
+</tr>
+<tr>
+<td>2등 Best Innovation</td>
+<td>창의성이 뛰어난 아이디어</td>
+<td>공개된 상용 제품이 없는 AI 항해 블랙박스, 출제-채점-오답노트 순환 구조</td>
+</tr>
+<tr>
+<td>3등 Best Impact</td>
+<td>산업적 파급력이 기대되는 아이디어</td>
+<td>중소조선사·선급·보험사까지 쓰는 공공 문제은행</td>
+</tr>
+</tbody>
+</table>
+<h3>정부 사업: 자율운항선박 AI 데이터플랫폼</h3>
+<p>출처: <a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">산업부·해수부 보도자료 원문 (2026.5.7)</a></p>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>기간·예산</td>
+<td>2026~2029년(4년), 346.06억 원 (국비 300억 + 민자 46.06억)</td>
+</tr>
+<tr>
+<td>수행주체</td>
+<td>산업부(한국산업기술기획평가원, KEIT). 사업수행기관은 선박해양플랜트연구소(KRISO)</td>
+</tr>
+<tr>
+<td>목적</td>
+<td>충돌 회피, 항로 최적화, 고장 예측 등 핵심 기능에 필요한 실운항 데이터를 수집·표준화하고 활용 기반 구축</td>
+</tr>
+<tr>
+<td>3대 내용</td>
+<td>학습 데이터 수집 / 데이터 플랫폼 구축 / AI 모델 개발·활용</td>
+</tr>
+<tr>
+<td>데이터 범위</td>
+<td>총 26개 데이터군 중 8개 핵심 분야, 100여 종: 자율운항시스템, 항해·조종, 엔진·기관, 원격관제·디지털트윈, 통신·데이터, 해상교통, 기상, 안전·보안</td>
+</tr>
+<tr>
+<td>참여</td>
+<td>조선사·해운사 등 25개 기업·기관이 참여의향서 체결 (의향서에 데이터 제출 동의 명시)</td>
+</tr>
+<tr>
+<td>정책 목표</td>
+<td>대형조선사뿐 아니라 중소조선사도 자율운항 AI 학습에 쓸 수 있는 고품질 데이터셋 구축</td>
+</tr>
+</tbody>
+</table>
+<p>함께 알아둘 흐름:</p>
+<ul>
+<li><strong>AI 완전자율운항 기술개발</strong>: 2026~2032년, 약 6,000억 원(산업부 2,500억, 해수부 2,000억, 참여 기업·기관 1,500억). IMO 레벨4 완전자율운항 기술 목표. 데이터플랫폼 사업과 연계(<a target="_blank" rel="noopener" href="https://edaily.co.kr/News/Read?mediaCodeNo=257&amp;newsId=06330406642363096">이데일리</a>, <a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">보도자료</a>)</li>
+<li><strong>IMO MASS Code</strong>: 2026년 5월 MSC 111에서 비강제 코드로 채택, 2026년 7월 1일 발효. 의무화 버전은 빠르면 2032년 1월 1일 목표. SOLAS 1장 적용 화물선 대상이며, 원격운항센터(ROC)는 기국의 인증 대상(<a target="_blank" rel="noopener" href="https://www.dnv.com/news/2026/imo-mcs-111-new-mass-code-adopted/">DNV</a>, <a target="_blank" rel="noopener" href="https://gcaptain.com/imo-adopts-mass-code-the-autonomous-ship-moves-from-drawing-board-to-regulated-reality/">gCaptain</a>)</li>
+<li><strong>시장 전망</strong>: 2032년 전 세계 약 1,800억 달러 규모의 관련 시장(<a target="_blank" rel="noopener" href="https://edaily.co.kr/News/Read?mediaCodeNo=257&amp;newsId=06330406642363096">이데일리</a>)</li>
+<li><strong>산업부 박동일 산업정책실장</strong>: "K-조선이 앞으로 만들어낼 자율운항선박의 경쟁력은 결국 양질의 데이터에서 결정된다"(<a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">보도자료</a>)</li>
+</ul>
+<h2>문제 정의</h2>
+<p>데이터는 쌓이지만, 자율운항 AI가 정말 배워야 할 위험한 순간과 한국 바다의 현실, AI 판단의 근거는 쌓이지 않습니다.</p>
+<ol>
+<li><strong>위험한 순간은 데이터에 거의 없다.</strong> 실운항 데이터 대부분은 평범한 항해입니다. 자율운항 상용화의 가장 큰 난관으로 꼽히는 것은 기상 악화나 소형 어선 돌발 출현 같은 "데이터화되지 않은 비정형 상황"입니다(<a target="_blank" rel="noopener" href="https://www.sentv.co.kr/article/view/sentv202601270198">서울경제TV</a>). 갑작스러운 기관 고장도 마찬가지로 드물지만 치명적입니다. 이런 상황을 일부러 만들어 데이터를 모을 수는 없습니다.</li>
+<li><strong>한국 바다는 특히 어렵다.</strong> 2025년 해양사고 3,513건 중 어선 사고가 65.8%, 10톤 미만 소형어선 사고가 53.0%입니다. 사고 종류로는 기관손상이 1,049건(29.9%)으로 가장 많습니다(<a target="_blank" rel="noopener" href="https://www.etoday.co.kr/news/view/2567005">중앙해양안전심판원 통계, 이투데이</a>). 레이더나 AIS(선박자동식별장치)를 갖추지 않은 소형 어선 비중이 높고, 전남 다도해처럼 2,000여 개 섬이 얽힌 해역에서 사고가 반복됩니다(<a target="_blank" rel="noopener" href="https://www.greenpostkorea.co.kr/news/articleView.html?idxno=306379">그린포스트코리아</a>).</li>
+<li><strong>AI의 판단 근거가 남지 않는다.</strong> AI 판단 착오로 사고가 나면 설계 제조사·육상 관제사·선주 사이의 책임 경계가 명확하지 않고, 보험사는 위험 통계가 부족해 보험 요율을 정하기 어렵습니다(<a target="_blank" rel="noopener" href="https://www.sentv.co.kr/article/view/sentv202601270198">서울경제TV</a>). 기존 항해기록장치(VDR)는 위치·속력·레이더·ECDIS·음성 같은 장비 데이터를 기록할 뿐 AI의 판단 근거는 남기지 않습니다(<a target="_blank" rel="noopener" href="https://www.marineinsight.com/marine-navigation/voyage-data-recorder-on-a-ship-explained/">Marine Insight</a>).</li>
+</ol>
+<h2>기존 서비스와 한계</h2>
+<p>부품은 이미 시장에 있지만 서로 끊겨 있습니다. 시험장은 있지만 실운항 데이터에서 문제를 자동으로 뽑아 공유하는 곳은 없고, 위험 순간 분석은 사람의 안전관리에 쓰이며, AI 판단 근거는 기록되지 않습니다. 아래는 공개된 상용 서비스 기준입니다.</p>
+<table>
+<thead>
+<tr>
+<th>영역</th>
+<th>서비스</th>
+<th>하는 일</th>
+<th>한계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>위험 순간 분석</td>
+<td><a target="_blank" rel="noopener" href="https://thedigitalship.com/news/electronics-navigation/48-fewer-close-encounters-as-eastern-pacific-shipping-expands-ai-navigation/">Orca AI</a> (SeaPod·FleetView)</td>
+<td>선박 카메라 AI로 근접 조우 기록, COLREG 준수 데이터, 아차사고 조사 지원. 5척 시범 운항에서 1,000해리당 근접 조우 48% 감소</td>
+<td>감사·선원 교육용. AI를 시험할 문제로 바꿔 공유하지는 않음</td>
+</tr>
+<tr>
+<td>위험 순간 분석</td>
+<td><a target="_blank" rel="noopener" href="https://www.klnews.co.kr/news/articleView.html?idxno=322879">KOMSA</a></td>
+<td>AI로 72시간 해상교통 혼잡도 예측, 2026.9 오픈API 개방</td>
+<td>혼잡 정보 제공용</td>
+</tr>
+<tr>
+<td>시험장</td>
+<td><a target="_blank" rel="noopener" href="https://www.kriso.re.kr/menu.es?mid=a10208040000">KRISO 자율운항선박실증연구센터</a></td>
+<td>가상환경·시나리오 기반 시험평가 체계(S-TAS), 시험선 해양누리호</td>
+<td>시나리오 공급원 아님. 실운항 데이터 기반 자동 출제·공유는 공개 자료에서 확인되지 않음</td>
+</tr>
+<tr>
+<td>시험장</td>
+<td><a target="_blank" rel="noopener" href="https://www.wartsila.com/insights/article/simulating-the-future-of-maritime">Wärtsilä</a> · <a target="_blank" rel="noopener" href="https://www.kongsberg.com/maritime/products/simulation/k-sim-navigation/">Kongsberg K-Sim</a></td>
+<td>항해 시뮬레이터. Wärtsilä의 무인선 제어 시뮬레이션은 DNV 인증</td>
+<td>시험 환경 제공. 실운항 데이터에서 문제를 뽑아주지 않음</td>
+</tr>
+<tr>
+<td>시험장</td>
+<td><a target="_blank" rel="noopener" href="https://www.appliedintuition.com/press-releases/applied-intuition-uk-teams-with-kraken-technology-group">Applied Intuition</a> (Axion Sim)</td>
+<td>무인수상정 자율성 시험·인증용 시뮬레이션</td>
+<td>주로 국방용</td>
+</tr>
+<tr>
+<td>항로·기상</td>
+<td><a target="_blank" rel="noopener" href="https://www.napa.fi/software-and-services/ship-operations/napa-fleet-intelligence/voyage-optimization/">NAPA Voyage Optimization</a> 등</td>
+<td>기상 기반 항로·속력 최적화</td>
+<td>사람이 운항하는 배의 항로 추천. 자율운항 AI의 기상 판단을 시험하지는 않음</td>
+</tr>
+<tr>
+<td>고장 예측</td>
+<td><a target="_blank" rel="noopener" href="https://www.wartsila.com/marine/services/lifecycle-agreements/expert-insight-service">Wärtsilä Expert Insight</a>, <a target="_blank" rel="noopener" href="https://kongsbergmaritime.com/services/kongsberg-remote-services/health-management/">Kongsberg Health Management</a></td>
+<td>AI로 기관 이상 징후를 찾아 고장 예방</td>
+<td>고장을 미리 찾는 서비스. 고장이 났을 때 자율운항 AI가 어떻게 대처하는지는 시험하지 않음</td>
+</tr>
+<tr>
+<td>기록</td>
+<td>기존 <a target="_blank" rel="noopener" href="https://www.marineinsight.com/marine-navigation/voyage-data-recorder-on-a-ship-explained/">VDR</a></td>
+<td>위치·레이더·ECDIS·음성 등 장비 데이터 기록</td>
+<td>AI 판단 근거 없음</td>
+</tr>
+<tr>
+<td>자율운항 시스템</td>
+<td><a target="_blank" rel="noopener" href="https://www.newspim.com/news/view/20260407000585">HD현대 아비커스 HiNAS Control</a>, 삼성 SAS, 한화오션 HS4</td>
+<td>인지·판단·제어. HiNAS는 DNV 형식승인, 2023년부터 HD현대 건조 선박에 적용, 누적 500척 이상 수주</td>
+<td>데이터·시나리오는 각 회사 내부 자산</td>
+</tr>
+</tbody>
+</table>
+<p>"AIS 항적 데이터를 안전 핵심 조우 시나리오로 바꾸는 생성형 AI" 연구는 학계에 이미 있습니다(<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2603.28067">arXiv 2603.28067</a>). 그래서 "시나리오 기반 검증을 처음 한다"는 주장은 하지 않고, "없던 연결"과 "공공 문제은행"으로 차별화합니다. 아비커스·삼성 등 기업 내부에 비슷한 도구가 있을 가능성은 남아 있어, 발표에서는 "공개된 상용 서비스 기준"이라고 표현합니다.</p>
+<h2>솔루션: 출제 · 채점 · 오답노트</h2>
+<p>씨나리오는 시험장이 아니라 문제은행입니다. 실운항 데이터로 3과목 문제를 자동 출제해 어느 시험장에든 공급하고, 실제 운항에서 AI가 망설인 순간을 다시 문제로 돌립니다.</p>
+<h3>시험 3과목</h3>
+<p>정부 플랫폼 8개 데이터 분야 중 5개(해상교통, 항해·조종, 기상, 엔진·기관, 통신·데이터)를 출제 재료로 씁니다(<a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">보도자료</a>).</p>
+<table>
+<thead>
+<tr>
+<th>과목</th>
+<th>출제 (위험 순간)</th>
+<th>채점 지표</th>
+<th>쓰는 플랫폼 데이터</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① 충돌 회피</td>
+<td>근접 조우, AIS 없는 어선 돌출, 어선군 밀집</td>
+<td>최소 이격 거리, COLREG 준수율</td>
+<td>해상교통, 항해·조종</td>
+</tr>
+<tr>
+<td>② 항로·기상</td>
+<td>돌풍·태풍 접근, 시정 급변, 고파고 구간</td>
+<td>재항로 판단 시점, 안전 여유, 도착 시간·연료 효율</td>
+<td>기상, 항해·조종</td>
+</tr>
+<tr>
+<td>③ 고장 대응</td>
+<td>엔진 출력 저하, 조타 이상, 센서·통신 고장 상태로 운항</td>
+<td>고장 상황에서 안전 확보 여부, 원격관제 인계 시점</td>
+<td>엔진·기관, 통신·데이터</td>
+</tr>
+</tbody>
+</table>
+<h3>① 출제: 위험 순간 1건을 시험 문제 수천 개로</h3>
+<ul>
+<li>입력: 정부 플랫폼 실운항 데이터 + <a target="_blank" rel="noopener" href="https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002698316">V-Pass</a> 어선 위치 데이터</li>
+<li>처리:<ol>
+<li>위험 순간 발굴: 근접 조우·급변침(충돌), 기상 급변 구간(항로·기상), 기관 이상 징후 구간(고장)</li>
+<li>유형 분류: 충돌은 정면·횡단·추월(국제해상충돌예방규칙 COLREG 기준), 기상은 바람·시정·파고, 고장은 추진·조타·센서</li>
+<li>생성형 AI로 변형 생성: 야간, 안개, 어선 무리, 기상 악화 강도, 고장 시점 변경</li>
+</ol>
+</li>
+<li>한국 특화 문제 예시: "다도해 협수로 + 조업 중인 어선군", "야간 + AIS 없는 소형선 돌출", "태풍 접근 중 연안 항로 재설정", "협수로 통과 중 엔진 출력 저하"</li>
+</ul>
+<h3>② 채점: 어느 시험장에서든 공정한 성적표</h3>
+<ul>
+<li>표준 문제 세트: 과목별, 해역별, 난이도별</li>
+<li>성적표: 과목별 통과율, 취약 상황 TOP 5, 안전 지표와 효율 지표(도착 시간·연료)를 함께 표시</li>
+<li>실행 장소: KRISO 테스트베드(S-TAS) 또는 각 회사 자체 시뮬레이터. 특정 시험장에 묶이지 않음</li>
+<li>활용: 중소조선사의 MASS Code 대응과 선급 인증 근거 자료</li>
+</ul>
+<h3>③ 오답노트: AI 항해 블랙박스 (핵심 혁신 포인트)</h3>
+<ul>
+<li>기록 항목: 무엇을 인지했나 → 어떤 경로들을 검토했나 → 왜 이것을 골랐나 → 사람이 개입했나. 당시 기상과 기관 상태도 함께 기록</li>
+<li>사고 시: 디지털트윈으로 재현하고, LLM이 책임 분석 리포트 작성</li>
+<li>평소: 위험 판단 기록을 모아 보험사용 위험 점수 산출</li>
+<li>고장 전조 데이터: 기관 상태 기록이 쌓여 고장 예측 모델의 학습 데이터로 공급됨. 고장 예측 서비스(Wärtsilä, Kongsberg)와 경쟁하지 않고 데이터를 공급하는 관계</li>
+<li>루프 연결: AI가 망설이거나 실수한 순간이 자동으로 새 시험 문제가 되어 ①로 돌아감</li>
+<li>공개된 상용 제품을 찾지 못한 영역입니다. 학계에서는 자율운항선박의 설명 가능한 판단과 규칙 추적성을 연구하는 단계입니다(<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2509.15959">arXiv 2509.15959</a>).</li>
+</ul>
+<h2>차별점</h2>
+<p>씨나리오의 차별점은 새 기술이 아니라 없던 연결입니다. 공개된 상용 서비스 기준으로 비교했습니다.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Orca AI</th>
+<th>KRISO·Wärtsilä·Kongsberg 시뮬레이터</th>
+<th>항로 최적화·고장 예측 서비스</th>
+<th>기존 VDR</th>
+<th>씨나리오</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>역할</td>
+<td>위험 경고·분석</td>
+<td>시험장</td>
+<td>사람 운항 지원</td>
+<td>장비 데이터 기록</td>
+<td><strong>문제은행 + 오답노트</strong></td>
+</tr>
+<tr>
+<td>다루는 산업 이슈</td>
+<td>충돌</td>
+<td>충돌 중심</td>
+<td>항로 또는 고장</td>
+<td>-</td>
+<td><strong>충돌·항로·고장 3과목</strong></td>
+</tr>
+<tr>
+<td>위험 순간 활용</td>
+<td>감사·교육</td>
+<td>✕</td>
+<td>✕</td>
+<td>사고 조사</td>
+<td><strong>AI 시험 문제로 자산화</strong></td>
+</tr>
+<tr>
+<td>시나리오 출처</td>
+<td>-</td>
+<td>사용자 제작</td>
+<td>-</td>
+<td>-</td>
+<td><strong>실운항 데이터에서 자동 출제</strong></td>
+</tr>
+<tr>
+<td>공유 범위</td>
+<td>자사 고객</td>
+<td>이용 기관</td>
+<td>자사 고객</td>
+<td>선박별</td>
+<td><strong>공공 공유 (중소조선사 포함)</strong></td>
+</tr>
+<tr>
+<td>한국 어선 반영</td>
+<td>카메라 탐지</td>
+<td>✕</td>
+<td>✕</td>
+<td>✕</td>
+<td><strong>V-Pass 조업 패턴</strong></td>
+</tr>
+<tr>
+<td>AI 판단 근거 기록</td>
+<td>✕</td>
+<td>✕</td>
+<td>✕</td>
+<td>✕</td>
+<td><strong>○</strong></td>
+</tr>
+</tbody>
+</table>
+<p>네 가지 포지션:</p>
+<ol>
+<li><strong>시험장이 아니라 문제은행</strong>: 시뮬레이터 업체·KRISO와 경쟁하지 않고 콘텐츠를 공급하는 협력 관계</li>
+<li><strong>산업 이슈 3가지를 한 곳에서</strong>: 충돌 회피·항로 최적화·고장 예측을 시험 3과목으로. 항로 최적화·고장 예측 서비스와는 경쟁이 아니라 "자율운항 AI가 그 상황을 잘 판단하는가"를 시험하는 역할</li>
+<li><strong>끊긴 고리를 잇는 선순환</strong>: 발굴·시험·기록을 하나의 루프로</li>
+<li><strong>한국 바다 특화</strong>: AIS에 <a target="_blank" rel="noopener" href="https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002698316">V-Pass</a> 어선 데이터를 결합. V-Pass는 어업활동 지도 연구 등에 쓰였지만, 자율운항 시험 시나리오에 넣은 사례는 확인한 범위에서 없음</li>
+</ol>
+<h2>생태계와 사용자 가치</h2>
+<p>정부 데이터플랫폼이 데이터를 주고, 씨나리오가 문제를 만들며, 시험장·조선사·선급·보험사가 각자 필요한 결과를 가져갑니다.</p>
+<table>
+<thead>
+<tr>
+<th>사용자</th>
+<th>가치</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>중소조선사</td>
+<td>큰 비용 없이 3과목 AI 검증, MASS Code 대응 자료 확보</td>
+</tr>
+<tr>
+<td>대형조선사·AI 기업</td>
+<td>자체적으로는 모으기 어려운 희귀 위험 문제 확보</td>
+</tr>
+<tr>
+<td>정부·KRISO</td>
+<td>346억 원 데이터의 활용도 극대화, 테스트베드에 넣을 콘텐츠 확보</td>
+</tr>
+<tr>
+<td>선급·인증기관</td>
+<td>표준 시험 문제로 인증 근거 마련</td>
+</tr>
+<tr>
+<td>보험사</td>
+<td>자율운항선박 위험 통계 확보 → 보험 상품 설계</td>
+</tr>
+<tr>
+<td>고장 예측 서비스 기업</td>
+<td>오답노트에 쌓인 고장 전조 데이터 확보</td>
+</tr>
+</tbody>
+</table>
+<p>수익 모델: 기본 문제 세트는 공공에 무료로 제공하고, 고급 성적표·인증 리포트(조선사·선급), 위험 점수(보험사), 고장 전조 데이터셋(장비 기업)은 유료로 제공합니다.</p>
+<h2>로드맵과 기대효과</h2>
+<p>씨나리오는 정부 사업 일정에 맞춰 성장하고, MASS Code 의무화 목표 시점(2032년)에 블랙박스 기록 형식을 국제표준으로 제안하는 것을 목표로 합니다.</p>
+<table>
+<thead>
+<tr>
+<th>시기</th>
+<th>정부 사업</th>
+<th>씨나리오</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026~2027</td>
+<td>데이터플랫폼 수집 시작</td>
+<td>출제 엔진 구축, 충돌 회피 과목 한국 연안 문제 세트 1차 공개</td>
+</tr>
+<tr>
+<td>2028~2029</td>
+<td>플랫폼 사업 종료(2029)</td>
+<td>항로·기상, 고장 대응 과목 추가, 채점 서비스 개시(KRISO 테스트베드 연계), 블랙박스 실증</td>
+</tr>
+<tr>
+<td>2030~2032</td>
+<td>AI 완전자율운항(레벨4) 기술개발, MASS Code 의무화 목표(2032)</td>
+<td>블랙박스 기록 형식 국제표준 제안, 보험 연계</td>
+</tr>
+</tbody>
+</table>
+<p>기대효과:</p>
+<ul>
+<li>비정형 상황(소형 어선, 기상 급변, 기관 고장) 대응력 향상</li>
+<li>중소조선사 자율운항 진입장벽 완화</li>
+<li>책임·보험 제도 공백 보완</li>
+<li>국제표준 대응에 필요한 운항 데이터 근거 확보</li>
+</ul>
+<p>정량 수치는 근거를 확보한 뒤 넣습니다. 근거 없는 추정치는 감점 요인이 될 수 있습니다.</p>
+<h2>PPT 슬라이드 구성 (15장)</h2>
+<p>발표는 배경 → 문제 3가지 → 기존 한계 → 솔루션 → 차별점 → 가치 순서입니다. 목업(선택)은 9~11번 기능 슬라이드에 화면 1장씩 넣습니다.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>슬라이드</th>
+<th>핵심 메시지</th>
+<th>담당</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>표지</td>
+<td>한 줄 정의 + 슬로건</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>배경: 자율운항 시대</td>
+<td>이미 왔고, 규칙도 생겼다 (MASS Code, 6,000억, 시장 전망)</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>정부 사업: AI 데이터플랫폼</td>
+<td>데이터는 이제 모인다. 그다음은?</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>문제 ①</td>
+<td>위험한 순간(충돌·기상·고장)은 데이터에 없다</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>문제 ②</td>
+<td>한국 바다는 특히 어렵다 (소형어선 53%, 기관손상 29.9%)</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>문제 ③</td>
+<td>AI의 판단 근거가 남지 않는다</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>기존 시도와 한계</td>
+<td>시험장은 있는데 문제가 없고, 고리가 끊겨 있다</td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>솔루션 개요</td>
+<td>출제 → 채점 → 오답노트 루프 + 시험 3과목</td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>기능 ① 출제</td>
+<td>위험 순간 1건을 시험 문제 수천 개로 (V-Pass 결합)</td>
+<td></td>
+</tr>
+<tr>
+<td>10</td>
+<td>기능 ② 채점</td>
+<td>3과목 성적표, 안전 + 효율 지표 (KRISO 연계)</td>
+<td></td>
+</tr>
+<tr>
+<td>11</td>
+<td>기능 ③ 오답노트</td>
+<td>AI가 "왜 그렇게 판단했는지" 기록 (혁신 포인트)</td>
+<td></td>
+</tr>
+<tr>
+<td>12</td>
+<td>차별점</td>
+<td>새 기술이 아니라 없던 연결 (비교표)</td>
+<td></td>
+</tr>
+<tr>
+<td>13</td>
+<td>생태계와 사용자 가치</td>
+<td>모두가 이득을 보는 구조</td>
+<td></td>
+</tr>
+<tr>
+<td>14</td>
+<td>로드맵 &amp; 기대효과</td>
+<td>정부 사업과 함께 성장</td>
+<td></td>
+</tr>
+<tr>
+<td>15</td>
+<td>마무리</td>
+<td>슬로건</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>슬로건 임시안: "바다의 모든 위험한 순간이, 더 안전한 AI의 교과서가 됩니다"</p>
+<p>목업 화면 후보:</p>
+<ol>
+<li>위험 순간 지도: 한국 연안 지도에 과목별 위험 지점 히트맵</li>
+<li>시나리오 생성 화면: 위험 사례 1건 → 변형 조건 선택 → 시나리오 목록</li>
+<li>AI 성적표: 과목별 통과율과 취약 상황</li>
+<li>사고 재현 화면: 타임라인 + AI 판단 근거 + 책임 분석 리포트 (추천)</li>
+</ol>
+<h2>예상 질문과 답변</h2>
+<p>심사위원이 가장 먼저 물을 질문은 "KRISO가 이미 하지 않느냐"입니다.</p>
+<table>
+<thead>
+<tr>
+<th>질문</th>
+<th>답변</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>KRISO 테스트베드가 이미 시나리오 기반 시험을 하지 않나요?</td>
+<td>테스트베드(S-TAS)는 시험장이고, 씨나리오는 그 시험장에 넣을 문제를 실운항 데이터에서 자동 출제합니다. 경쟁이 아니라 콘텐츠 공급 관계입니다.</td>
+</tr>
+<tr>
+<td>Orca AI도 위험 순간을 분석하지 않나요?</td>
+<td>Orca는 감사·선원 교육을 위한 분석입니다. 우리는 위험 순간을 AI 시험 문제로 바꿔 공유 자산으로 만듭니다.</td>
+</tr>
+<tr>
+<td>항로 최적화·고장 예측은 이미 서비스가 있지 않나요?</td>
+<td>그 서비스들은 사람이 운항하는 배를 돕습니다. 우리는 자율운항 AI가 기상 급변·고장 상황에서 제대로 판단하는지를 시험합니다. 고장 예측 기업에는 고장 전조 데이터를 공급합니다.</td>
+</tr>
+<tr>
+<td>기업들이 블랙박스 기록을 공개하려 할까요?</td>
+<td>원본은 회사가 보관하고, 비식별화된 위험 순간만 문제은행에 기여합니다. 기여한 회사는 문제은행 이용 혜택을 받습니다.</td>
+</tr>
+<tr>
+<td>생성형 AI가 만든 시나리오는 현실성이 있나요?</td>
+<td>실제 위험 순간을 뼈대로 조건만 바꾸는 방식이라 현실성을 유지합니다. AIS 항적으로 조우 시나리오를 생성하는 학계 연구(<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2603.28067">arXiv 2603.28067</a>)도 있습니다.</td>
+</tr>
+<tr>
+<td>수익 모델은요?</td>
+<td>기본 문제 세트는 공공에 무료입니다. 고급 성적표·인증 리포트, 위험 점수, 고장 전조 데이터셋은 유료입니다.</td>
+</tr>
+</tbody>
+</table>
+<h2>팀이 정해야 할 것</h2>
+<ul>
+<li>☐ 서비스 이름 확정 (현재 가칭: 씨나리오)</li>
+<li>☐ 슬로건 확정</li>
+<li>☐ 목업 범위: 4개 후보 중 1~2개 선택 (사고 재현 화면 추천)</li>
+<li>☐ 발표 분량: 15장 유지 또는 2·3번, 4·5·6번 합치기</li>
+<li>☐ 역할 분담: 리서치·근거 / 스토리·대본 / 목업 / PPT 디자인 (슬라이드 표의 담당 열에 기입)</li>
+<li>☐ 기대효과 정량 수치의 근거 찾기</li>
+</ul>
+<h2>팩트체크 기록</h2>
+<p>2026-10-05에 아래 항목의 근거 페이지를 직접 열어 확인했습니다.</p>
+<table>
+<thead>
+<tr>
+<th>항목</th>
+<th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>소형선박 사고 비중</td>
+<td><a target="_blank" rel="noopener" href="https://www.etoday.co.kr/news/view/2567005">이투데이</a></td>
+</tr>
+<tr>
+<td>시장 전망</td>
+<td><a target="_blank" rel="noopener" href="https://edaily.co.kr/News/Read?mediaCodeNo=257&amp;newsId=06330406642363096">이데일리</a></td>
+</tr>
+<tr>
+<td>MASS Code 적용</td>
+<td><a target="_blank" rel="noopener" href="https://www.dnv.com/news/2026/imo-mcs-111-new-mass-code-adopted/">DNV</a></td>
+</tr>
+<tr>
+<td>산업부 실장 발언</td>
+<td><a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">보도자료</a></td>
+</tr>
+<tr>
+<td>KRISO 테스트베드</td>
+<td><a target="_blank" rel="noopener" href="https://www.kriso.re.kr/menu.es?mid=a10208040000">KRISO</a></td>
+</tr>
+<tr>
+<td>Orca AI</td>
+<td><a target="_blank" rel="noopener" href="https://thedigitalship.com/news/electronics-navigation/48-fewer-close-encounters-as-eastern-pacific-shipping-expands-ai-navigation/">The Digital Ship</a></td>
+</tr>
+<tr>
+<td>KOMSA</td>
+<td><a target="_blank" rel="noopener" href="https://www.klnews.co.kr/news/articleView.html?idxno=322879">물류신문</a></td>
+</tr>
+<tr>
+<td>시뮬레이터 DNV 인증</td>
+<td><a target="_blank" rel="noopener" href="https://www.wartsila.com/insights/article/simulating-the-future-of-maritime">Wärtsilä</a></td>
+</tr>
+</tbody>
+</table>
+<h2>출처</h2>
+<p>정부·통계</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">산업부·해수부 보도자료 원문: 자율운항선박 AI 데이터플랫폼 사업 출범 (2026.5.7)</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.korea.kr/briefing/pressReleaseView.do?newsId=156760191&amp;call_from=rsslink">정책브리핑 보도자료</a></li>
+<li><a target="_blank" rel="noopener" href="https://edaily.co.kr/News/Read?mediaCodeNo=257&amp;newsId=06330406642363096">이데일리: AI 완전자율운항 6,000억 사업 예타 면제 (2025.11.6)</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.etoday.co.kr/news/view/2567005">이투데이: 2025년 해양사고 통계 (2026.3.19)</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.klnews.co.kr/news/articleView.html?idxno=322879">물류신문: KOMSA 72시간 해상 혼잡도 데이터 개방 (2026.9.28)</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.kriso.re.kr/menu.es?mid=a10208040000">KRISO 자율운항선박실증연구센터</a></li>
+</ul>
+<p>국제 규범</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.dnv.com/news/2026/imo-mcs-111-new-mass-code-adopted/">DNV: IMO MSC 111, MASS Code 채택</a></li>
+<li><a target="_blank" rel="noopener" href="https://gcaptain.com/imo-adopts-mass-code-the-autonomous-ship-moves-from-drawing-board-to-regulated-reality/">gCaptain: IMO Adopts MASS Code</a></li>
+</ul>
+<p>언론·과제 분석</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.sentv.co.kr/article/view/sentv202601270198">서울경제TV: 자율운항 상용화까지 남은 과제</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.greenpostkorea.co.kr/news/articleView.html?idxno=306379">그린포스트코리아: 소형 어선 사고와 다도해</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.dailysecu.com/news/articleView.html?idxno=206632">데일리시큐: 데이터 표준화·보안 과제</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.newspim.com/news/view/20260407000585">뉴스핌: HD현대 아비커스 형식승인 (2026.4.7)</a></li>
+</ul>
+<p>기존 서비스</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://thedigitalship.com/news/electronics-navigation/48-fewer-close-encounters-as-eastern-pacific-shipping-expands-ai-navigation/">The Digital Ship: Orca AI, 근접 조우 48% 감소</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.wartsila.com/insights/article/simulating-the-future-of-maritime">Wärtsilä: Simulating the future of maritime</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.kongsberg.com/maritime/products/simulation/k-sim-navigation/">Kongsberg K-Sim Navigation</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.appliedintuition.com/press-releases/applied-intuition-uk-teams-with-kraken-technology-group">Applied Intuition × Kraken (Axion Sim)</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.napa.fi/software-and-services/ship-operations/napa-fleet-intelligence/voyage-optimization/">NAPA Voyage Optimization</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.wartsila.com/marine/services/lifecycle-agreements/expert-insight-service">Wärtsilä Expert Insight</a></li>
+<li><a target="_blank" rel="noopener" href="https://kongsbergmaritime.com/services/kongsberg-remote-services/health-management/">Kongsberg Health Management</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.marineinsight.com/marine-navigation/voyage-data-recorder-on-a-ship-explained/">Marine Insight: VDR 기록 항목</a></li>
+</ul>
+<p>연구</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2603.28067">arXiv 2603.28067: From Vessel Trajectories to Safety-Critical Encounter Scenarios (2026.3)</a></li>
+<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2509.15959">arXiv 2509.15959: Explainable Decision Support for MASS (2025.9)</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002698316">KCI: V-Pass 자료를 활용한 어업활동 지도 제작 연구 (2021)</a></li>
+</ul>
+</main>
+</body>
+</html>
