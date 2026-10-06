@@ -25,10 +25,16 @@ svg.loop{width:100%;height:auto;display:block}
 svg .ink{fill:var(--text)} svg .quiet{fill:var(--muted)} svg .edge{stroke:var(--muted)} svg .arrowhead{fill:var(--muted)}
 svg .tint{fill:var(--tint)} svg .accent{fill:var(--accent-tint);stroke:var(--accent)}
 li{margin:4px 0}
+blockquote{margin:16px 0;padding:4px 20px;border-left:4px solid var(--accent);background:var(--soft);border-radius:0 8px 8px 0}
 @media print{main{max-width:none;padding:0}h2{break-after:avoid}table,figure{break-inside:avoid}}
+nav.tabs{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--line)}
+nav.tabs div{max-width:860px;margin:0 auto;padding:0 16px;display:flex;gap:4px}
+nav.tabs a{padding:12px 14px;color:var(--muted);text-decoration:none;font-weight:600;border-bottom:2px solid transparent}
+nav.tabs a[aria-current]{color:var(--text);border-bottom-color:var(--accent)}
 </style>
 </head>
 <body>
+<nav class="tabs"><div><a href="./summary.html">한 장 요약</a><a href="./" aria-current="page">전체 기획안</a></div></nav>
 <main>
 <h1>씨나리오 (SEA-nario) 기획안</h1>
 <p>2026-10-06 · SSAFY 해양 X AI 아이디어 해커톤 · 주제 2</p>
