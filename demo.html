@@ -12,244 +12,188 @@
   --blue:#0b6bcb;--blue-d:#0a5db0;--blue-soft:#e8f3ff;
   --ink:#191f28;--ink2:#4e5968;--gray:#8b95a1;--line:#e5e8eb;--card:#f3f5f8;
   --pass:#16a34a;--pass-soft:#e9f7ef;--warn:#f59e0b;--warn-ink:#b45309;--warn-soft:#fff6e5;--fail:#dc2626;--fail-soft:#fdecec;
-  --act:#ef6c3a;
   --font:"Pretendard Local","Pretendard Variable",Pretendard,"Malgun Gothic",system-ui,sans-serif;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;overflow:hidden;background:#eef1f4;font-family:var(--font);color:var(--ink);-webkit-font-smoothing:antialiased}
 button{font-family:inherit;cursor:pointer}
 .num{font-variant-numeric:tabular-nums}
+svg text{font-family:var(--font)}
 #stage{position:absolute;left:50%;top:50%;width:1440px;height:900px;transform:translate(-50%,-50%) scale(var(--s,1));background:#fff;overflow:hidden}
 
 /* chrome */
 #bar{position:absolute;left:0;right:0;top:0;height:5px;background:#eef1f4;z-index:10;transition:opacity .3s}
 #barFill{display:block;height:100%;width:0;background:var(--blue);border-radius:0 3px 3px 0;transition:width .6s cubic-bezier(.3,.8,.3,1)}
-#back{position:absolute;left:24px;top:22px;width:48px;height:48px;border:0;border-radius:14px;background:transparent;display:grid;place-items:center;z-index:10;transition:background .2s,opacity .3s}
+#back{position:absolute;left:28px;top:30px;width:52px;height:52px;border:0;border-radius:14px;background:transparent;display:grid;place-items:center;z-index:10;transition:background .2s,opacity .3s}
 #back:hover{background:var(--card)}
-#note{position:absolute;right:28px;top:34px;font-size:13px;color:#b0b8c1;z-index:10;font-weight:500}
-#steps{position:absolute;left:50%;top:32px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:10;font-size:16px;font-weight:600;color:#b0b8c1;white-space:nowrap;transition:opacity .3s}
+#note{position:absolute;right:32px;top:40px;font-size:13px;color:#b0b8c1;z-index:10;font-weight:500}
+#steps{position:absolute;left:50%;top:38px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:10;font-size:16px;font-weight:600;color:#b0b8c1;white-space:nowrap;transition:opacity .3s}
 #steps span{transition:color .3s}
 #steps span.done{color:#8b95a1}
 #steps span.on{color:var(--blue);font-weight:700}
 #steps i{width:4px;height:4px;border-radius:50%;background:#d1d6db}
 .hide{opacity:0!important;pointer-events:none}
-#cta{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);width:520px;height:72px;border:0;border-radius:20px;background:var(--blue);color:#fff;font-size:24px;font-weight:700;letter-spacing:-.01em;z-index:10;transition:background .25s,color .25s}
+#cta{position:absolute;left:50%;bottom:56px;transform:translateX(-50%);width:600px;height:80px;border:0;border-radius:22px;background:var(--blue);color:#fff;font-size:26px;font-weight:700;letter-spacing:-.01em;z-index:10;transition:background .25s,color .25s}
 #cta:hover{background:var(--blue-d)}
 #cta.busy{background:var(--blue-soft);color:var(--blue);cursor:default}
 
 /* screens */
-.scr{position:absolute;inset:0;padding:84px 30px 126px;display:flex;flex-direction:column;align-items:center;opacity:0;visibility:hidden;transform:translateX(56px);transition:opacity .45s ease,transform .55s cubic-bezier(.2,.8,.2,1),visibility 0s .55s}
+.scr{position:absolute;inset:0;padding:104px 0 172px;display:flex;flex-direction:column;align-items:center;opacity:0;visibility:hidden;transform:translateX(56px);transition:opacity .45s ease,transform .55s cubic-bezier(.2,.8,.2,1),visibility 0s .55s}
 .scr.on{opacity:1;visibility:visible;transform:none;transition:opacity .45s ease,transform .55s cubic-bezier(.2,.8,.2,1),visibility 0s}
 .scr.past{transform:translateX(-56px)}
-.h1{margin:0;font-size:38px;line-height:1.3;font-weight:700;letter-spacing:-.03em;text-align:center;white-space:nowrap}
+.h1{margin:0;font-size:54px;line-height:1.3;font-weight:700;letter-spacing:-.03em;text-align:center}
 .h1 em{font-style:normal;color:var(--blue)}
-.h1 .f{color:var(--fail)}.h1 .p{color:var(--pass)}
-.sub{margin-top:8px;font-size:19px;line-height:1.4;color:var(--gray);font-weight:500;text-align:center;letter-spacing:-.01em}
-.vis{flex:1;width:100%;display:flex;align-items:stretch;justify-content:center;gap:20px;margin-top:20px;min-height:0}
-.scr.on .h1{animation:up .55s .05s both}
-.scr.on .sub{animation:up .55s .12s both}
-.scr.on .vis{animation:up .6s .18s both}
-@keyframes up{from{opacity:0;transform:translateY(16px)}}
-@keyframes pop{40%{transform:scale(1.15)}}
-.card{background:var(--card);border-radius:22px}
-.chip{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:999px;font-size:15px;font-weight:700;background:var(--blue-soft);color:var(--blue);white-space:nowrap}
+.h1 .f{color:var(--fail)}
+.sub{margin-top:16px;font-size:24px;line-height:1.4;color:var(--gray);font-weight:500;text-align:center;letter-spacing:-.01em}
+.vis{flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:28px;min-height:0}
+.scr.on .h1{animation:up .6s .05s both}
+.scr.on .sub{animation:up .6s .14s both}
+.scr.on .vis{animation:up .7s .22s both}
+@keyframes up{from{opacity:0;transform:translateY(18px)}}
+@keyframes pop{40%{transform:scale(1.18)}}
+.card{background:var(--card);border-radius:24px}
+.chip{display:inline-flex;align-items:center;height:44px;padding:0 18px;border-radius:999px;font-size:20px;font-weight:700;background:var(--blue-soft);color:var(--blue);white-space:nowrap}
 .chip.warn{background:var(--warn-soft);color:var(--warn-ink)}
 .chip.fail{background:var(--fail-soft);color:var(--fail)}
 .chip.pass{background:var(--pass-soft);color:var(--pass)}
-.chip.gray{background:#e9edf2;color:var(--ink2)}
-.sb{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;font-size:15px;font-weight:800;color:#fff;background:#6b7684;flex:none}
+.chip.gray{background:#eef1f4;color:var(--ink2)}
+.mapbox{position:relative;width:1200px;border-radius:24px;overflow:hidden;background:#e8f1fb}
+.mapbox>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.mapbox .sea3d{position:absolute;inset:0}
+.sb{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;font-size:21px;font-weight:800;color:#fff;background:#6b7684;flex:none}
 .sb.own{background:var(--blue)}
-.pill{display:inline-flex;align-items:center;justify-content:center;height:34px;padding:0 14px;border-radius:10px;font-size:18px;font-weight:800;color:#fff;white-space:nowrap}
-.pill.pass{background:var(--pass)}.pill.fail{background:var(--fail)}.pill.review{background:var(--warn)}.pill.na{background:#a7b1bc}
-.prov{display:inline-flex;align-items:center;height:28px;padding:0 10px;border-radius:8px;font-size:14px;font-weight:700;background:var(--warn-soft);color:var(--warn-ink);white-space:nowrap}
-.s1c{--sc:#0b6bcb;--sc-soft:#e8f3ff}
-.s2c{--sc:#7c4dff;--sc-soft:#f0ebff}
-.v1c{--sc:#e05252;--sc-soft:#fdecec}
-.v2c{--sc:#0b6bcb;--sc-soft:#e8f3ff}
-.stb{display:inline-grid;place-items:center;min-width:28px;height:28px;padding:0 6px;border-radius:8px;font-size:15px;font-weight:800;color:#fff;background:var(--sc);flex:none}
-#toast{position:absolute;left:50%;top:78px;transform:translate(-50%,-16px);opacity:0;background:var(--ink);color:#fff;height:52px;padding:0 24px;border-radius:999px;font-size:19px;font-weight:600;display:flex;align-items:center;gap:10px;transition:all .45s;z-index:20;white-space:nowrap;pointer-events:none}
-#toast.show{opacity:1;transform:translate(-50%,0)}
-a{color:inherit}
 
 /* 0 cover */
-#s0{justify-content:center;padding-bottom:110px}
+#s0{justify-content:center;padding-bottom:120px}
 .logo{width:104px;height:104px;border-radius:30px;background:var(--blue);display:grid;place-items:center;box-shadow:0 18px 40px -18px rgba(11,107,203,.7)}
-.cover-t{margin:34px 0 0;font-size:104px;line-height:1;font-weight:800;letter-spacing:-.045em}
-.cover-s{margin-top:26px;font-size:32px;font-weight:500;color:var(--ink2);letter-spacing:-.02em;text-align:center}
+.cover-t{margin:36px 0 0;font-size:104px;line-height:1;font-weight:800;letter-spacing:-.045em}
+.cover-s{margin-top:28px;font-size:32px;font-weight:500;color:var(--ink2);letter-spacing:-.02em}
 .cover-s b{color:var(--blue);font-weight:700}
-.cover-f{margin-top:26px;display:flex;gap:10px}
-.cover-f .chip{height:38px;font-size:18px;padding:0 16px}
 .scr.on .logo{animation:up .6s both}
 .scr.on .cover-t{animation:up .6s .1s both}
 .scr.on .cover-s{animation:up .6s .2s both}
-.scr.on .cover-f{animation:up .6s .3s both}
 
-/* 3D 뷰 공통 */
-.mapc{position:relative;flex:1;border-radius:22px;overflow:hidden;background:#eef5fc;min-height:0}
-.sea3d{position:absolute;inset:0}
-.sea3d canvas{display:block;position:absolute;left:0;top:0}
-.sea2d canvas{cursor:grab;touch-action:none}
-.sea3d-labels{position:absolute!important;inset:0;pointer-events:none}
-.lbl>span{display:inline-block;transform:translateY(-12px);font:700 13px/1 var(--font);padding:5px 8px;border-radius:8px;background:rgba(255,255,255,.93);color:#4e5968;white-space:nowrap;box-shadow:0 2px 8px -3px rgba(25,31,40,.35);letter-spacing:-.01em}
-.lbl.tg>span{transform:translate(calc(50% + 16px),-4px)}
-.lbl.own>span{background:var(--c);color:#fff;transform:translate(calc(-50% - 16px),-4px)}
-.lbl.ghost>span{background:rgba(255,255,255,.95);color:var(--c);box-shadow:inset 0 0 0 1.5px var(--c)}
-.lbl.tg.hot>span{background:var(--fail);color:#fff}
-.lbl.warn>span{background:var(--fail);color:#fff;transform:translateY(20px);font-size:14px;padding:6px 9px}
-.lbl.hit>span{background:#fff;color:var(--fail);box-shadow:inset 0 0 0 1.5px var(--fail);transform:translateY(52px)}
-.ov{position:absolute;z-index:3}
-.camb{right:12px;top:12px;display:flex;gap:6px}
-.camb button,.lay button{height:34px;padding:0 12px;border:0;border-radius:10px;background:rgba(255,255,255,.92);font-size:14px;font-weight:700;color:var(--ink2);box-shadow:0 2px 8px -4px rgba(25,31,40,.35)}
-.camb button.on,.lay button.on{background:var(--ink);color:#fff}
-.lay{right:12px;top:52px;display:flex;gap:6px}
-.lay button.on{background:var(--act)}
-.tbar{left:12px;right:12px;bottom:12px;height:48px;display:flex;align-items:center;gap:12px;padding:0 14px 0 8px;background:rgba(255,255,255,.94);border-radius:14px;box-shadow:0 4px 14px -8px rgba(25,31,40,.4)}
-.tbar .pp{width:36px;height:36px;border:0;border-radius:10px;background:var(--ink);display:grid;place-items:center;flex:none}
-.tbar input{flex:1;accent-color:var(--blue);height:24px}
-.tbar .clk{font-size:15px;font-weight:700;color:var(--ink2);white-space:nowrap;min-width:150px;text-align:right}
-.tbar .clk b{color:var(--blue)}
-.scale{left:14px;bottom:70px;font-size:12px;font-weight:600;color:#7f8fa1;background:rgba(255,255,255,.8);padding:4px 8px;border-radius:7px}
-.hud{left:12px;top:12px;background:rgba(255,255,255,.95);border-radius:14px;padding:10px 14px 8px;box-shadow:0 6px 18px -10px rgba(25,31,40,.35);font-size:14px;font-weight:600;color:var(--ink2)}
-.hud .hh{font-size:12px;color:var(--gray);margin-bottom:4px;display:flex;align-items:center;gap:6px}
-.hud .hh .stb{min-width:44px;height:20px;border-radius:6px;font-size:12px;margin-left:auto}
-.hud .hh .stb+.stb{margin-left:0}
-.hud .hr{display:flex;align-items:center;gap:8px;height:28px}
-.hud .hr .sb{width:22px;height:22px;border-radius:6px;font-size:12px}
-.hud .hr .nm{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hud .hr .vv{margin-left:auto;display:flex;gap:6px;padding-left:10px}
-.hud .hr .vv b{width:44px;text-align:center;font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums;border-radius:6px;line-height:22px}
-.hud .hr .vv b.bad{color:#fff;background:var(--fail)}
-.hud .ft{font-size:11px;color:var(--gray);margin-top:2px}
-.nogl{position:absolute;inset:0;display:grid;place-items:center;font-size:16px;color:var(--gray)}
+.s1c{--sc:#0b6bcb;--sc-soft:#e8f3ff}
+.s2c{--sc:#7c4dff;--sc-soft:#f0ebff}
+.stb{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:10px;font-size:19px;font-weight:800;color:#fff;background:var(--sc);flex:none}
+.pill{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 16px;border-radius:12px;font-size:21px;font-weight:800;color:#fff;white-space:nowrap}
+.pill.pass{background:var(--pass)}.pill.fail{background:var(--fail)}.pill.warn{background:var(--warn)}.pill.na{background:#a7b1bc}
+.prov{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:9px;font-size:16px;font-weight:700;background:var(--warn-soft);color:var(--warn-ink)}
+#toast{position:absolute;left:50%;top:84px;transform:translate(-50%,-16px);opacity:0;background:var(--ink);color:#fff;height:56px;padding:0 26px;border-radius:999px;font-size:21px;font-weight:600;display:flex;align-items:center;gap:10px;transition:all .45s;z-index:20;white-space:nowrap;pointer-events:none}
+#toast.show{opacity:1;transform:translate(-50%,0)}
 
-/* 1 문제 선택 */
-.plist{width:500px;display:flex;flex-direction:column;gap:14px}
-.pc{all:unset;box-sizing:border-box;cursor:pointer;display:block;padding:16px 22px;border-radius:22px;background:var(--card);box-shadow:inset 0 0 0 2px transparent;transition:box-shadow .2s,background .2s}
-.pc:hover{background:#edf0f4}
-.pc.on{background:#fff;box-shadow:inset 0 0 0 2.5px var(--blue),0 10px 30px -18px rgba(11,107,203,.6)}
-.pc-top{display:flex;align-items:center;gap:8px}
-.pc-top .n{margin-left:auto;font-size:15px;font-weight:700;color:var(--gray)}
-.pc-t{margin-top:8px;font-size:25px;font-weight:800;letter-spacing:-.025em}
-.pc-k{margin-top:4px;font-size:17px;font-weight:600;color:var(--ink2)}
-.pc-m{margin-top:6px;font-size:15px;color:var(--gray);font-weight:600;line-height:1.5}
-.pc-r{margin-top:9px;display:flex;gap:8px;flex-wrap:wrap}
-.pc-src{margin-top:7px;font-size:13px;color:var(--gray);font-weight:600}
-.pc-src a{color:var(--blue);text-decoration:none}
-.pdet{width:840px;display:flex;flex-direction:column;gap:12px}
-.pdet .mapc{flex:1}
-.story{left:12px;top:12px;max-width:420px;background:rgba(255,255,255,.95);border-radius:14px;padding:10px 14px;font-size:15px;font-weight:600;line-height:1.45;color:var(--ink2);box-shadow:0 6px 18px -10px rgba(25,31,40,.35)}
-.story b{color:var(--act)}
-.shtab{background:var(--card);border-radius:18px;padding:4px 0}
-.shr{display:grid;grid-template-columns:236px 136px 70px 50px 1fr;align-items:center;height:42px;padding:0 18px;font-size:15px;font-weight:600;color:var(--ink2);white-space:nowrap;gap:8px}
-.shr+.shr{border-top:1px solid var(--line)}
-.shr.hd{height:30px;font-size:13px;color:var(--gray)}
-.shr .nm{display:flex;align-items:center;gap:10px;color:var(--ink);font-weight:700;overflow:hidden}
-.shr .nm small{font-size:12px;color:var(--gray);font-weight:600}
-.shr .rel{display:flex;gap:6px;align-items:center}
-.shr .rel .chip{height:26px;font-size:13px;padding:0 9px}
-.shr .rel .cp{font-size:13px;color:var(--gray)}
+/* 1 문제 카드 */
+#s1 .vis{margin-top:24px}
+.prob{display:flex;gap:24px;align-items:stretch}
+.tbl{width:820px;padding:6px 0}
+.tr{display:grid;grid-template-columns:300px 130px 120px 110px 90px;align-items:center;height:72px;padding:0 26px;font-size:22px;font-weight:600;color:var(--ink2);letter-spacing:-.02em;white-space:nowrap}
+.tr+.tr{border-top:1px solid var(--line)}
+.tr.hd{height:48px;font-size:18px;color:var(--gray);font-weight:600}
+.tr .nm{display:flex;align-items:center;gap:14px;color:var(--ink);font-weight:700}
+.tr .r{text-align:right}
+.tr.me .nm{color:var(--blue)}
+.pic{width:376px;padding:16px;display:flex}
+.pic svg{display:block;width:100%;height:100%;border-radius:16px}
+.conds{display:flex;gap:10px;margin-top:18px;flex-wrap:nowrap}
+.cond{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1.5px var(--line);font-size:18px;font-weight:600;color:var(--ink2);white-space:nowrap}
+.cond b{color:var(--gray);font-weight:600}
+.cond.rp{box-shadow:none;background:var(--blue-soft);color:var(--blue);font-weight:700}
+.cond.ex{box-shadow:none;background:var(--warn-soft);color:var(--warn-ink);font-weight:700}
 
-/* 2 전략 설정·실행 */
-.panel{width:450px;display:flex;flex-direction:column;padding:10px 0 8px;overflow:hidden}
-.tabs{display:flex;gap:8px;padding:2px 12px 10px}
-.tab{flex:1;height:58px;border:0;border-radius:14px;background:#e9edf2;color:var(--gray);font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:-.02em;position:relative}
-.tab small{font-size:13px;font-weight:700;opacity:.85}
-.tab.on{background:#fff;color:var(--sc);box-shadow:inset 0 0 0 2px var(--sc)}
-.tab .stb{min-width:26px;height:26px}
-.ed .row{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:52px;padding:6px 18px;border-top:1px solid var(--line)}
-.ed .row .k{font-size:15px;color:var(--ink2);font-weight:700;white-space:nowrap}
-.ed .row .k small{display:block;font-size:12px;color:var(--gray);font-weight:600;margin-top:2px}
-.ed .row.chg .k::after{content:"수정됨";margin-left:6px;font-size:11px;font-weight:800;color:#fff;background:var(--sc);padding:2px 6px;border-radius:6px;vertical-align:2px}
-.seg{display:flex;background:#e3e8ee;border-radius:11px;padding:3px;gap:2px}
-.seg button{border:0;background:transparent;height:34px;padding:0 11px;border-radius:9px;font-size:14px;font-weight:700;color:var(--ink2);white-space:nowrap}
-.seg button.on{background:#fff;color:var(--sc);box-shadow:0 1px 4px rgba(25,31,40,.15)}
-.rng{display:flex;align-items:center;gap:10px}
-.rng input{width:150px;accent-color:var(--sc)}
-.rng .val{min-width:66px;text-align:right;font-size:16px;font-weight:800;color:var(--ink)}
-.tog{width:52px;height:30px;border-radius:999px;border:0;background:#cfd6de;position:relative;transition:background .2s}
-.tog::after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.tog.on{background:var(--sc)}.tog.on::after{left:25px}
-.live{margin:8px 12px 0;padding:10px 14px;border-radius:14px;background:#fff}
-.live .lh{display:flex;align-items:center;font-size:13px;font-weight:700;color:var(--gray)}
-.live .lh span{margin-left:auto;font-weight:600}
-.live .lr{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
-.live .lr .chip{height:28px;font-size:14px}
-.live .dec{margin-top:8px;font-size:14px;font-weight:600;color:var(--ink2);line-height:1.45}
-.live .dec b{color:var(--sc)}
-.live .calc{font-style:normal;margin-left:8px;font-size:11px;font-weight:700;color:var(--pass);background:var(--pass-soft);padding:2px 6px;border-radius:6px}
-.pnote{margin:10px 18px 0;font-size:12.5px;font-weight:600;color:var(--gray);line-height:1.45}
-.mapcol{width:890px;display:flex;flex-direction:column;gap:10px}
-.cap{display:flex;align-items:center;justify-content:center;gap:12px;height:40px;font-size:21px;font-weight:600;letter-spacing:-.02em;white-space:nowrap}
-.cap .tm{color:var(--blue);font-weight:700;font-size:18px}
+/* 2 판단 비교 */
+.cmp{display:flex;gap:24px}
+.sc{width:560px;padding:8px 0 10px;border-radius:24px;background:var(--card);position:relative;overflow:hidden}
+.sc::before{content:"";position:absolute;left:0;top:0;right:0;height:6px;background:var(--sc)}
+.sc .hd{display:flex;align-items:center;gap:14px;height:84px;padding:6px 30px 0;font-size:26px;font-weight:800;letter-spacing:-.02em}
+.sc .hd small{font-size:18px;font-weight:600;color:var(--gray);margin-left:auto}
+.sr{padding:16px 30px;border-top:1px solid var(--line)}
+.sr .k{font-size:18px;font-weight:600;color:var(--gray)}
+.sr .v{margin-top:6px;font-size:26px;font-weight:700;letter-spacing:-.02em;white-space:nowrap}
+.sr .v em{font-style:normal;color:var(--sc)}
+.sr .v.big{font-size:34px}
+.sr .pr{display:flex;align-items:center;gap:10px;margin-top:8px}
+.sr .pr .sb{width:38px;height:38px;font-size:19px}
+.sr .pr .ar{color:#c5ccd3;font-weight:600}
+.sr .pr .sb.dim{background:#d1d6db}
+.same{margin-top:22px;display:flex;align-items:center;gap:10px;font-size:20px;font-weight:600;color:var(--ink2)}
+.same .ic{width:30px;height:30px;border-radius:9px;background:var(--blue-soft);display:grid;place-items:center}
+.scr.on .sc.s1c{animation:up .55s .2s both}.scr.on .sc.s2c{animation:up .55s .45s both}.scr.on .same{animation:up .5s .8s both}
+
+/* 3 위험 변화 */
+#s3 .vis{margin-top:22px}
+#map3{height:452px}
+.cap{display:flex;align-items:center;justify-content:center;gap:14px;height:52px;margin-top:16px;font-size:27px;font-weight:600;letter-spacing:-.02em;white-space:nowrap}
+.cap .tm{color:var(--blue);font-weight:700;font-size:24px}
+.cap .tx{color:var(--ink)}
 .cap.fx{animation:capin .4s both}
-@keyframes capin{from{opacity:0;transform:translateY(6px)}}
-.cap .chip{transition:opacity .3s}
-.cap .chip.off{display:none}
+@keyframes capin{from{opacity:0;transform:translateY(8px)}}
+.cap .chip{transition:opacity .3s,transform .3s}
+.cap .chip.off{opacity:0;transform:scale(.8);width:0;padding:0;margin-left:-14px;overflow:hidden}
 .cap .chip:not(.off){animation:pop .5s}
+.hud{position:absolute;left:18px;top:18px;background:rgba(255,255,255,.95);border-radius:16px;padding:12px 16px 8px;box-shadow:0 6px 18px -10px rgba(25,31,40,.35);font-size:17px;font-weight:600;color:var(--ink2);z-index:2;width:272px}
+.hud .hh{font-size:14px;color:var(--gray);margin-bottom:4px;display:flex;align-items:center}
+.hud .hh span{margin-left:auto;display:flex;gap:6px}
+.hud .hh .stb{width:52px;height:22px;border-radius:7px;font-size:13px}
+.hud .hr{display:flex;align-items:center;gap:8px;height:34px}
+.hud .hr .sb{width:24px;height:24px;border-radius:7px;font-size:14px}
+.hud .hr .vv{margin-left:auto;display:flex;gap:6px}
+.hud .hr .vv b{width:52px;text-align:center;font-size:19px;color:var(--ink);font-variant-numeric:tabular-nums;border-radius:7px}
+.hud .hr .vv b.bad{color:#fff;background:var(--fail)}
+.hud .ft{font-size:13px;color:var(--gray);margin-top:2px}
+.lgd{position:absolute;right:18px;bottom:14px;display:flex;gap:16px;font-size:16px;font-weight:600;color:var(--ink2);background:rgba(255,255,255,.92);padding:8px 14px;border-radius:12px;z-index:2}
+.lgd span{display:flex;align-items:center;gap:7px}
+.lgd i{display:inline-block;width:24px;height:0;border-top:3px dashed #8b95a1}
+.lgd i.s1{border-top:4px solid #0b6bcb}.lgd i.s2{border-top:4px solid #7c4dff}
+.lgd i.z{width:15px;height:15px;border:2px dashed #8b95a1;border-radius:50%}
+.rptag{position:absolute;right:18px;top:16px;z-index:2;display:flex;gap:8px}
+.rptag span{height:30px;padding:0 12px;border-radius:9px;background:rgba(255,255,255,.92);font-size:15px;font-weight:700;color:var(--blue);display:inline-flex;align-items:center}
 
-/* 3 결과 리포트 */
-.repw{display:flex;flex-direction:column;align-items:center}
-.states{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--gray);margin-bottom:12px}
-.states .st{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:8px;background:var(--card)}
+/* 4 결과 리포트 */
+#s4 .vis{margin-top:20px}
+.states{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:600;color:var(--gray);margin-bottom:16px}
+.states .st{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;border-radius:9px;background:var(--card)}
 .states .st i{width:10px;height:10px;border-radius:50%}
-.rep{display:grid;grid-template-columns:190px 560px 560px;width:1310px;border-radius:22px;background:var(--card);overflow:hidden}
-.rep>div{padding:14px 22px;border-top:1px solid var(--line);min-height:118px;display:flex;flex-direction:column;justify-content:center}
-.rep>.hc{min-height:64px;border-top:0;flex-direction:row;align-items:center;justify-content:flex-start;gap:12px;font-size:21px;font-weight:800;letter-spacing:-.02em}
-.rep>.hc small{font-size:14px;color:var(--gray);font-weight:600}
+.rep{display:grid;grid-template-columns:190px 500px 500px;width:1190px;border-radius:24px;background:var(--card);overflow:hidden}
+.rep>div{padding:14px 24px;border-top:1px solid var(--line);min-height:104px;display:flex;flex-direction:column;justify-content:center}
+.rep>.hc{min-height:72px;border-top:0;flex-direction:row;align-items:center;justify-content:flex-start;gap:12px;font-size:23px;font-weight:800;letter-spacing:-.02em}
 .rep>.hc .pill{margin-left:auto}
-.rep>.lay{font-size:19px;font-weight:700;color:var(--ink)}
-.rep>.lay small{display:block;font-size:13px;font-weight:600;color:var(--gray);margin-top:4px;line-height:1.35}
-.rep>.lay.l1,.rep .cl.l1.ng{background:#fff6f6}
-.cl .m{font-size:20px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;white-space:nowrap}
-.cl .d{font-size:15px;font-weight:600;color:var(--gray);margin-top:5px;white-space:nowrap;line-height:1.45}
-.cl .m.ng{color:var(--fail)}.cl .m.ok{color:var(--pass)}.cl .m.mu{color:var(--gray)}.cl .m.wn{color:var(--warn-ink)}
-.cl .tag{font-size:12px;font-weight:700;height:22px;padding:0 8px;border-radius:7px;background:#fff;color:var(--gray);display:inline-flex;align-items:center}
-.repbtn{margin-top:14px;display:flex;gap:10px;align-items:center}
-.btn2{height:42px;padding:0 16px;border:0;border-radius:12px;background:var(--card);font-size:16px;font-weight:700;color:var(--ink2);display:inline-flex;align-items:center;gap:8px}
-.btn2:hover{background:#e7ebf0}
-.btn2.pri{background:var(--blue-soft);color:var(--blue)}
-.repnote{font-size:14px;font-weight:600;color:var(--gray);margin-left:8px}
+.rep>.lay{font-size:21px;font-weight:700;color:var(--ink);justify-content:center}
+.rep>.lay small{display:block;font-size:15px;font-weight:600;color:var(--gray);margin-top:4px;line-height:1.35}
+.rep>.lay.l1{background:#fff7f7}
+.cl .m{font-size:23px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:10px;white-space:nowrap}
+.cl .d{font-size:17px;font-weight:600;color:var(--gray);margin-top:6px;white-space:nowrap}
+.cl .m.ng{color:var(--fail)}.cl .m.ok{color:var(--pass)}.cl .m.mu{color:var(--gray)}
+.cl .tag{font-size:14px;font-weight:700;height:26px;padding:0 9px;border-radius:8px;background:#fff;color:var(--gray);display:inline-flex;align-items:center}
+.rep .c1.l1{background:#fff3f3}
+.repnote{margin-top:14px;font-size:17px;font-weight:600;color:var(--gray)}
 .scr.on .rep>div{animation:up .45s both}
-.scr.on .rep>.r2{animation-delay:.25s}.scr.on .rep>.r3{animation-delay:.45s}.scr.on .rep>.r4{animation-delay:.65s}
+.scr.on .rep>.r2{animation-delay:.3s}.scr.on .rep>.r3{animation-delay:.55s}.scr.on .rep>.r4{animation-delay:.8s}
 
-/* 4 오답 재시험 */
-.rtl{width:450px;display:flex;flex-direction:column;gap:10px}
-.why{padding:12px 16px;border-radius:18px;background:#fff6f6}
-.why .wt{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800}
-.why .wd{margin-top:6px;font-size:13.5px;font-weight:600;color:var(--ink2);line-height:1.5}
-.sug{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.sug button{height:32px;padding:0 11px;border:0;border-radius:9px;background:#fff;box-shadow:inset 0 0 0 1.5px #f3c1c1;font-size:13px;font-weight:700;color:var(--fail)}
-.sug button:hover{background:#fff0f0}
-.sug button.used{background:var(--fail);color:#fff;box-shadow:none}
-.rtl .panel{width:auto;flex:1;padding-top:4px}
-.rtl .ed .row{min-height:44px;padding:4px 16px}
-.rtl .ed .row .k small{display:none}
-.rtl .live{margin-top:6px;padding:8px 12px}
-.rtl .live .lh{display:none}
-.rtr{width:850px;display:flex;flex-direction:column;gap:10px}
-.rres{display:flex;align-items:center;gap:12px;height:62px;padding:0 18px;border-radius:18px;background:var(--card);font-size:17px;font-weight:700;white-space:nowrap}
-.rres .arr{color:#b0b8c1}
-.rres .imp{font-size:15px;font-weight:600;color:var(--ink2);margin-left:6px;overflow:hidden;text-overflow:ellipsis}
-.rres .reg{margin-left:auto;display:flex;gap:6px;align-items:center;font-size:13px;color:var(--gray)}
-.rres .reg .chip{height:26px;font-size:13px;padding:0 9px}
-
-/* modal */
-#modal{position:absolute;inset:0;z-index:40;background:rgba(25,31,40,.35);display:none;align-items:center;justify-content:center}
-#modal.show{display:flex}
-#modal .box{width:1040px;height:700px;background:#fff;border-radius:24px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 80px -30px rgba(0,0,0,.5)}
-#modal .mh{display:flex;align-items:center;gap:12px;height:68px;padding:0 24px;border-bottom:1px solid var(--line);font-size:22px;font-weight:800}
-#modal .mh small{font-size:14px;color:var(--gray);font-weight:600}
-#modal .mh button{margin-left:auto;border:0;background:var(--card);width:40px;height:40px;border-radius:12px;font-size:20px}
-#modal .mb{flex:1;overflow:auto;padding:18px 24px;font-size:15px}
-#modal pre{margin:0;font:500 13.5px/1.55 ui-monospace,Consolas,monospace;color:#273445;white-space:pre-wrap}
-#modal pre .k{color:#0a5db0}#modal pre .s{color:#16794a}#modal pre .n{color:#b45309}
-.lg{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.lg h4{margin:0 0 8px;font-size:17px;display:flex;align-items:center;gap:8px}
-.lg ol{margin:0;padding:0;list-style:none}
-.lg li{padding:10px 12px;border-radius:12px;background:var(--card);margin-bottom:8px;font-size:14px;line-height:1.5;color:var(--ink2);font-weight:600}
-.lg li b{color:var(--ink)}
-.lg li .t{color:var(--blue);font-weight:800;margin-right:6px}
-.lg li .sm{display:block;font-size:12.5px;color:var(--gray);margin-top:2px}
+/* 5 오답 재시험 */
+#s5 .vis{margin-top:22px}
+.rt{display:flex;gap:24px;align-items:stretch}
+.rtc{width:760px;padding:6px 0 12px}
+.rtc .ch{display:flex;align-items:center;gap:8px;height:56px;padding:0 28px;font-size:16px;font-weight:600;color:var(--gray);white-space:nowrap}
+.rtc .ch b{color:var(--ink2);font-weight:700}
+.rv{display:flex;align-items:center;gap:16px;height:84px;margin:0 14px;padding:0 20px;border-radius:18px;background:#fff;font-size:24px;font-weight:700;white-space:nowrap}
+.rv .who{display:flex;align-items:center;gap:10px;width:200px}
+.rv .who small{font-size:16px;color:var(--gray);font-weight:600}
+.rv .d{font-size:20px;font-weight:600;color:var(--ink2)}
+.rv .d.ng{color:var(--fail)}
+.rarr{height:34px;display:grid;place-items:center}
+.dl{margin:14px 14px 0;padding:6px 20px;border-radius:18px;background:#fff}
+.dr{display:flex;align-items:center;gap:14px;height:60px;font-size:21px;font-weight:600;color:var(--ink);white-space:nowrap}
+.dr+.dr{border-top:1px solid var(--line)}
+.dr .ic{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;flex:none}
+.dr.ok .ic{background:var(--pass)}.dr.wn .ic{background:var(--warn)}
+.dr .k{width:72px;font-size:17px;color:var(--gray);font-weight:700}
+.rtm{width:404px;padding:16px;display:flex;flex-direction:column}
+.rtm svg{display:block;width:100%;flex:1;border-radius:16px}
+.rtm .lg{display:flex;gap:14px;justify-content:center;margin-top:10px;font-size:15px;font-weight:600;color:var(--ink2)}
+.rtm .lg span{display:flex;align-items:center;gap:6px}
+.rtm .lg i{display:inline-block;width:22px;border-top:3px dashed #e57373}
+.rtm .lg i.n{border-top:4px solid #0b6bcb}
+.scr.on .rv.v1{animation:up .5s .2s both}.scr.on .rarr{animation:up .5s .5s both}.scr.on .rv.v2{animation:up .5s .7s both}.scr.on .dl{animation:up .5s 1s both}
 
 /* loop overlay */
 #loopFx{position:absolute;inset:0;z-index:30;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;opacity:0;visibility:hidden;transition:opacity .35s,visibility 0s .35s}
@@ -259,90 +203,158 @@ a{color:inherit}
 #loopFx.show .arc{animation:arc 1s .1s cubic-bezier(.5,0,.3,1) forwards}
 @keyframes arc{to{stroke-dashoffset:0}}
 #loopFx .lt{font-size:44px;font-weight:700;letter-spacing:-.03em}
+
+/* ---- v10 추가: 지도·옵션·문제 전환·재시험 ---- */
+.sea3d canvas{display:block;position:absolute;left:0;top:0}
+.sea2d canvas{cursor:grab;touch-action:none}
+.sea3d-labels{position:absolute!important;inset:0;pointer-events:none}
+.lbl>span{display:inline-block;transform:translateY(-12px);font:700 13px/1 var(--font);padding:5px 8px;border-radius:8px;background:rgba(255,255,255,.93);color:#4e5968;white-space:nowrap}
+.lbl.own>span{background:var(--c);color:#fff}
+.lbl.warn>span{background:var(--fail);color:#fff}
+.camb{position:absolute;right:14px;top:14px;z-index:3;display:flex;gap:6px}
+.camb button{height:34px;padding:0 12px;border:0;border-radius:10px;background:rgba(255,255,255,.92);font-size:14px;font-weight:700;color:var(--ink2);box-shadow:0 2px 8px -4px rgba(25,31,40,.35)}
+.camb button.on{background:var(--ink);color:#fff}
+.psw{display:flex;gap:8px;justify-content:center;margin-bottom:16px}
+.psw button{height:40px;padding:0 18px;border:0;border-radius:999px;background:var(--card);font-size:16px;font-weight:700;color:var(--ink2)}
+.psw button.on{background:var(--ink);color:#fff}
+.pic .mapbox{width:100%;height:100%;border-radius:16px}
+.cond.fl{box-shadow:none;background:var(--fail-soft);color:var(--fail);font-weight:700}
+/* 2 판단 비교 */
+.cmp2{display:flex;gap:24px;align-items:stretch}
+.cols{width:540px;display:flex;flex-direction:column;gap:16px}
+.cols .sc{width:auto;flex:1;padding:2px 0 4px}
+.cols .sc .hd{height:52px;font-size:22px}
+.h1 .p{color:var(--pass)}
+.hud{width:340px!important}
+.hud .hr .nm{max-width:190px!important}
+.mnote{position:absolute;left:14px;bottom:12px;z-index:2;font-size:14px;font-weight:600;color:var(--ink2);background:rgba(255,255,255,.92);padding:6px 12px;border-radius:10px}
+.sc .opt{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 24px;border-top:1px solid var(--line);min-height:46px}
+.sc .opt .k{font-size:17px;font-weight:600;color:var(--gray);white-space:nowrap}
+.seg{display:flex;background:#e3e8ee;border-radius:11px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;height:36px;padding:0 12px;border-radius:9px;font-size:15px;font-weight:700;color:var(--ink2);white-space:nowrap}
+.seg button.on{background:#fff;color:var(--sc);box-shadow:0 1px 4px rgba(25,31,40,.15)}
+.rng{display:flex;align-items:center;gap:10px}
+.rng input{width:170px;accent-color:var(--sc)}
+.rng .val{min-width:70px;text-align:right;font-size:17px;font-weight:800;color:var(--ink)}
+.sc .act{padding:8px 24px 2px;border-top:1px solid var(--line)}
+.sc .act .k{font-size:15px;font-weight:600;color:var(--gray);display:flex;align-items:center;gap:8px}
+.sc .act .v{margin-top:0;font-size:25px;font-weight:800;letter-spacing:-.02em;color:var(--sc);white-space:nowrap}
+.sc .act .w{margin-top:2px;font-size:16px;font-weight:600;color:var(--ink2);white-space:nowrap}
+.sc .more{border:0;background:transparent;font-size:14px;font-weight:700;color:var(--gray);margin-left:auto;padding:4px 8px;border-radius:8px}
+.sc .more:hover{background:#e7ebf0}
+.calc{font-style:normal;font-size:12px;font-weight:700;color:var(--pass);background:var(--pass-soft);padding:2px 7px;border-radius:6px}
+.m2{width:800px}
+.scr.on .cols .sc.s1c{animation:up .5s .15s both}.scr.on .cols .sc.s2c{animation:up .5s .3s both}
+/* 3 위험 변화 HUD 이름 */
+.hud .hr .nm{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* 4 리포트 버튼 */
+.repbtn{margin-top:14px;display:flex;gap:10px;align-items:center;justify-content:center}
+.btn2{height:40px;padding:0 16px;border:0;border-radius:12px;background:var(--card);font-size:16px;font-weight:700;color:var(--ink2)}
+.btn2:hover{background:#e7ebf0}
+/* 5 재시험 */
+.sgh{margin:16px 20px 0;font-size:17px;font-weight:700;color:var(--ink2)}
+.sug{display:flex;flex-wrap:wrap;gap:8px;margin:10px 14px 0}
+.sug button{height:44px;padding:0 16px;border:0;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1.5px var(--line);font-size:17px;font-weight:700;color:var(--ink2)}
+.sug button:hover{box-shadow:inset 0 0 0 1.5px var(--blue)}
+.sug button.used{background:var(--blue);color:#fff;box-shadow:none}
+.rv .pend{font-size:18px;font-weight:600;color:var(--gray)}
+.dr .reg{display:flex;gap:6px}
+.dr .reg .chip{height:30px;font-size:15px;padding:0 10px}
+.dr.ng .ic{background:var(--fail)}
+.rtm .mapbox{width:100%;flex:1;border-radius:16px}
+/* 판단 기록·JSON 창 */
+#modal{position:absolute;inset:0;z-index:40;background:rgba(25,31,40,.35);display:none;align-items:center;justify-content:center}
+#modal.show{display:flex}
+#modal .box{width:1040px;height:700px;background:#fff;border-radius:24px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 80px -30px rgba(0,0,0,.5)}
+#modal .mh{display:flex;align-items:center;gap:12px;height:68px;padding:0 24px;border-bottom:1px solid var(--line);font-size:22px;font-weight:800}
+#modal .mh small{font-size:14px;color:var(--gray);font-weight:600}
+#modal .mh button{margin-left:auto;border:0;background:var(--card);width:40px;height:40px;border-radius:12px;font-size:20px}
+#modal .mb{flex:1;overflow:auto;padding:18px 24px;font-size:15px}
+#modal pre{margin:0;font:500 13.5px/1.55 ui-monospace,Consolas,monospace;color:#273445;white-space:pre-wrap}
+#modal pre .k{color:#0a5db0}#modal pre .s{color:#16794a}#modal pre .n{color:#b45309}
+.lgl{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.lgl h4{margin:0 0 8px;font-size:17px;display:flex;align-items:center;gap:8px}
+.lgl ol{margin:0;padding:0;list-style:none}
+.lgl li{padding:10px 12px;border-radius:12px;background:var(--card);margin-bottom:8px;font-size:14px;line-height:1.5;color:var(--ink2);font-weight:600}
+.lgl li b{color:var(--ink)}
+.lgl li .t{color:var(--blue);font-weight:800;margin-right:6px}
+.lgl li .sm{display:block;font-size:12.5px;color:var(--gray);margin-top:2px}
+
 .shot *,.shot *::before,.shot *::after{transition:none!important;animation:none!important}
 </style>
 </head>
 <body>
 <div id="stage">
   <div id="bar"><i id="barFill"></i></div>
-  <button id="back" aria-label="뒤로"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4e5968" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
-  <div id="steps"><span>문제 선택</span><i></i><span>전략 설정·실행</span><i></i><span>결과 리포트</span><i></i><span>오답 재시험</span></div>
-  <div id="note">실제 사고 재구성 · 판정은 데모용 잠정값</div>
-  <div id="toast">↺ 수정 이력이 회귀검증 기록에 저장됐어요</div>
+  <button id="back" aria-label="뒤로"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4e5968" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div id="steps"><span>문제 카드</span><i></i><span>판단 비교</span><i></i><span>위험 변화</span><i></i><span>결과 리포트</span><i></i><span>오답 재시험</span></div>
+  <div id="note">실제 사고 재구성 · 판정은 잠정값</div>
+  <div id="toast">↺ 수정 이력이 회귀검증 기록에 들어갔어요</div>
 
   <!-- 0 표지 -->
   <section class="scr" id="s0">
     <div class="logo"><svg width="60" height="60" viewBox="0 0 40 40"><path d="M6 24c4.7-3.5 9.3-3.5 14 0s9.3 3.5 14 0" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M6 15c4.7-3.5 9.3-3.5 14 0s9.3 3.5 14 0" stroke="#9fcbf5" stroke-width="3.4" fill="none" stroke-linecap="round"/></svg></div>
     <h1 class="cover-t">씨나리오</h1>
     <div class="cover-s">한 배를 피한 AI가, <b>다른 배의 위험</b>까지 낮췄는지 시험해요</div>
-    <div class="cover-f"><span class="chip gray" id="coverN">실제 사고 문제 2개</span><span class="chip gray">전략을 바꾸면 바로 다시 계산</span><span class="chip gray">사고 항적 재현</span></div>
   </section>
 
-  <!-- 1 문제 선택 -->
+  <!-- 1 문제 카드 -->
   <section class="scr" id="s1">
-    <h2 class="h1">실제 사고를 <em>시험 문제</em>로 만들었어요</h2>
-    <div class="sub">조사보고서의 위치·침로·속력으로 장면을 다시 만들고, AI가 사고 선박 자리에서 판단해요</div>
+    <h2 class="h1" id="t1"></h2>
+    <div class="sub" id="sub1"></div>
     <div class="vis">
-      <div class="plist" id="plist"></div>
-      <div class="pdet">
-        <div class="mapc" id="slot1">
-          <div class="ov story" id="story1"></div>
-          <div class="ov camb" data-cam></div>
-          <div class="ov tbar" data-tbar></div>
-        </div>
-        <div class="shtab" id="ships1"></div>
+      <div class="psw" id="psw"></div>
+      <div class="prob">
+        <div class="card tbl" id="tbl1"></div>
+        <div class="card pic"><div class="mapbox" id="slot1"></div></div>
       </div>
+      <div class="conds" id="conds1"></div>
     </div>
   </section>
 
-  <!-- 2 전략 설정·실행 -->
+  <!-- 2 판단 비교 -->
   <section class="scr" id="s2">
-    <h2 class="h1" id="t2">AI 전략을 바꾸면, <em>예상 항적</em>이 바로 바뀌어요</h2>
+    <h2 class="h1">같은 상황에서 두 전략은 다르게 움직여요</h2>
     <div class="vis">
-      <div class="card panel" id="ed2"></div>
-      <div class="mapcol">
-        <div class="mapc" id="slot2">
-          <div class="ov hud" id="hud2"></div>
-          <div class="ov camb" data-cam></div>
-          <div class="ov lay"><button id="actBtn">실제 사고 항적</button></div>
-          <div class="ov scale">격자 1칸 = 1해리 · 선박 크기 6배 확대</div>
-          <div class="ov tbar" data-tbar></div>
-        </div>
-        <div class="cap" id="cap2"><span class="tm num"></span><span class="tx"></span><span class="chip off"></span></div>
+      <div class="cmp2">
+        <div class="cols"><div class="sc s1c" id="sc1"></div><div class="sc s2c" id="sc2"></div></div>
+        <div class="mapbox m2" id="slot2"><div class="mnote">옵션을 바꾸면 바로 다시 계산 · 같은 초기 조건 · 타선 고정 Replay</div></div>
       </div>
     </div>
   </section>
 
-  <!-- 3 결과 리포트 -->
+  <!-- 3 위험 변화 -->
   <section class="scr" id="s3">
-    <h2 class="h1" id="t3">안전 판정과 행동 진단을 나눠서 봐요</h2>
-    <div class="vis"><div class="repw">
+    <h2 class="h1" id="t3"></h2>
+    <div class="vis">
+      <div class="mapbox" id="slot3" style="height:452px">
+        <div class="hud" id="hud3"></div>
+        <div class="lgd"><span><i class="s1"></i>전략 1</span><span><i class="s2"></i>전략 2</span><span><i></i>주변 배 (기록 항적)</span><span><i class="z"></i>안전영역</span></div>
+      </div>
+      <div class="cap" id="cap3"><span class="tm num"></span><span class="tx"></span><span class="chip off"></span></div>
+    </div>
+  </section>
+
+  <!-- 4 결과 리포트 -->
+  <section class="scr" id="s4">
+    <h2 class="h1" id="t4">안전 판정과 행동 진단을 나눠서 봐요</h2>
+    <div class="vis">
       <div class="states">결과 상태
         <span class="st"><i style="background:var(--pass)"></i>통과</span><span class="st"><i style="background:var(--warn)"></i>검토 필요</span><span class="st"><i style="background:var(--fail)"></i>실패</span><span class="st"><i style="background:#a7b1bc"></i>판정 불가</span>
         <span class="prov" style="margin-left:10px">잠정 판정 · 전문가 검토 전</span>
-        <span class="repnote" id="repmeta"></span>
       </div>
       <div class="rep" id="rep"></div>
-      <div class="repbtn"><button class="btn2" id="logBtn">판단 기록 보기</button><button class="btn2" id="jsonBtn">성적표 데이터(JSON)</button><span class="repnote">모든 수치는 이 화면에서 시뮬레이션으로 계산한 값이에요</span></div>
-    </div></div>
+      <div class="repbtn"><button class="btn2" id="logBtn">판단 기록 보기</button><button class="btn2" id="jsonBtn">성적표 데이터(JSON)</button></div>
+    </div>
   </section>
 
-  <!-- 4 오답 재시험 -->
-  <section class="scr" id="s4">
-    <h2 class="h1" id="t4"></h2>
+  <!-- 5 오답 재시험 -->
+  <section class="scr" id="s5">
+    <h2 class="h1" id="t5"></h2>
     <div class="vis">
-      <div class="rtl">
-        <div class="why" id="why4"></div>
-        <div class="card panel" id="ed4"></div>
-      </div>
-      <div class="rtr">
-        <div class="mapc" id="slot4">
-          <div class="ov hud" id="hud4"></div>
-          <div class="ov camb" data-cam></div>
-          <div class="ov scale">격자 1칸 = 1해리 · 선박 크기 6배 확대</div>
-          <div class="ov tbar" data-tbar></div>
-        </div>
-        <div class="rres" id="res4"></div>
+      <div class="rt">
+        <div class="card rtc" id="rtc"></div>
+        <div class="card rtm"><div class="mapbox" id="slot5"></div><div class="lg"><span><i></i>전략 1 (v1)</span><span><i class="n"></i>고친 전략 (v2)</span></div></div>
       </div>
     </div>
   </section>
@@ -1112,6 +1124,15 @@ var SeaMap2D = (function () {
       tr.forEach(function (p) { x0 = Math.min(x0, p.x); x1 = Math.max(x1, p.x); y0 = Math.min(y0, p.y); y1 = Math.max(y1, p.y); });
     });
     this.all = { x0: x0, y0: y0, x1: x1, y1: y1 };
+    // 충돌(두 선박 길이 평균 안으로 들어온 첫 순간) 미리 계산
+    var hits = [];
+    d.owns.forEach(function (O) {
+      d.targets.forEach(function (T) {
+        var cd = ((O.len || 150) + (T.len || 100)) / 2 / 1852, n = Math.min(O.track.length, T.track.length);
+        for (var i = 0; i < n; i++) { var p = O.track[i], q = T.track[i]; if (Math.hypot(p.x - q.x, p.y - q.y) < cd) { hits.push({ O: O, T: T, t: i * d.dt, x: (p.x + q.x) / 2, y: (p.y + q.y) / 2 }); break; } }
+      });
+    });
+    this.hits = hits; this.hitsActive = 0;
     this.box = d.box || this.all;
     if (!this.keepCam) this.cam(this.mode === "free" ? "fit" : this.mode, true); else this.draw();
   };
@@ -1120,7 +1141,7 @@ var SeaMap2D = (function () {
   Map2D.prototype.cam = function (mode, instant) {
     if (!this.data || !this.w) { this.mode = mode; return; }
     this.mode = mode;
-    var b = mode === "all" ? this.all : this.box, padT = 24, padB = 74, padX = 28;
+    var b = mode === "all" ? this.all : this.box, padT = 28, padB = 28, padX = 28;
     var k = Math.min((this.w - padX * 2) / Math.max(.5, b.x1 - b.x0), (this.h - padT - padB) / Math.max(.5, b.y1 - b.y0));
     var tgt = { cx: (b.x0 + b.x1) / 2, cy: (b.y0 + b.y1) / 2 - (padB - padT) / 2 / k, k: k };
     if (mode === "follow") { var p = this._own(); if (p) { tgt.cx = p.x; tgt.cy = p.y; tgt.k = Math.max(k, this.v.k); } }
@@ -1184,6 +1205,10 @@ var SeaMap2D = (function () {
     if (this.mode === "follow") { var po = this._own(); if (po) { this.v.cx = po.x; this.v.cy = po.y; } }
     var w = this.w, h = this.h, k = this.v.k, t = this.t, self = this;
     c.setTransform(this.pr, 0, 0, this.pr, 0, 0);
+    // 충돌 직후 짧게 흔들림
+    var now = performance.now(), shake = 0;
+    (this.hits || []).forEach(function (H) { if (H.at && now - H.at < 450) shake = Math.max(shake, 7 * (1 - (now - H.at) / 450)); });
+    if (shake) c.translate((Math.random() - .5) * 2 * shake, (Math.random() - .5) * 2 * shake);
     var g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, "#e9f2fb"); g.addColorStop(1, "#dbe9f7"); c.fillStyle = g; c.fillRect(0, 0, w, h);
     // 격자
     var step = k >= 20 ? 1 : k >= 8 ? 2 : 5, tl = this.toWorld(0, 0), br = this.toWorld(w, h);
@@ -1196,7 +1221,7 @@ var SeaMap2D = (function () {
     d.targets.forEach(function (T) { self._line(T.track, T.track.length, "#8d99a6", 2.2, [7, 7], .85); });
     // 자선 계획 항적(옅게) + 지나온 항적
     d.owns.forEach(function (O) {
-      if (O.planned !== false) self._line(O.track, O.track.length, O.color, 2.2, [7, 7], .45);
+      if (O.planned !== false) self._line(O.track, O.track.length, O.color, O.noShip ? 3.4 : 2.2, O.noShip ? [10, 7] : [7, 7], O.planAlpha || .45);
       self._line(O.track, n, O.color, O.ghost ? 3 : 4.5, O.ghost ? [8, 6] : null, O.ghost ? .8 : 1);
     });
     // 표식
@@ -1210,13 +1235,13 @@ var SeaMap2D = (function () {
     var tp = d.targets.map(function (T) { return { T: T, p: self._at(T.track, t), hot: false }; });
     var owns = d.owns.map(function (O) {
       var p = self._at(O.track, t), worst = null;
-      if (!O.ghost) tp.forEach(function (g) { var dd = Math.hypot(g.p.x - p.x, g.p.y - p.y); if (dd < d.safe && (!worst || dd < worst.d)) worst = { g: g, d: dd }; });
+      if (!O.ghost && !O.noShip) tp.forEach(function (g) { var dd = Math.hypot(g.p.x - p.x, g.p.y - p.y); if (dd < d.safe && (!worst || dd < worst.d)) worst = { g: g, d: dd }; });
       if (worst) worst.g.hot = true;
       return { O: O, p: p, worst: worst };
     });
     // 안전영역
     owns.forEach(function (o) {
-      if (o.O.ghost) return; var s = self.toScreen(o.p.x, o.p.y), bad = !!o.worst, col = bad ? "#dc2626" : o.O.color;
+      if (o.O.ghost || o.O.noShip) return; var s = self.toScreen(o.p.x, o.p.y), bad = !!o.worst, col = bad ? "#dc2626" : o.O.color;
       c.save(); c.beginPath(); c.arc(s[0], s[1], d.safe * k, 0, 7); c.fillStyle = rgba(col, bad ? .14 : .07); c.fill();
       c.setLineDash([6, 5]); c.lineWidth = 2; c.strokeStyle = rgba(col, bad ? 1 : .6); c.stroke(); c.restore();
     });
@@ -1227,20 +1252,49 @@ var SeaMap2D = (function () {
     });
     // 선박
     tp.forEach(function (g) { g.s = self._ship(g.p, g.T.len, g.T.beam, g.hot ? "#dc2626" : "#6b7684", 1, g.T.type); });
-    owns.forEach(function (o) { o.s = self._ship(o.p, o.O.len, o.O.beam, o.O.color, o.O.ghost ? .5 : 1, o.O.type); });
+    var startDone = false;
+    owns.forEach(function (o) {
+      if (o.O.noShip) {
+        if (!startDone) { var s0 = self.toScreen(o.p.x, o.p.y); c.save(); c.fillStyle = "#191f28"; c.beginPath(); c.arc(s0[0], s0[1], 8, 0, 7); c.fill(); c.lineWidth = 2.5; c.strokeStyle = "#fff"; c.stroke(); c.restore(); self._chip("자선 · " + (d.clock ? d.clock(t).slice(0, 5) : "") + " 판단", s0[0] - 14, s0[1], { bg: "#191f28", fg: "#fff" }, "left"); startDone = true; }
+        var e = o.O.track[o.O.track.length - 1]; o.s = self.toScreen(e.x, e.y); return;
+      }
+      o.s = self._ship(o.p, o.O.len, o.O.beam, o.O.color, o.O.ghost ? .5 : 1, o.O.type);
+    });
     // 라벨
     tp.forEach(function (g) { if (!g.hot) self._chip(g.T.name, g.s[0] + 16, g.s[1] - 16, { bg: "rgba(255,255,255,.95)", fg: "#4e5968" }); });
     owns.forEach(function (o) {
       var st = o.O.ghost ? { bg: "rgba(255,255,255,.96)", fg: o.O.color, border: o.O.color } : { bg: o.O.color, fg: "#fff" };
+      if (o.O.noShip) { self._chip(o.O.label, o.s[0], o.s[1] - 18, st, "center"); return; }
       self._chip(o.O.label, o.s[0] - 16, o.s[1] - 16, st, "left");
-      if (o.worst) {
+      if (o.worst && !(self.hits || []).some(function (H) { return H.O === o.O && t >= H.t; })) {
         var b = self.toScreen(o.worst.g.p.x, o.worst.g.p.y), m = [(o.s[0] + b[0]) / 2, Math.max(o.s[1], b[1]) + 30];
         self._chip(o.worst.g.T.name.replace(/^[A-Z] · /, "") + " " + o.worst.d.toFixed(2) + "해리", m[0], m[1], { bg: "#dc2626", fg: "#fff" }, "center");
       }
     });
     (d.markers || []).forEach(function (M) { if (M._s && (M.until == null || t < M.until)) self._chip(M.text, M._s[0] + 22, M._s[1] - 2, { bg: "#fff", fg: "#dc2626", border: "#dc2626" }); M._s = null; });
+    // 충돌 효과: 파동 3개 + 섬광 + 별 모양, 끝나면 표시만 남김
+    var act = 0, anim = false;
+    (this.hits || []).forEach(function (H) {
+      if (t < H.t - 1e-9) { H.at = null; return; }
+      act++; if (!H.at) H.at = now;
+      var e = (now - H.at) / 1000, s = self.toScreen(H.x, H.y);
+      if (e < 1.8) {
+        anim = true;
+        if (e < .35) { c.save(); c.globalAlpha = .35 * (1 - e / .35); c.fillStyle = "#dc2626"; c.beginPath(); c.arc(s[0], s[1], 60 + e * 120, 0, 7); c.fill(); c.restore(); }
+        for (var r = 0; r < 3; r++) { var q = e - r * .22; if (q < 0 || q > 1.1) continue;
+          c.save(); c.globalAlpha = Math.max(0, 1 - q / 1.1); c.strokeStyle = "#dc2626"; c.lineWidth = 4 - q * 2.5; c.beginPath(); c.arc(s[0], s[1], 12 + q * 95, 0, 7); c.stroke(); c.restore(); }
+      }
+      var pop = e < .3 ? 1 + (1 - e / .3) * .8 : 1;
+      c.save(); c.translate(s[0], s[1]); c.scale(pop, pop); c.beginPath();
+      for (var j = 0; j < 16; j++) { var ang = j * Math.PI / 8, rad = j % 2 ? 7 : 17; c.lineTo(Math.cos(ang) * rad, Math.sin(ang) * rad); }
+      c.closePath(); c.fillStyle = "#dc2626"; c.shadowColor = "rgba(220,38,38,.6)"; c.shadowBlur = 14; c.fill();
+      c.shadowBlur = 0; c.lineWidth = 2; c.strokeStyle = "#fff"; c.stroke(); c.restore();
+      if (e > .25) self._chip(H.O.hitLabel || ("충돌 · " + (d.clock ? d.clock(H.t) : "")), s[0] + 24, s[1] - 2, { bg: "#dc2626", fg: "#fff" });
+    });
+    this.hitsActive = act;
+    if (anim && !this._hitLoop) { var me = this; this._hitLoop = true; frame(function () { me._hitLoop = false; me.draw(); }); }
     // 방위 표시 (오른쪽 아래)
-    var nx = w - 30, ny = h - 96;
+    var nx = w - 30, ny = h - 32;
     c.save(); c.fillStyle = "rgba(255,255,255,.9)"; c.beginPath(); c.arc(nx, ny, 17, 0, 7); c.fill();
     c.fillStyle = "#4e5968"; c.beginPath(); c.moveTo(nx, ny - 12); c.lineTo(nx + 6, ny + 5); c.lineTo(nx, ny + 1); c.lineTo(nx - 6, ny + 5); c.closePath(); c.fill();
     c.font = "800 10px " + FONT; c.textAlign = "center"; c.fillText("N", nx, ny + 14); c.restore();
@@ -1252,8 +1306,8 @@ window.SeaMap2D = SeaMap2D;
 </script>
 <script>
 /* =====================================================================
-   씨나리오 데모 앱: 문제 선택 → 전략 설정·실행 → 결과 리포트 → 오답 재시험
-   모든 결과는 Engine으로 이 페이지에서 계산한다 (하드코딩된 판정 없음)
+   씨나리오 데모 (v9 5화면 흐름): 문제 카드 → 판단 비교(옵션 조절) → 위험 변화 → 결과 리포트 → 오답 재시험
+   판정·수치는 모두 Engine으로 이 페이지에서 계산한다
    ===================================================================== */
 (function () {
 "use strict";
@@ -1269,11 +1323,10 @@ var E = Engine, BANK = SCENARIOS;
 BANK.forEach(E.prepare);
 var COL = { s1: "#0b6bcb", s2: "#7c4dff", v1: "#e05252", v2: "#0b6bcb", act: "#ef6c3a" };
 var NM = { s1: "전략 1", s2: "전략 2" };
-var S = { pi: 0, params: null, tab: "s1", runs: null, showAct: false, done2: false, rt: null, hist: [] };
+var S = { pi: 0, params: null, runs: null, done3: false, rt: null, adv: {}, hist: [], last: null };
 function sc() { return BANK[S.pi]; }
-// 문제마다 개발팀이 먼저 시험해 볼 전략 기본값 (없으면 공통 기본값)
 function preset(k) { return Object.assign({}, E.PRESETS[k], (sc().presets || {})[k] || {}); }
-function resetParams() { S.params = { s1: preset("s1"), s2: preset("s2") }; }
+function resetParams() { S.params = { s1: preset("s1"), s2: preset("s2") }; S.adv = {}; }
 function subn(p) { return (p.scope === "one" ? "가장 급한 1척" : "모든 배") + " · " + { turn: "변침", speed: "감속", both: "변침+감속" }[p.method]; }
 var qp = QS.get("p"); if (qp) BANK.forEach(function (b, i) { if (b.id === qp) S.pi = i; });
 resetParams();
@@ -1283,7 +1336,6 @@ function p3(v) { return String(Math.round(E.n360(v)) % 360).padStart(3, "0"); }
 function clk(t, s) { s = s || sc(); var p = s.clock0.split(":").map(Number), x = Math.round(p[0] * 3600 + p[1] * 60 + (p[2] || 0) + t * 60); x = ((x % 86400) + 86400) % 86400; return [x / 3600 | 0, (x / 60 | 0) % 60, x % 60].map(function (v) { return String(v).padStart(2, "0"); }).join(":"); }
 function tn(id, s) { return E.name(s || sc(), id); }
 function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
-// 받침에 맞는 조사 (영문·숫자 끝도 처리)
 function jong(w) {
   var c = String(w).trim().slice(-1), code = c.charCodeAt(0);
   if (code >= 0xAC00 && code <= 0xD7A3) { var j = (code - 0xAC00) % 28; return j === 0 ? 0 : (j === 8 ? 2 : 1); }
@@ -1292,331 +1344,233 @@ function jong(w) {
 }
 function J(w, a, b) { return w + (jong(w) ? a : b); }
 var ST = { pass: "통과", review: "검토 필요", fail: "실패", na: "판정 불가" };
-function pill(st) { return '<span class="pill ' + st + '">' + ST[st] + "</span>"; }
-var ICON = {
-  play: '<svg width="16" height="16" viewBox="0 0 24 24"><path d="M7 4.5v15l12.5-7.5z" fill="#fff"/></svg>',
-  pause: '<svg width="16" height="16" viewBox="0 0 24 24"><path d="M7 4h3.5v16H7zM13.5 4H17v16h-3.5z" fill="#fff"/></svg>',
-  replay: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5"/></svg>'
-};
+function pill(st) { return '<span class="pill ' + (st === "review" ? "warn" : st) + '">' + ST[st] + "</span>"; }
+function vname(v) { return v.kind === "collision" ? "충돌" : v.secondary ? "2차 충돌위험" : "안전영역 침범"; }
 
-/* ---------------- 재생기 ---------------- */
-var PL = { t: 0, dur: 1, playing: false, rate: 2, frame: null, end: null, raf: 0, last: 0, tb: null };
-// 화면 갱신(rAF)과 타이머를 함께 걸어, 창이 가려져 rAF가 멈춰도 재생이 이어지게 함
+/* ---------------- 재생기 (화면 갱신 + 타이머: 창이 가려져도 진행) ---------------- */
+var PL = { t: 0, dur: 1, playing: false, rate: 2, frame: null, end: null, raf: 0, to: 0, last: 0 };
 PL.sched = function () { cancelAnimationFrame(PL.raf); clearTimeout(PL.to); PL.raf = requestAnimationFrame(PL.tick); PL.to = setTimeout(PL.tick, 40); };
 PL.tick = function () {
   if (!PL.playing) return; var now = performance.now(), dt = Math.max(0, Math.min(.1, (now - PL.last) / 1000)); PL.last = now;
   PL.t = Math.min(PL.dur, PL.t + dt * PL.rate); PL.render();
-  if (PL.t >= PL.dur) { PL.playing = false; cancelAnimationFrame(PL.raf); clearTimeout(PL.to); PL.ui(); if (PL.end) PL.end(); return; }
+  if (PL.t >= PL.dur) { PL.playing = false; cancelAnimationFrame(PL.raf); clearTimeout(PL.to); if (PL.end) PL.end(); updCta(); return; }
   PL.sched();
 };
-PL.play = function () { if (PL.playing) return; if (PL.t >= PL.dur - 1e-6) PL.t = 0; PL.playing = true; PL.last = performance.now(); PL.sched(); PL.ui(); };
-PL.pause = function () { PL.playing = false; cancelAnimationFrame(PL.raf); clearTimeout(PL.to); PL.ui(); };
-PL.seek = function (t) { PL.t = Math.max(0, Math.min(PL.dur, t)); PL.render(); PL.ui(); };
-PL.render = function () { if (view) view.setTime(PL.t); if (PL.frame) PL.frame(PL.t); if (PL.tb) { PL.tb.range.value = Math.round(PL.t / PL.dur * 1000); PL.tb.clk.innerHTML = "<b>" + clk(PL.t) + "</b> · +" + f1(PL.t) + "분"; } };
-PL.ui = function () { if (PL.tb) PL.tb.pp.innerHTML = PL.playing ? ICON.pause : PL.t >= PL.dur - 1e-6 ? ICON.replay : ICON.play; if (PL.onUi) PL.onUi(); };
-PL.bind = function (slot, opt) {
-  PL.pause(); var tb = $("[data-tbar]", slot);
-  if (!tb._b) {
-    tb.innerHTML = '<button class="pp" aria-label="재생/정지"></button><input type="range" min="0" max="1000" value="0" aria-label="시간"><span class="clk num"></span>';
-    tb._b = { pp: $(".pp", tb), range: $("input", tb), clk: $(".clk", tb) };
-    tb._b.pp.onclick = function () { this.blur(); if (PL.playing) PL.pause(); else if (PL.onPlay) PL.onPlay(); else PL.play(); };
-    tb._b.range.oninput = function () { PL.pause(); PL.seek(this.value / 1000 * PL.dur); if (PL.onScrub) PL.onScrub(); };
-  }
-  PL.tb = tb._b; PL.dur = sc().tEnd; PL.frame = opt.frame || null; PL.end = opt.end || null; PL.onPlay = opt.onPlay || null; PL.onScrub = opt.onScrub || null; PL.onUi = opt.onUi || null;
-};
+PL.play = function () { if (PL.playing) return; if (PL.t >= PL.dur - 1e-6) PL.t = 0; PL.playing = true; PL.last = performance.now(); PL.sched(); updCta(); };
+PL.pause = function () { PL.playing = false; cancelAnimationFrame(PL.raf); clearTimeout(PL.to); };
+PL.seek = function (t) { PL.t = Math.max(0, Math.min(PL.dur, t)); PL.render(); };
+PL.render = function () { if (view) view.setTime(PL.t); if (PL.frame) PL.frame(PL.t); };
+PL.bind = function (opt) { PL.pause(); PL.dur = sc().tEnd; PL.rate = opt.rate || 2; PL.frame = opt.frame || null; PL.end = opt.end || null; };
 
-/* ---------------- 카메라 버튼 ---------------- */
-function camButtons(slot, chaseKey) {
-  var box = $("[data-cam]", slot); if (!view) return;
-  var modes = view.camModes || [["oblique", "비스듬히"], ["top", "위에서"], ["chase", "자선 따라가기"]];
-  box.innerHTML = modes.map(function (m) { return '<button data-m="' + m[0] + '">' + m[1] + "</button>"; }).join("");
-  $$("button", box).forEach(function (b) {
-    b.onclick = function () { b.blur(); view.chaseKey = chaseKey; view.cam(b.dataset.m); mark(); };
-  });
-  function mark() { $$("button", box).forEach(function (x) { x.classList.toggle("on", x.dataset.m === view.mode); }); }
-  view.onUser = mark; mark();
-}
-
-/* ---------------- 뷰 데이터 ---------------- */
+/* ---------------- 지도 ---------------- */
 function tgData(s) { return s.targets.map(function (T) { return { id: T.id, name: T.id + " · " + T.name, type: T.type, len: T.len, beam: T.beam, track: T.track }; }); }
 function ownData(key, label, color, run, extra) { var o = sc().own; return Object.assign({ key: key, label: label, color: color, type: o.type, len: o.len, beam: o.beam, track: run.own }, extra || {}); }
-function actualMarker() { var a = sc().actualRun.own, p = a[a.length - 1]; return { x: p.x, y: p.y, text: "실제 충돌 " + sc().collide }; }
-// 화면 맞춤: 후반부 자선 항적 + 그때 자선 3해리 안에 있던 타선
+// 화면 맞춤: 자선과 다른 배가 2해리 안으로 가까워지는 구간 (wide면 후반 60% 전체)
 function focusBox(d, wide) {
-  if (wide) {
-    var bb = [1e9, 1e9, -1e9, -1e9], tr = d.owns[0].track, m = tr.length;
-    var ad = function (p) { bb[0] = Math.min(bb[0], p.x); bb[1] = Math.min(bb[1], p.y); bb[2] = Math.max(bb[2], p.x); bb[3] = Math.max(bb[3], p.y); };
-    var w0 = view && view.kind === "2d" ? .4 : .25, rr = view && view.kind === "2d" ? 2 : 3;
-    for (var w = Math.round(m * w0); w < m; w += 4) { ad(tr[w]); d.targets.forEach(function (t) { var q = t.track[w]; if (Math.hypot(q.x - tr[w].x, q.y - tr[w].y) < rr) ad(q); }); }
-    return { x0: bb[0] - .4, y0: bb[1] - .4, x1: bb[2] + .4, y1: bb[3] + .4 };
-  }
   var owns = d.owns.filter(function (o) { return !o.ghost; }); if (!owns.length) owns = d.owns;
-  // 자선과 다른 배가 2해리 안으로 가까워지는 구간만 사용 (없으면 후반부 전체)
   var n = owns[0].track.length, b = [1e9, 1e9, -1e9, -1e9], hit = false;
   function add(p) { b[0] = Math.min(b[0], p.x); b[1] = Math.min(b[1], p.y); b[2] = Math.max(b[2], p.x); b[3] = Math.max(b[3], p.y); }
-  for (var i = Math.round(n * .3); i < n; i += 3) owns.forEach(function (o) { var p = o.track[i]; d.targets.forEach(function (t) { var q = t.track[i]; if (Math.hypot(q.x - p.x, q.y - p.y) < 2) { add(p); add(q); hit = true; } }); });
-  if (!hit) for (var k = Math.round(n * .4); k < n; k += 4) owns.forEach(function (o) { add(o.track[k]); });
+  for (var i = Math.round(n * (wide ? .4 : .3)); i < n; i += 3) owns.forEach(function (o) {
+    var p = o.track[i]; if (wide) add(p);
+    d.targets.forEach(function (t) { var q = t.track[i]; if (Math.hypot(q.x - p.x, q.y - p.y) < 2) { add(p); add(q); hit = true; } });
+  });
+  if (!hit && !wide) for (var k = Math.round(n * .4); k < n; k += 4) owns.forEach(function (o) { add(o.track[k]); });
   return { x0: b[0] - .4, y0: b[1] - .4, x1: b[2] + .4, y1: b[3] + .4 };
 }
-function setView(d, keep) { view.keepCam = !!keep; d.dt = sc().dt; d.safe = sc().safe; d.box = focusBox(d, d.wide); view.setData(d); view.keepCam = false; }
+function setView(d, keep) { view.keepCam = !!keep; d.clock = function (t) { return clk(t); }; d.dt = sc().dt; d.safe = sc().safe; d.box = focusBox(d, d.wide); view.setData(d); view.keepCam = false; }
+function mount(slot) { view.mount(slot); view.mode = "fit"; }
 
-/* ================= 1 문제 선택 ================= */
-function renderList() {
-  $("#plist").innerHTML = BANK.map(function (b, i) {
-    return '<button class="pc' + (i === S.pi ? " on" : "") + '" data-i="' + i + '"><div class="pc-top"><span class="chip">문제 ' + b.no + '</span><span class="chip gray">실제 사고 재구성</span><span class="n">' + (b.targets.length + 1) + "척</span></div>" +
-      '<div class="pc-t">' + esc(b.title) + '</div><div class="pc-k">' + esc(b.accident) + "</div>" +
-      '<div class="pc-m">' + esc(b.date) + " " + esc(b.collide.slice(0, 5)) + " · " + esc(b.place) + "<br>" + esc(b.cond) + "</div>" +
-      '<div class="pc-r"><span class="chip fail">실제 결과: ' + esc(b.outcome) + '</span><span class="chip gray">' + esc(b.why) + "</span></div>" +
-      '<div class="pc-src">출처 ' + b.sources.map(function (s) { return '<a href="' + s.url + '" target="_blank" rel="noopener">' + esc(s.label) + "</a>"; }).join(" · ") + "</div></button>";
-  }).join("");
-  $$("#plist .pc").forEach(function (el) { el.onclick = function (e) { if (e.target.tagName === "A") return; el.blur(); selectProblem(+el.dataset.i); }; });
-  $("#coverN").textContent = "실제 사고 문제 " + BANK.length + "개";
-}
-function selectProblem(i) {
-  if (i !== S.pi) { S.pi = i; S.runs = null; S.done2 = false; S.rt = null; resetParams(); }
-  renderList(); renderShips(); if (IDS[cur] === "1") enter1();
-}
-function renderShips() {
-  var s = sc(), o = s.own;
-  var rows = '<div class="shr hd"><span>선박</span><span>선종 · 길이</span><span>속력</span><span>침로</span><span>자선 기준 COLREG 관계 · ' + clk(0).slice(0, 5) + " 기준 자동 계산</span></div>";
-  rows += '<div class="shr"><span class="nm"><span class="sb own">A</span>자선 <small>AI 시험 대상</small></span><span>' + o.kind + " " + o.len + 'm</span><span class="num">' + f1(o.speed) + '노트</span><span class="num">' + p3(o.course) + '°</span><span class="rel"><span class="chip">AI가 판단할 자리</span></span></div>';
-  s.targets.forEach(function (T) {
-    var q = T.track[0];
-    rows += '<div class="shr"><span class="nm"><span class="sb">' + T.id + "</span>" + esc(T.name) + "</span><span>" + T.kind + " " + T.len + 'm</span><span class="num">' + f1(q.s) + '노트</span><span class="num">' + p3(q.h) + '°</span><span class="rel"><span class="chip ' + (T.enc.role === "give" ? "warn" : "gray") + '">' + T.enc.label + " · " + T.enc.roleLabel + " " + T.enc.rule + '</span><span class="cp num">DCPA ' + f2(T.cpa0.dcpa) + " · TCPA " + f1(T.cpa0.tcpa) + "분</span></span></div>";
-  });
-  $("#ships1").innerHTML = rows;
-  $("#story1").innerHTML = s.story;
-}
+/* ================= 1 문제 카드 ================= */
 function enter1() {
-  var s = sc(); view.mount($("#slot1")); camButtons($("#slot1"), "act");
-  setView({ targets: tgData(s), owns: [ownData("act", s.actualLabel, COL.act, s.actualRun, { planned: false })], markers: [actualMarker()], wide: true });
-  PL.bind($("#slot1"), {});
-  if (SHOT) PL.seek(QS.get("t") != null ? +QS.get("t") : s.tEnd); else { PL.seek(0); setTimeout(function () { if (IDS[cur] === "1") PL.play(); }, 700); }
+  var s = sc(), o = s.own;
+  $("#t1").innerHTML = "이번 문제: <em>" + (s.targets.length + 1) + "척</em>이 얽힌 실제 사고 장면";
+  $("#sub1").textContent = s.date + " " + s.accident + " · " + s.place;
+  $("#psw").innerHTML = BANK.map(function (b, i) { return '<button data-i="' + i + '" class="' + (i === S.pi ? "on" : "") + '">문제 ' + b.no + " · " + esc(b.title) + "</button>"; }).join("");
+  $$("#psw button").forEach(function (b) { b.onclick = function () { b.blur(); var i = +b.dataset.i; if (i !== S.pi) { S.pi = i; S.runs = null; S.done3 = false; S.rt = null; resetParams(); enter1(); } }; });
+  var rows = '<div class="tr hd"><span>선박</span><span>선종</span><span>크기</span><span class="r">속력</span><span class="r">침로</span></div>';
+  rows += '<div class="tr me"><span class="nm"><span class="sb own">A</span>자선<small style="font-size:16px;color:var(--gray);font-weight:600">시험 대상</small></span><span>' + o.kind + '</span><span class="num">' + o.len + 'm</span><span class="r num">' + f1(o.speed) + '노트</span><span class="r num">' + p3(o.course) + "°</span></div>";
+  s.targets.forEach(function (T) { var q = T.track[0];
+    rows += '<div class="tr"><span class="nm"><span class="sb">' + T.id + "</span>" + esc(T.name) + "</span><span>" + T.kind + '</span><span class="num">' + T.len + 'm</span><span class="r num">' + f1(q.s) + '노트</span><span class="r num">' + p3(q.h) + "°</span></div>"; });
+  $("#tbl1").innerHTML = rows;
+  var give = s.targets.filter(function (T) { return T.enc.role === "give"; }).map(function (T) { return T.id; }), stand = s.targets.filter(function (T) { return T.enc.role !== "give"; }).map(function (T) { return T.id; });
+  $("#conds1").innerHTML = '<span class="cond"><b>출처</b>' + s.sources.map(function (x) { return esc(x.label); }).join(" · ") + " AIS</span>" +
+    '<span class="cond"><b>관계</b>' + (give.length ? give.join("·") + "에 피항선" : "") + (stand.length ? " · " + stand.join("·") + "에 유지선" : "") + "</span>" +
+    '<span class="cond"><b>안전영역</b>' + s.safe + "해리</span>" + '<span class="cond rp">타선 고정 Replay</span>' + '<span class="cond fl">실제 결과 · ' + esc(s.outcome) + "</span>";
+  // 그림: 실제 사고 항적을 반복 재생 (충돌 애니메이션 포함)
+  mount($("#slot1"));
+  setView({ targets: tgData(s), owns: [ownData("act", "실제 항적", COL.act, s.actualRun, { planned: false, hitLabel: "실제 충돌 " + s.collide.slice(0, 5) })], markers: [], wide: true });
+  PL.bind({ rate: 2.5, end: function () { setTimeout(function () { if (IDS[cur] === "1" && !PL.playing) { PL.seek(0); PL.play(); } }, 1800); } });
+  if (SHOT) PL.seek(QS.get("t") != null ? +QS.get("t") : s.tEnd); else { PL.seek(0); setTimeout(function () { if (IDS[cur] === "1") PL.play(); }, 600); }
 }
 
-/* ================= 전략 편집기 ================= */
-var CTRL = [
-  { k: "scope", label: "판단 대상", type: "seg", opts: [["one", "가장 급한 1척"], ["all", "위험한 모든 배"]] },
-  { k: "method", label: "회피 수단", type: "seg", opts: [["turn", "변침"], ["speed", "감속"], ["both", "변침+감속"]] },
-  { k: "side", label: "변침 방향", sub: "COLREG 14·15조", type: "seg", opts: [["stbd", "우현만"], ["any", "좌·우현"]] },
-  { k: "trigger", label: "회피 시작", sub: "충돌까지 남은 시간(TCPA)", type: "rng", min: 4, max: 20, step: 1, fmt: function (v) { return v + "분 전"; } },
-  { k: "dcpa", label: "목표 통과 거리", sub: "각 배와의 최소 거리(DCPA)", type: "rng", min: .3, max: 1.5, step: .1, fmt: function (v) { return f1(v) + "해리"; } },
-  { k: "reeval", label: "위험 재평가", sub: "회피를 시작한 뒤 다시 계산", type: "seg", opts: [[0, "안 함"], [3, "3분마다"], [1, "1분마다"]] },
-  { k: "resume", label: "위험이 지나면 원침로 복귀", type: "tog" }
-];
-function buildEditor(box, o) {
-  // o: {tabs:bool, get:()=>params, set:(k,v)=>void, base:()=>params|null, cls:()=>"s1c"}
-  var html = "";
-  if (o.tabs) html += '<div class="tabs">' + ["s1", "s2"].map(function (k) { return '<button class="tab ' + k + 'c" data-k="' + k + '"><span class="stb">' + k.slice(1) + "</span>" + NM[k] + " <small></small></button>"; }).join("") + "</div>";
-  html += '<div class="ed">' + CTRL.map(function (c) {
-    var ctl = "";
-    if (c.type === "seg") ctl = '<div class="seg">' + c.opts.map(function (x) { return '<button data-v="' + x[0] + '">' + x[1] + "</button>"; }).join("") + "</div>";
-    else if (c.type === "rng") ctl = '<div class="rng"><input type="range" min="' + c.min + '" max="' + c.max + '" step="' + c.step + '"><span class="val num"></span></div>';
-    else ctl = '<button class="tog" aria-label="' + c.label + '"></button>';
-    return '<div class="row" data-k="' + c.k + '"><span class="k">' + c.label + (c.sub ? "<small>" + c.sub + "</small>" : "") + "</span>" + ctl + "</div>";
-  }).join("") + "</div>" + '<div class="live"></div>' + (o.tabs ? '<div class="pnote">데모용 회피 알고리즘이에요. 실제 서비스에서는 개발사 AI가 같은 자리에서 판단을 보내요</div>' : "");
-  box.innerHTML = html;
-  if (o.tabs) $$(".tab", box).forEach(function (b) { b.onclick = function () { b.blur(); o.onTab(b.dataset.k); }; });
-  CTRL.forEach(function (c) {
-    var row = $('.row[data-k="' + c.k + '"]', box);
-    if (c.type === "seg") $$("button", row).forEach(function (b) { b.onclick = function () { b.blur(); var v = b.dataset.v; o.set(c.k, isNaN(+v) ? v : +v); }; });
-    else if (c.type === "rng") { var r = $("input", row); r.oninput = function () { $(".val", row).textContent = c.fmt(+r.value); o.set(c.k, +(+r.value).toFixed(2)); }; }
-    else $(".tog", row).onclick = function () { this.blur(); o.set(c.k, !o.get()[c.k]); };
-  });
-  box._sync = function () {
-    var p = o.get(), base = o.base ? o.base() : null; box.className = box.className.replace(/\b[sv][12]c\b/g, "").trim() + " " + o.cls();
-    if (o.tabs) $$(".tab", box).forEach(function (b) { b.classList.toggle("on", b.dataset.k === S.tab); $("small", b).textContent = subn(S.params[b.dataset.k]); });
-    CTRL.forEach(function (c) {
-      var row = $('.row[data-k="' + c.k + '"]', box), v = p[c.k];
-      if (c.type === "seg") $$("button", row).forEach(function (b) { b.classList.toggle("on", String(b.dataset.v) === String(v)); });
-      else if (c.type === "rng") { var r = $("input", row); if (document.activeElement !== r) r.value = v; $(".val", row).textContent = c.fmt(v); }
-      else $(".tog", row).classList.toggle("on", !!v);
-      row.classList.toggle("chg", !!base && String(base[c.k]) !== String(v));
-    });
-  };
-  box._sync();
-}
+/* ================= 2 판단 비교 (옵션 조절) ================= */
+function ensureRuns() { if (!S.runs) S.runs = { s1: E.run(sc(), S.params.s1), s2: E.run(sc(), S.params.s2) }; }
 function actTxt(l) {
   var o = sc().own, off = Math.round(E.n180(l.course - o.course)), parts = [];
-  if (Math.abs(off) >= 1) parts.push((off > 0 ? "우현 " : "좌현 ") + Math.abs(off) + "° 변침(" + p3(l.course) + "°)");
+  if (Math.abs(off) >= 1) parts.push((off > 0 ? "우현 " : "좌현 ") + Math.abs(off) + "° 변침");
   if (l.speed < o.speed - .05) parts.push(f1(l.speed) + "노트로 감속");
   if (!parts.length) parts.push("침로·속력 유지");
   return parts.join(" + ");
 }
-function liveHtml(run, label) {
-  var s = sc(), first = run.log.filter(function (l) { return l.changed; })[0];
-  if (!first) return '<div class="lh">AI 판단</div><div class="dec">회피가 필요하다고 판단한 순간이 없어요 (침로·속력 유지)</div>';
-  var mins = first.seen.filter(function (x) { return first.consider.indexOf(x.id) >= 0 && x.tcpa > 0; }).map(function (x) { return x.tcpa; });
-  var chips = s.targets.map(function (T) { var on = first.consider.indexOf(T.id) >= 0; return '<span class="sb" style="background:' + (on ? "var(--fail)" : "#d1d6db") + '">' + T.id + "</span>"; }).join("");
-  return '<div class="lh">AI가 처음 고른 행동' + (calcMs != null ? '<i class="calc">다시 계산 ' + Math.max(1, Math.round(calcMs)) + "ms</i>" : "") + '<span class="num">' + clk(first.t) + (mins.length ? " · TCPA " + f1(Math.min.apply(null, mins)) + "분" : "") + "</span></div>" +
-    '<div class="lr" style="align-items:center;gap:6px"><span style="font-size:13px;font-weight:700;color:var(--gray);margin-right:4px">보는 배</span>' + chips +
-    '<span style="font-size:13px;font-weight:600;color:var(--gray);margin-left:6px">' + (first.consider.length === 1 ? esc(tn(first.consider[0])) + "만" : first.consider.length + "척 함께") + "</span></div>" +
-    '<div class="dec">선택: <b>' + actTxt(first) + "</b>" + (first.feasible ? "" : ' <span class="chip warn" style="height:24px;font-size:12px">모두 만족하는 해 없음</span>') + "</div>";
+var OPT = {
+  scope: { label: "판단 대상", opts: [["one", "가장 급한 1척"], ["all", "위험한 모든 배"]] },
+  method: { label: "회피 수단", opts: [["turn", "변침"], ["speed", "감속"], ["both", "변침+감속"]] },
+  trigger: { label: "회피 시작", min: 4, max: 20, step: 1, fmt: function (v) { return v + "분 전"; } },
+  dcpa: { label: "목표 통과 거리", min: .3, max: 1.5, step: .1, fmt: function (v) { return f1(v) + "해리"; } }
+};
+var calcMs = null;
+function card(k) {
+  var box = $("#sc" + k.slice(1)), p = S.params[k], run = S.runs[k], adv = !!S.adv[k];
+  var keys = adv ? ["trigger", "dcpa"] : ["scope", "method"];
+  var h = '<div class="hd"><span class="stb">' + k.slice(1) + "</span>" + NM[k] + "<small>" + subn(p) + "</small></div>";
+  keys.forEach(function (key) {
+    var c = OPT[key], ctl;
+    if (c.opts) ctl = '<div class="seg">' + c.opts.map(function (x) { return '<button data-k="' + key + '" data-v="' + x[0] + '" class="' + (String(p[key]) === String(x[0]) ? "on" : "") + '">' + x[1] + "</button>"; }).join("") + "</div>";
+    else ctl = '<div class="rng"><input type="range" data-k="' + key + '" min="' + c.min + '" max="' + c.max + '" step="' + c.step + '" value="' + p[key] + '"><span class="val num">' + c.fmt(p[key]) + "</span></div>";
+    h += '<div class="opt"><span class="k">' + c.label + "</span>" + ctl + "</div>";
+  });
+  h += '<div class="act"></div>';
+  box.innerHTML = h;
+  actBox(k);
+  $$(".seg button", box).forEach(function (b) { b.onclick = function () { b.blur(); setParam(k, b.dataset.k, b.dataset.v); }; });
+  $$("input[type=range]", box).forEach(function (r) { r.oninput = function () { r.nextElementSibling.textContent = OPT[r.dataset.k].fmt(+r.value); setParam(k, r.dataset.k, +(+r.value).toFixed(2), true); }; });
+}
+function actBox(k) {
+  var box = $("#sc" + k.slice(1)), run = S.runs[k], adv = !!S.adv[k];
+  var first = run.log.filter(function (l) { return l.changed; })[0];
+  var who = !first ? "피할 필요가 없다고 판단" : (first.consider.length === 1 ? esc(tn(first.consider[0])) + "만 보고" : first.consider.length + "척을 함께 보고") + " · " + clk(first.t).slice(0, 5);
+  $(".act", box).innerHTML = '<div class="k">AI가 고른 행동' + (calcMs != null && S.last === k ? '<i class="calc">' + Math.max(1, Math.round(calcMs)) + "ms 재계산</i>" : "") + '<button class="more">' + (adv ? "기본 옵션 ▴" : "세부 옵션 ▾") + "</button></div>" +
+    '<div class="v">' + (first ? actTxt(first) : "침로·속력 유지") + '</div><div class="w">' + who + "</div>";
+  $(".hd small", box).textContent = subn(S.params[k]);
+  $(".more", box).onclick = function () { this.blur(); S.adv[k] = !S.adv[k]; card(k); };
+}
+var pend = 0;
+function setParam(k, key, v, slider) {
+  S.params[k][key] = isNaN(+v) ? v : +v;
+  clearTimeout(pend);
+  pend = setTimeout(function () {
+    var t0 = performance.now(); S.runs[k] = E.run(sc(), S.params[k]); calcMs = performance.now() - t0; S.last = k; S.done3 = false;
+    if (slider) actBox(k); else card(k);
+    setView(view2Data(), true); PL.seek(decT());
+  }, 30);
+}
+function view2Data() {
+  return { targets: tgData(sc()), owns: [ownData("s1", NM.s1, COL.s1, S.runs.s1, { noShip: true, planAlpha: .9 }), ownData("s2", NM.s2, COL.s2, S.runs.s2, { noShip: true, planAlpha: .9 })], markers: [] };
+}
+// 판단 비교 지도: AI가 처음 판단한 순간의 배치 + 두 전략의 예상 항적
+function decT() { var ts = ["s1", "s2"].map(function (k) { var f = S.runs[k].log.filter(function (l) { return l.changed; })[0]; return f ? f.t : 0; }); return Math.min.apply(null, ts); }
+function enter2() {
+  ensureRuns(); card("s1"); card("s2");
+  mount($("#slot2")); setView(view2Data()); PL.bind({}); PL.seek(decT());
 }
 
-/* ================= 2 전략 설정·실행 ================= */
-function ensureRuns() { if (!S.runs) S.runs = { s1: E.run(sc(), S.params.s1), s2: E.run(sc(), S.params.s2) }; }
-function view2Data() {
-  var s = sc(), owns = [ownData("s1", NM.s1, COL.s1, S.runs.s1), ownData("s2", NM.s2, COL.s2, S.runs.s2)], mk = [];
-  if (S.showAct) { owns.unshift(ownData("act", "실제 항적", COL.act, s.actualRun, { ghost: true, planned: false })); mk.push(actualMarker()); }
-  return { targets: tgData(s), owns: owns, markers: mk };
-}
-var ed2Opts = {
-  tabs: true, get: function () { return S.params[S.tab]; }, cls: function () { return S.tab + "c"; },
-  base: function () { return preset(S.tab); },
-  onTab: function (k) { S.tab = k; $("#ed2")._sync(); live2(); },
-  set: function (k, v) { S.params[S.tab][k] = v; $("#ed2")._sync(); schedule2(); }
-};
-var pend2 = 0;
-var calcMs = null;
-function schedule2() { if (pend2) return; pend2 = setTimeout(function () { pend2 = 0; var t0 = performance.now(); S.runs[S.tab] = E.run(sc(), S.params[S.tab]); calcMs = performance.now() - t0; S.done2 = false; setView(view2Data(), true); PL.pause(); PL.seek(0); live2(); hud2Build(); title2(); updCta(); }, 30); }
-function live2() { var b = $("#ed2 .live"); b.innerHTML = liveHtml(S.runs[S.tab], NM[S.tab]); b.className = "live " + S.tab + "c"; }
-function hudBuild(el, cols) {
+/* ================= 3 위험 변화 ================= */
+function hudBuild() {
   var s = sc();
-  el.innerHTML = '<div class="hh">최소 거리 (해리, 지금까지)' + cols.map(function (c) { return '<span class="stb ' + c.cls + '">' + c.short + "</span>"; }).join("") + "</div>" +
-    s.targets.map(function (T) { return '<div class="hr" data-id="' + T.id + '"><span class="sb">' + T.id + '</span><span class="nm">' + esc(T.name) + '</span><span class="vv">' + cols.map(function () { return "<b></b>"; }).join("") + "</span></div>"; }).join("") +
+  $("#hud3").innerHTML = '<div class="hh">최소 거리 (해리)<span><span class="stb s1c">전략1</span><span class="stb s2c">전략2</span></span></div>' +
+    s.targets.map(function (T) { return '<div class="hr" data-id="' + T.id + '"><span class="sb">' + T.id + '</span><span class="nm">' + esc(T.name) + '</span><span class="vv"><b></b><b></b></span></div>'; }).join("") +
     '<div class="ft">빨간 칸 = 안전영역(' + s.safe + "해리) 침범</div>";
-  el._cols = cols;
 }
-function hudUpdate(el, t) {
+function hudUpdate(t) {
   var s = sc(), n = Math.min(s.targets[0].track.length - 1, Math.floor(t / s.dt));
   s.targets.forEach(function (T) {
-    var cells = $$('.hr[data-id="' + T.id + '"] b', el);
-    el._cols.forEach(function (c, j) { var d = c.run.ev.dist[T.id].d, m = 99; for (var i = 0; i <= n; i++) if (d[i] < m) m = d[i]; cells[j].textContent = f2(m); cells[j].classList.toggle("bad", m < s.safe); });
+    var cells = $$('#hud3 .hr[data-id="' + T.id + '"] b');
+    ["s1", "s2"].forEach(function (k, j) { var d = S.runs[k].ev.dist[T.id].d, m = 99; for (var i = 0; i <= n; i++) if (d[i] < m) m = d[i]; cells[j].textContent = f2(m); cells[j].classList.toggle("bad", m < s.safe); });
   });
 }
-function hud2Build() { hudBuild($("#hud2"), [{ cls: "s1c", short: "전략1", run: S.runs.s1 }, { cls: "s2c", short: "전략2", run: S.runs.s2 }]); hudUpdate($("#hud2"), PL.t); }
-function events(list) {
+function events() {
   var s = sc(), ev = [];
-  list.forEach(function (it) {
-    var r = it.run, fc = r.log.filter(function (l) { return l.changed; })[0];
-    if (fc) ev.push({ t: fc.t, txt: it.label + ": " + (fc.consider.length === 1 ? tn(fc.consider[0]) + "만 보고 " : fc.consider.length + "척을 함께 보고 ") + actTxt(fc) });
-    var rs = r.log.filter(function (l) { return l.why === "resume"; })[0];
-    if (rs) ev.push({ t: rs.t, txt: it.label + ": 위험이 지나 원침로(" + p3(s.own.course) + "°)로 복귀" });
-    r.ev.safety.forEach(function (v) {
-      ev.push({ t: v.tIn >= 0 ? v.tIn : v.tMin, txt: it.label + ": 안전영역에 " + tn(v.id) + " 진입", chip: v.kind === "collision" ? "충돌" : v.secondary ? "2차 충돌위험" : "피하려던 배와 근접", cls: "fail" });
-    });
+  ["s1", "s2"].forEach(function (k) {
+    var r = S.runs[k], fc = r.log.filter(function (l) { return l.changed; })[0];
+    if (fc) ev.push({ t: fc.t, txt: NM[k] + ": " + (fc.consider.length === 1 ? tn(fc.consider[0]) + "만 보고 " : fc.consider.length + "척을 함께 보고 ") + actTxt(fc) });
+    r.ev.safety.forEach(function (v) { ev.push({ t: v.tIn >= 0 ? v.tIn : v.tMin, txt: NM[k] + ": 안전영역에 " + tn(v.id) + " 진입", chip: vname(v), cls: "fail" }); });
   });
   s.targets.filter(function (T) { return T.primary; }).forEach(function (T) {
-    if (list.every(function (it) { return it.run.ev.dist[T.id].min >= s.safe; })) {
-      var t = Math.max.apply(null, list.map(function (it) { return it.run.ev.dist[T.id].tMin; })) + .2;
-      ev.push({ t: t, txt: (list.length > 1 ? "모두 " : "") + J(T.name, "과는", "와는") + " 안전하게 지나갔어요", chip: list.map(function (it) { return f2(it.run.ev.dist[T.id].min); }).join(" · ") + "해리", cls: "pass" });
+    if (["s1", "s2"].every(function (k) { return S.runs[k].ev.dist[T.id].min >= s.safe; })) {
+      ev.push({ t: Math.max(S.runs.s1.ev.dist[T.id].tMin, S.runs.s2.ev.dist[T.id].tMin) + .2, txt: "두 전략 모두 " + J(T.name, "과는", "와는") + " 안전하게 지나갔어요", chip: f2(S.runs.s1.ev.dist[T.id].min) + " · " + f2(S.runs.s2.ev.dist[T.id].min) + "해리", cls: "pass" });
     }
   });
   ev.sort(function (a, b) { return a.t - b.t; }); return ev;
 }
-function capUpdate(el, evs, t, idle) {
-  var c = idle ? { txt: el._idle, t: -1 } : { txt: el._idle, t: -1 };
-  if (!idle) evs.forEach(function (e) { if (t >= e.t) c = e; });
-  if (!idle && t >= PL.dur - 1e-6) { var fails = evs.filter(function (e) { return e.cls === "fail"; }); if (fails.length) c = fails[0]; }
-  if (el._cur === c.txt + (c.chip || "")) return; el._cur = c.txt + (c.chip || "");
+function capSet(c) {
+  var el = $("#cap3"), key = c.txt + (c.chip || ""); if (el._cur === key) return; el._cur = key;
   $(".tm", el).textContent = c.t >= 0 ? clk(c.t).slice(0, 5) : ""; $(".tx", el).textContent = c.txt;
   var ch = $(".chip", el); if (c.chip) { ch.textContent = c.chip; ch.className = "chip " + (c.cls || ""); } else ch.className = "chip off";
   if (!SHOT) { el.classList.remove("fx"); void el.offsetWidth; el.classList.add("fx"); }
 }
-function title2() {
-  var h = $("#t2");
-  if (!S.done2) { h.innerHTML = "AI 전략을 바꾸면, <em>예상 항적</em>이 바로 바뀌어요"; return; }
-  var s = sc(), hit = null;
-  ["s1", "s2"].forEach(function (k) { if (!hit) { var v = S.runs[k].ev.safety.filter(function (x) { return x.secondary; })[0]; if (v) hit = { k: k, v: v }; } });
-  if (hit) { var r = S.runs[hit.k], fc = r.log.filter(function (l) { return l.changed; })[0]; var who = fc && fc.consider.length === 1 ? tn(fc.consider[0]) + " 회피 뒤, " : "";
-    h.innerHTML = NM[hit.k] + "은 " + esc(who) + '<span class="f">' + esc(tn(hit.v.id)) + "에 " + f2(hit.v.min) + "해리</span>까지 다가갔어요"; return; }
-  var rv = null;
-  ["s1", "s2"].forEach(function (k) { if (!rv && S.runs[k].ev.reviews.length && S.runs[k].ev.status === "review") rv = { k: k, r: S.runs[k].ev.reviews[0] }; });
-  if (rv) { h.innerHTML = NM[rv.k] + '은 거리는 지켰지만, <span style="color:var(--warn-ink)">' + esc(rv.r.text.replace("피항선인데 ", "")) + "</span>"; return; }
-  h.innerHTML = NM.s1 + " " + ST[S.runs.s1.ev.status] + " · " + NM.s2 + " " + ST[S.runs.s2.ev.status];
-}
-function enter2() {
-  ensureRuns(); var s = sc();
-  view.mount($("#slot2")); camButtons($("#slot2"), "s1");
-  buildEditor($("#ed2"), ed2Opts); live2();
-  setView(view2Data()); hud2Build();
-  var cap = $("#cap2"); cap._idle = "같은 순간에서 두 전략을 함께 출발시켜요"; cap._cur = null;
-  var evs = events([{ label: NM.s1, run: S.runs.s1 }, { label: NM.s2, run: S.runs.s2 }]);
-  PL.bind($("#slot2"), {
-    frame: function (t) { hudUpdate($("#hud2"), t); capUpdate(cap, evs, t, t <= 0 && !PL.playing); },
-    end: function () { S.done2 = true; title2(); updCta(); },
-    onPlay: function () { evs = events([{ label: NM.s1, run: S.runs.s1 }, { label: NM.s2, run: S.runs.s2 }]); PL.play(); },
-    onScrub: function () { evs = events([{ label: NM.s1, run: S.runs.s1 }, { label: NM.s2, run: S.runs.s2 }]); },
-    onUi: updCta
-  });
-  PL._evs2 = function () { evs = events([{ label: NM.s1, run: S.runs.s1 }, { label: NM.s2, run: S.runs.s2 }]); };
-  $("#actBtn").classList.toggle("on", S.showAct);
-  $("#actBtn").onclick = function () { this.blur(); S.showAct = !S.showAct; this.classList.toggle("on", S.showAct); setView(view2Data(), true); view.setTime(PL.t); };
-  if (SHOT) { S.done2 = QS.get("t") == null; PL.seek(QS.get("t") != null ? +QS.get("t") : s.tEnd); }
-  else PL.seek(S.done2 ? s.tEnd : 0);
-  title2();
-}
-function run2() { PL._evs2 && PL._evs2(); PL.seek(0); PL.play(); }
-
-/* ================= 3 결과 리포트 ================= */
-var KIND = { collision: "충돌", domain: "안전영역 침범" };
-function safetyCell(ev) {
-  var s = sc();
-  if (ev.status === "na") {
-    var u = ev.safety[0];
-    return '<div class="cl r2"><div class="m mu">판정 불가 · ' + esc(tn(u.id)) + '</div><div class="d">' + clk(u.tIn >= 0 ? u.tIn : u.tMin) + " 근접(최소 " + f2(u.min) + "해리)은 보고서 기록이 없는<br>역산·연장 구간이라 판정하지 않아요 → 데이터 보강 후 재시험</div></div>";
-  }
-  if (ev.safety.length) {
-    var v = ev.safety[0], name = v.kind === "collision" ? "충돌" : v.secondary ? "2차 충돌위험" : "안전영역 침범";
-    return '<div class="cl l1 ng r2"><div class="m ng">' + name + " · " + esc(tn(v.id)) + '</div><div class="d">' + (v.tIn >= 0 ? clk(v.tIn) + " 안전영역 진입 · " : "") + "최소 " + f2(v.min) + "해리 (" + clk(v.tMin) + ")" +
-      (v.secondary ? "<br>원래 침로였다면 위험하지 않던 배 → 회피 때문에 생긴 위험" : "") + (ev.safety.length > 1 ? "<br>그 밖에 " + (ev.safety.length - 1) + "척 더" : "") +
-      (ev.reviews.length ? '<br><span style="color:var(--warn-ink)">항법 검토: ' + ev.reviews.map(function (r) { return esc(r.text) + " (" + r.rule + ")"; }).join(" · ") + "</span>" : "") + "</div></div>";
-  }
-  var mins = s.targets.map(function (T) { return T.name + " " + f2(ev.dist[T.id].min); }).join(" · ");
-  if (ev.reviews.length) return '<div class="cl r2"><div class="m wn">안전 조건 충족 · 항법 검토</div><div class="d">' + ev.reviews.map(function (r) { return esc(r.text) + " (" + r.rule + ")"; }).join("<br>") + "<br>최소 거리 " + mins + "해리</div></div>";
-  return '<div class="cl r2"><div class="m ok">필수 조건 충족</div><div class="d">최소 거리 ' + mins + "해리<br>충돌 · 안전영역 · 2차 충돌위험 · 항법 검토 모두 이상 없음</div></div>";
-}
-function diagCell(ev, run) {
-  var d = ev.diag, first = d.firstT != null ? clk(d.firstT) + (d.firstTcpa != null ? " · TCPA " + f1(d.firstTcpa) + "분" : "") : "회피 안 함";
-  var flags = [];
-  if (d.lateReassess) flags.push("회피 뒤 재평가 없음");
-  if (d.adjusts >= 4) flags.push("조정 반복 " + d.adjusts + "회");
-  if (d.switches) flags.push("판단 대상 교체 " + d.switches + "회");
-  if (d.noSolution) flags.push("해 없음 → 사람 개입 필요");
-  return '<div class="cl r3"><div class="m">회피 시작 ' + first + ' <span class="tag">진단값</span></div><div class="d">조정 ' + d.adjusts + "회 · 재평가 " + (d.reeval ? d.reeval + "분마다" : "안 함") + " · 최대 변침 " + Math.round(d.maxTurn) + "° · 최저 " + f1(d.minSpeed) + "노트" +
-    (flags.length ? '<br><span style="color:var(--warn-ink)">' + flags.join(" · ") + "</span>" : "<br>안전 판정과 별도로 기록") + "</div></div>";
-}
-function effCell(ev) {
-  if (ev.status === "fail") return '<div class="cl r4"><div class="m mu">비교 제외</div><div class="d">안전을 효율 점수로 상쇄하지 않아요</div></div>';
-  return '<div class="cl r4"><div class="m">진행 손실 ' + f2(ev.eff.lossNm) + "해리 (≈" + f1(ev.eff.delayMin) + '분)</div><div class="d">최대 항로 이탈 ' + f1(ev.eff.maxXte) + "해리 · 같은 문제의 다른 통과 결과와 비교</div></div>";
+function title3() {
+  var s = sc(), h = $("#t3"), prim = s.targets.filter(function (T) { return T.primary; })[0];
+  if (!S.done3) { h.innerHTML = (prim ? esc(J(prim.name, "을", "를")) + " 피한 뒤, " : "") + "다른 배의 위험은 어떻게 될까요?"; return; }
+  var hit = null;
+  ["s1", "s2"].forEach(function (k) { if (!hit) { var v = S.runs[k].ev.safety[0]; if (v) hit = { k: k, v: v }; } });
+  if (hit) { var r = S.runs[hit.k], fc = r.log.filter(function (l) { return l.changed; })[0];
+    h.innerHTML = NM[hit.k] + "은 " + (fc && fc.consider.length === 1 ? esc(J(tn(fc.consider[0]), "을", "를")) + " 피한 뒤, " : "") + '<span class="f">' + esc(J(tn(hit.v.id), "과", "와")) + " 위험해졌어요</span>"; return; }
+  h.innerHTML = '두 전략 모두 <span class="p">안전하게</span> 지나갔어요';
 }
 function enter3() {
-  ensureRuns(); var s = sc(), R = S.runs;
-  $("#repmeta").textContent = s.code + " · 평가 기준 " + E.RULES_VERSION + " · 동역학 가정 " + E.DYN_VERSION + " · 안전영역 " + s.safe + "해리";
-  var h = '<div class="hc"></div>';
-  ["s1", "s2"].forEach(function (k) { h += '<div class="hc ' + k + 'c"><span class="stb">' + k.slice(1) + "</span>" + NM[k] + " <small>" + subn(S.params[k]) + "</small>" + pill(R[k].ev.status) + "</div>"; });
-  var anyFail = R.s1.ev.status === "fail" || R.s2.ev.status === "fail";
-  h += '<div class="lay r2' + (anyFail ? " l1" : "") + '">① 안전성<small>충돌·안전영역·2차 충돌위험<br>위반이 확인되면 실패</small></div>' + safetyCell(R.s1.ev) + safetyCell(R.s2.ev);
-  h += '<div class="lay r3">② 행동 진단<small>회피 시점·조정·재평가<br>안전 판정과 따로 기록</small></div>' + diagCell(R.s1.ev, R.s1) + diagCell(R.s2.ev, R.s2);
-  h += '<div class="lay r4">③ 운항 효율<small>안전을 지킨 결과끼리만 비교</small></div>' + effCell(R.s1.ev) + effCell(R.s2.ev);
-  $("#rep").innerHTML = h;
-  var fk = ["s1", "s2"].filter(function (k) { return R[k].ev.status === "fail"; }), rk = ["s1", "s2"].filter(function (k) { return R[k].ev.status === "review" || R[k].ev.status === "na"; });
-  $("#t3").innerHTML = fk.length ? NM[fk[0]] + '은 <span class="f">실패</span>, 이유와 근거를 남겨요' : rk.length ? NM[rk[0]] + '은 <span style="color:var(--warn-ink)">' + ST[R[rk[0]].ev.status] + "</span>, 전문가가 볼 근거를 남겨요" : "안전 판정과 행동 진단을 나눠서 봐요";
+  ensureRuns(); var s = sc();
+  mount($("#slot3"));
+  setView({ targets: tgData(s), owns: [ownData("s1", NM.s1, COL.s1, S.runs.s1), ownData("s2", NM.s2, COL.s2, S.runs.s2)], markers: [] });
+  hudBuild(); $("#cap3")._cur = null;
+  var evs = events();
+  PL.bind({ frame: function (t) {
+    hudUpdate(t);
+    var c = { t: -1, txt: "같은 순간에서 두 전략을 함께 출발시켜요" };
+    if (PL.playing || t > 0) evs.forEach(function (e) { if (t >= e.t) c = e; });
+    if (t >= PL.dur - 1e-6) { var f = evs.filter(function (e) { return e.cls === "fail"; }); if (f.length) c = f[0]; }
+    capSet(c);
+  }, end: function () { S.done3 = true; title3(); } });
+  if (SHOT) { S.done3 = QS.get("t") == null; PL.seek(QS.get("t") != null ? +QS.get("t") : s.tEnd); }
+  else PL.seek(S.done3 ? s.tEnd : 0);
+  title3();
 }
 
-/* ---------------- 판단 기록 · JSON ---------------- */
+/* ================= 4 결과 리포트 ================= */
+function safetyCell(ev) {
+  var s = sc();
+  if (ev.status === "na") { var u = ev.safety[0]; return '<div class="cl r2"><div class="m mu">판정 불가 · ' + esc(tn(u.id)) + '</div><div class="d">보고서 기록이 없는 구간의 근접</div></div>'; }
+  if (ev.safety.length) { var v = ev.safety[0];
+    return '<div class="cl c1 l1 r2"><div class="m ng">' + vname(v) + " · " + esc(tn(v.id)) + '</div><div class="d">' + clk(v.tIn >= 0 ? v.tIn : v.tMin) + " 안전영역 진입 · 최소 " + f2(v.min) + "해리</div></div>"; }
+  if (ev.reviews.length) return '<div class="cl r2"><div class="m" style="color:var(--warn-ink)">항법 검토 필요</div><div class="d">' + esc(ev.reviews[0].text) + "</div></div>";
+  var near = s.targets.slice().sort(function (a, b) { return ev.dist[a.id].min - ev.dist[b.id].min; })[0];
+  return '<div class="cl r2"><div class="m ok">필수 조건 충족</div><div class="d">가장 가까운 배 ' + esc(near.name) + " " + f2(ev.dist[near.id].min) + "해리</div></div>";
+}
+function diagCell(ev) {
+  var d = ev.diag, flag = d.noSolution ? "모두 만족하는 해 없음" : d.lateReassess ? "회피 뒤 다시 보지 않음" : d.adjusts >= 4 ? "조정 반복 " + d.adjusts + "회" : "";
+  return '<div class="cl r3"><div class="m">' + (flag || "특이 행동 없음") + ' <span class="tag">진단값</span></div><div class="d">회피 시작 ' + (d.firstT != null ? clk(d.firstT).slice(0, 5) : "-") + " · 조정 " + d.adjusts + "회 · 최대 변침 " + Math.round(d.maxTurn) + "°</div></div>";
+}
+function effCell(ev) {
+  if (ev.status === "fail") return '<div class="cl r4"><div class="m mu">비교 제외</div><div class="d">안전을 점수로 상쇄하지 않아요</div></div>';
+  return '<div class="cl r4"><div class="m">진행 손실 ' + f2(ev.eff.lossNm) + "해리 · " + f1(ev.eff.delayMin) + '분</div><div class="d">같은 문제의 다른 통과 결과와 비교</div></div>';
+}
+function enter4() {
+  ensureRuns(); var R = S.runs;
+  var h = '<div class="hc"></div>';
+  ["s1", "s2"].forEach(function (k) { h += '<div class="hc ' + k + 'c"><span class="stb">' + k.slice(1) + "</span>" + NM[k] + pill(R[k].ev.status) + "</div>"; });
+  h += '<div class="lay l1 r2">① 안전성<small>위반이 확인되면 실패</small></div>' + safetyCell(R.s1.ev) + safetyCell(R.s2.ev);
+  h += '<div class="lay r3">② 행동 진단<small>안전 판정과 따로 기록</small></div>' + diagCell(R.s1.ev) + diagCell(R.s2.ev);
+  h += '<div class="lay r4">③ 운항 효율<small>통과한 결과끼리만 비교</small></div>' + effCell(R.s1.ev) + effCell(R.s2.ev);
+  $("#rep").innerHTML = h;
+}
+/* 판단 기록 · JSON */
 function logItems(run) {
-  var o = sc().own, why = { trigger: "회피 시작", reeval: "재평가", resume: "원침로 복귀" };
+  var why = { trigger: "회피 시작", reeval: "재평가", resume: "원침로 복귀" };
   var items = run.log.filter(function (l) { return l.changed || l.why === "trigger"; });
   if (!items.length) return "<li>회피 판단 없음</li>";
   return items.map(function (l) {
     var seen = l.seen.filter(function (x) { return l.consider.indexOf(x.id) >= 0; }).map(function (x) { return esc(tn(x.id)) + " DCPA " + f2(x.dcpa) + " · TCPA " + f1(x.tcpa) + "분 (" + x.enc + " " + x.rule + ")"; });
-    return '<li><span class="t num">' + clk(l.t) + "</span><b>" + why[l.why] + "</b> → " + actTxt(l) + '<span class="sm">' + (seen.length ? "본 배: " + seen.join(" / ") : "본 배: " + l.consider.map(function (i) { return esc(tn(i)); }).join(", ")) +
-      " · 예측 최소 거리 " + f2(l.predMin) + "해리" + (l.feasible ? "" : " · 목표를 만족하는 해 없음") + "</span></li>";
+    return '<li><span class="t num">' + clk(l.t) + "</span><b>" + why[l.why] + "</b> → " + actTxt(l) + '<span class="sm">' + (seen.length ? "본 배: " + seen.join(" / ") : "본 배: " + l.consider.map(function (i) { return esc(tn(i)); }).join(", ")) + " · 예측 최소 거리 " + f2(l.predMin) + "해리" + (l.feasible ? "" : " · 목표를 만족하는 해 없음") + "</span></li>";
   }).join("");
 }
 function reportJSON(label, run) {
-  var s = sc(), ev = run.ev, code = { pass: "PASS", review: "REVIEW", fail: "FAIL", na: "N/A" };
-  var mins = {}; s.targets.forEach(function (T) { mins[T.name] = +f2(ev.dist[T.id].min); });
+  var s = sc(), ev = run.ev, code = { pass: "PASS", review: "REVIEW", fail: "FAIL", na: "N/A" }, mins = {};
+  s.targets.forEach(function (T) { mins[T.name] = +f2(ev.dist[T.id].min); });
   return {
     schema: "sea-nario.report/0.1",
     problem: { id: s.code, title: s.title, based_on: s.accident, sources: s.sources.map(function (x) { return x.label; }), ships: s.targets.length + 1, window: s.clock0 + "–" + clk(s.tEnd), safe_zone_nm: s.safe, replay: "target-fixed" },
-    model_under_test: { name: label, params: run.params },
-    rules: E.RULES_VERSION, dynamics: E.DYN_VERSION, provisional: true,
-    result: code[ev.status],
+    model_under_test: { name: label, params: run.params }, rules: E.RULES_VERSION, dynamics: E.DYN_VERSION, provisional: true, result: code[ev.status],
     safety: { violations: ev.safety.map(function (v) { return { ship: tn(v.id), type: v.kind === "collision" ? "collision" : v.secondary ? "secondary_risk" : "safe_zone", min_nm: +f2(v.min), at: clk(v.tMin), entered: v.tIn >= 0 ? clk(v.tIn) : null }; }), reviews: ev.reviews.map(function (r) { return { rule: r.rule, note: r.text }; }), min_distance_nm: mins },
-    diagnostics: { first_action: ev.diag.firstT != null ? clk(ev.diag.firstT) : null, tcpa_at_first_action_min: ev.diag.firstTcpa != null ? +f1(ev.diag.firstTcpa) : null, adjustments: ev.diag.adjusts, target_switches: ev.diag.switches, reassessment_min: ev.diag.reeval || null, max_course_change_deg: Math.round(ev.diag.maxTurn), min_speed_kn: +f1(ev.diag.minSpeed), no_solution: ev.diag.noSolution },
+    diagnostics: { first_action: ev.diag.firstT != null ? clk(ev.diag.firstT) : null, adjustments: ev.diag.adjusts, reassessment_min: ev.diag.reeval || null, max_course_change_deg: Math.round(ev.diag.maxTurn), min_speed_kn: +f1(ev.diag.minSpeed), no_solution: ev.diag.noSolution },
     efficiency: ev.status === "fail" ? null : { progress_loss_nm: +f2(ev.eff.lossNm), delay_min: +f1(ev.eff.delayMin), max_cross_track_nm: +f2(ev.eff.maxXte) },
     decision_log: run.log.filter(function (l) { return l.changed || l.why === "trigger"; }).map(function (l) {
       return { time: clk(l.t), event: l.why, considered: l.consider.map(function (i) { return tn(i); }), observed: l.seen.map(function (x) { return { ship: tn(x.id), dcpa_nm: +f2(x.dcpa), tcpa_min: +f1(x.tcpa), relation: x.enc + " " + x.rule }; }), action: { course_deg: Math.round(l.course), speed_kn: +f1(l.speed) }, predicted_min_nm: +f2(l.predMin) };
@@ -1632,111 +1586,94 @@ function hl(json) {
 function modal(title, sub, html) { $("#mt").textContent = title; $("#ms").textContent = sub; $("#mb").innerHTML = html; $("#modal").classList.add("show"); }
 $("#mx").onclick = function () { $("#modal").classList.remove("show"); };
 $("#modal").onclick = function (e) { if (e.target.id === "modal") $("#modal").classList.remove("show"); };
-$("#logBtn").onclick = function () {
-  this.blur(); ensureRuns();
-  modal("판단 기록", sc().code + " · 회피 판단이 바뀐 순간만 표시", '<div class="lg">' + ["s1", "s2"].map(function (k) { return '<div class="' + k + 'c"><h4><span class="stb">' + k.slice(1) + "</span>" + NM[k] + " · " + subn(S.params[k]) + "</h4><ol>" + logItems(S.runs[k]) + "</ol></div>"; }).join("") + "</div>");
-};
-$("#jsonBtn").onclick = function () {
-  this.blur(); ensureRuns();
-  var j = { s1: reportJSON(NM.s1 + " · " + subn(S.params.s1), S.runs.s1), s2: reportJSON(NM.s2 + " · " + subn(S.params.s2), S.runs.s2) };
-  modal("성적표 데이터", "어느 시험장에서든 같은 형식으로 남기는 결과 (예시 스키마 v0.1)", "<pre>" + hl(JSON.stringify([j.s1, j.s2], null, 2)) + "</pre>");
-};
+$("#logBtn").onclick = function () { this.blur(); ensureRuns();
+  modal("판단 기록", sc().code + " · 회피 판단이 바뀐 순간", '<div class="lgl">' + ["s1", "s2"].map(function (k) { return '<div class="' + k + 'c"><h4><span class="stb">' + k.slice(1) + "</span>" + NM[k] + " · " + subn(S.params[k]) + "</h4><ol>" + logItems(S.runs[k]) + "</ol></div>"; }).join("") + "</div>"); };
+$("#jsonBtn").onclick = function () { this.blur(); ensureRuns();
+  modal("성적표 데이터", "어느 시험장에서든 같은 형식으로 남기는 결과 (예시 스키마 v0.1)", "<pre>" + hl(JSON.stringify([reportJSON(NM.s1 + " · " + subn(S.params.s1), S.runs.s1), reportJSON(NM.s2 + " · " + subn(S.params.s2), S.runs.s2)], null, 2)) + "</pre>"); };
 
-/* ================= 4 오답 재시험 ================= */
+/* ================= 5 오답 재시험 ================= */
 function initRt() {
   ensureRuns(); var R = S.runs;
-  var fk = ["s1", "s2"].filter(function (k) { return R[k].ev.status === "fail"; })[0] || ["s1", "s2"].filter(function (k) { return R[k].ev.status !== "pass"; })[0] || "s1";
-  S.rt = { pi: S.pi, from: fk, v1: Object.assign({}, S.params[fk]), v2: Object.assign({}, S.params[fk]), r1: R[fk], done: false, reg: null };
+  var fk = ["s1", "s2"].filter(function (k) { return R[k].ev.status !== "pass"; })[0] || "s1";
+  S.rt = { pi: S.pi, from: fk, v1: Object.assign({}, S.params[fk]), v2: Object.assign({}, S.params[fk]), r1: R[fk], done: false, reg: null, sg: null };
   S.rt.r2 = E.run(sc(), S.rt.v2);
 }
-var ed4Opts = {
-  tabs: false, get: function () { return S.rt.v2; }, cls: function () { return "v2c"; }, base: function () { return S.rt.v1; },
-  set: function (k, v) { S.rt.v2[k] = v; $("#ed4")._sync(); schedule4(); }
-};
-var pend4 = 0;
-function schedule4() { if (pend4) return; pend4 = setTimeout(function () { pend4 = 0; var t0 = performance.now(); S.rt.r2 = E.run(sc(), S.rt.v2); calcMs = performance.now() - t0; S.rt.done = false; S.rt.reg = null; setView(view4Data(), true); PL.pause(); PL.seek(0); live4(); hud4Build(); why4(); res4(); title4(); updCta(); }, 30); }
-function view4Data() {
-  var s = sc(), rt = S.rt;
-  return { targets: tgData(s), owns: [ownData("v1", NM[rt.from] + " v1 · " + ST[rt.r1.ev.status], COL.v1, rt.r1, { ghost: true, planned: false }), ownData("v2", "수정 v2", COL.v2, rt.r2)], markers: [] };
-}
-function live4() { var b = $("#ed4 .live"); b.innerHTML = liveHtml(S.rt.r2, "v2"); b.className = "live v2c"; }
-function hud4Build() { hudBuild($("#hud4"), [{ cls: "v1c", short: "v1", run: S.rt.r1 }, { cls: "v2c", short: "v2", run: S.rt.r2 }]); hudUpdate($("#hud4"), PL.t); }
 function suggestions() {
   var s = sc(), rt = S.rt, sg = E.suggest(s, rt.r1.ev, rt.v1);
-  // 실제로 통과하는 제안을 앞으로 (시험은 숨기지 않고 화면에서 직접 다시 돌려 확인)
   sg.forEach(function (g) { var p = Object.assign({}, rt.v1); p[g.key] = g.value; g.ok = E.run(s, p).ev.status === "pass"; });
   sg.sort(function (a, b) { return (b.ok ? 1 : 0) - (a.ok ? 1 : 0); });
   return sg;
 }
-function why4() {
-  var rt = S.rt, ev = rt.r1.ev, v = ev.safety[0], fc = rt.r1.log.filter(function (l) { return l.changed; })[0];
-  var head = '<div class="wt">' + pill(ev.status) + " " + NM[rt.from] + " v1 " + (v ? "· " + (v.kind === "collision" ? "충돌" : v.secondary ? "2차 충돌위험" : "안전영역 침범") + " · " + esc(tn(v.id)) + " " + f2(v.min) + "해리" : ev.reviews.length ? "· 항법 검토 " + esc(ev.reviews[0].rule) : "") + "</div>";
-  var body = fc ? (fc.consider.length === 1 ? esc(J(tn(fc.consider[0]), "만", "만")) + " 보고 " + actTxt(fc) + "했어요. " : fc.consider.length + "척을 함께 보고 " + actTxt(fc) + "했어요. ") : "";
-  if (v && v.secondary) body += "회피한 뒤 " + esc(J(tn(v.id), "과의", "와의")) + " 관계를 다시 계산하지 않았어요.";
-  else if (!v && ev.reviews.length) body += "거리는 지켰지만 " + esc(ev.reviews[0].text.replace("피항선인데 ", "피항선으로서 ")) + "었어요.";
-  else if (v && ev.reviews.length) body += ev.reviews.map(function (r) { return esc(r.text); }).join(" · ");
-  var sg = suggestions();
-  rt.sg = sg;
-  var chips = sg.map(function (g, i) { var used = String(rt.v2[g.key]) === String(g.value); return '<button data-i="' + i + '" class="' + (used ? "used" : "") + '" title="' + esc(g.why) + '">' + (used ? "✓ " : "+ ") + esc(g.label) + "</button>"; }).join("");
-  $("#why4").innerHTML = head + '<div class="wd">' + body + "</div>" + (chips ? '<div class="sug">' + chips + "</div>" : "");
-  $$("#why4 .sug button").forEach(function (b) { b.onclick = function () { b.blur(); var g = rt.sg[+b.dataset.i]; ed4Opts.set(g.key, String(rt.v2[g.key]) === String(g.value) ? rt.v1[g.key] : g.value); }; });
+var CHG = { scope: { one: "판단 대상: 가장 급한 1척", all: "판단 대상: 위험한 모든 배" }, method: { turn: "회피 수단: 변침", speed: "회피 수단: 감속", both: "회피 수단: 변침+감속" }, reeval: { 0: "재평가 안 함", 1: "1분마다 재평가", 3: "3분마다 재평가" }, side: { stbd: "우현 변침만", any: "좌·우현 변침" } };
+function changes() {
+  var rt = S.rt, out = [];
+  Object.keys(rt.v2).forEach(function (k) { if (String(rt.v1[k]) !== String(rt.v2[k])) out.push(CHG[k] && CHG[k][rt.v2[k]] ? CHG[k][rt.v2[k]] : k === "trigger" ? "회피 시작 " + rt.v2[k] + "분 전" : k + " " + rt.v2[k]); });
+  return out;
 }
-function res4() {
-  var rt = S.rt, s = sc(), r1 = rt.r1.ev;
-  var h = '<span class="stb v1c">v1</span>' + pill(r1.status) + '<span class="arr">→</span><span class="stb v2c">v2</span>';
-  if (!rt.done) { $("#res4").innerHTML = h + '<span class="imp">고친 전략을 같은 문제·같은 조건(타선 고정 Replay)으로 다시 실행해요</span>'; return; }
-  var r2 = rt.r2.ev; h += pill(r2.status);
-  var key = (r1.safety[0] || {}).id;
-  if (key) h += '<span class="imp">' + esc(tn(key)) + " 최소 " + f2(r1.dist[key].min) + " → <b>" + f2(r2.dist[key].min) + "해리</b></span>";
-  if (rt.reg) h += '<span class="reg">' + (rt.reg.some(function (g) { return g.st === "fail"; }) ? '<b style="color:var(--fail)">다른 문제도 함께 고쳐요</b>' : "") + "회귀검증" + rt.reg.map(function (g) { return '<span class="chip ' + (g.st === "pass" ? "pass" : g.st === "fail" ? "fail" : "warn") + '">문제 ' + g.no + " " + ST[g.st] + "</span>"; }).join("") + "</span>";
-  $("#res4").innerHTML = h;
+var ICK = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+var IX = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg>';
+function renderRt() {
+  var s = sc(), rt = S.rt, e1 = rt.r1.ev, v = e1.safety[0], ch = changes();
+  if (!rt.sg) rt.sg = suggestions();
+  var h = '<div class="ch">기록 <b>' + s.code + "</b> · 평가 기준 <b>" + E.RULES_VERSION + "</b> · 동역학 가정 <b>" + E.DYN_VERSION + '</b> · 타선 고정 Replay<span class="prov" style="margin-left:auto">잠정 판정</span></div>';
+  h += '<div class="rv v1 s1c"><span class="who"><span class="stb">' + rt.from.slice(1) + "</span>" + NM[rt.from] + " <small>v1</small></span>" + pill(e1.status) + '<span class="d ng">' + (v ? vname(v) + " · " + esc(tn(v.id)) + " " + f2(v.min) + "해리" : e1.reviews.length ? "항법 검토 필요" : "") + "</span></div>";
+  h += '<div class="rarr"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b0b8c1" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15M6 13l6 6 6-6"/></svg></div>';
+  h += '<div class="rv v2 s1c"><span class="who"><span class="stb">' + rt.from.slice(1) + "′</span>고친 전략 <small>v2</small></span>" + (rt.done ? pill(rt.r2.ev.status) : '<span class="pend">재시험 전</span>') + '<span class="d">' + (ch.length ? esc(ch.join(" · ")) : "아래에서 고칠 점을 골라요") + "</span></div>";
+  var regFail = rt.reg && rt.reg.some(function (g) { return g.st !== "pass"; });
+  if (rt.done) {
+    var key = (e1.safety[0] || {}).id, e2 = rt.r2.ev;
+    h += '<div class="dl">';
+    if (key) h += '<div class="dr ' + (e2.status === "pass" ? "ok" : "ng") + '"><span class="ic">' + (e2.status === "pass" ? ICK : IX) + '</span><span class="k">개선</span>' + esc(tn(key)) + " 최소 거리 " + f2(e1.dist[key].min) + " → " + f2(e2.dist[key].min) + "해리</div>";
+    h += '<div class="dr ' + (regFail ? "ng" : "ok") + '"><span class="ic">' + (regFail ? IX : ICK) + '</span><span class="k">회귀검증</span><span class="reg">' +
+      rt.reg.map(function (g) { return '<span class="chip ' + (g.st === "pass" ? "pass" : g.st === "fail" ? "fail" : "warn") + '">문제 ' + g.no + " " + ST[g.st] + "</span>"; }).join("") + "</span></div></div>";
+  }
+  if (!rt.done || regFail || rt.r2.ev.status !== "pass") {
+    h += '<div class="sgh">' + (rt.done && regFail && rt.r2.ev.status === "pass" ? "다른 문제도 통과하도록 더 고쳐 보세요" : "이렇게 고쳐 보세요") + '</div><div class="sug">' + rt.sg.map(function (g, i) { var used = String(rt.v2[g.key]) === String(g.value); return '<button data-i="' + i + '" class="' + (used ? "used" : "") + '" title="' + esc(g.why) + '">' + (used ? "✓ " : "+ ") + esc(g.label) + "</button>"; }).join("") + "</div>";
+  }
+  $("#rtc").innerHTML = h;
+  $$("#rtc .sug button").forEach(function (b) { b.onclick = function () { b.blur(); var g = rt.sg[+b.dataset.i]; rt.v2[g.key] = String(rt.v2[g.key]) === String(g.value) ? rt.v1[g.key] : g.value; rt.r2 = E.run(sc(), rt.v2); rt.done = false; rt.reg = null; setView(view5Data(), true); PL.pause(); PL.seek(0); renderRt(); title5(); updCta(); }; });
 }
-function title4() {
-  var rt = S.rt, h = $("#t4");
-  if (!rt.done) { h.innerHTML = (rt.r1.ev.status === "fail" ? "실패한 " : ST[rt.r1.ev.status] + " 판정을 받은 ") + NM[rt.from] + "을 고쳐서, <em>같은 문제</em>로 다시 시험해요"; return; }
-  var st = rt.r2.ev.status;
-  var regFail = rt.reg && rt.reg.some(function (g) { return g.st === "fail"; });
+function title5() {
+  var rt = S.rt, h = $("#t5");
+  if (!rt.done) { h.innerHTML = NM[rt.from] + "을 고쳐서, 같은 문제로 다시 시험해요"; return; }
+  var st = rt.r2.ev.status, regFail = rt.reg.some(function (g) { return g.st !== "pass"; });
   if (st === "pass" && regFail) { h.innerHTML = '이 문제는 <span class="p">통과</span>, 하지만 <span class="f">다른 문제에서 실패</span>했어요'; return; }
-  h.innerHTML = st === "pass" ? '수정한 전략은 <span class="p">통과</span>했어요' : st === "review" ? '안전은 지켰지만 <span style="color:var(--warn-ink)">검토 필요</span>예요' : '아직 <span class="f">실패</span> — 다른 수정을 해 보세요';
+  h.innerHTML = st === "pass" ? '고친 전략은 <span class="p">통과</span>했어요' : '아직 <span class="f">' + ST[st] + "</span> — 다른 수정을 골라 보세요";
 }
-function enter4() {
+function view5Data() {
+  var rt = S.rt;
+  return { targets: tgData(sc()), owns: [ownData("v1", "v1", COL.v1, rt.r1, { ghost: true, planned: false }), ownData("v2", "v2", COL.v2, rt.r2)], markers: [] };
+}
+function enter5() {
   if (!S.rt || S.rt.pi !== S.pi) initRt();
   var s = sc();
-  view.mount($("#slot4")); camButtons($("#slot4"), "v2");
-  buildEditor($("#ed4"), ed4Opts); live4(); why4();
-  setView(view4Data()); hud4Build(); res4(); title4();
-  PL.bind($("#slot4"), {
-    frame: function (t) { hudUpdate($("#hud4"), t); },
-    end: function () { finish4(); },
-    onUi: updCta
-  });
+  mount($("#slot5")); setView(view5Data());
+  PL.bind({ end: function () { finish5(); } });
   if (SHOT) {
-    // 캡처용: 제안을 차례로 적용해 모든 문제에서 통과하는 수정안을 찾음 (fix=1이면 첫 제안만)
     if (!S.rt.done && QS.get("fix") !== "0") {
-      var sg = S.rt.sg || [], ok = function (p) { return BANK.every(function (b) { return E.run(b, p).ev.status === "pass"; }); };
+      var sg = suggestions(), ok = function (p) { return BANK.every(function (b) { return E.run(b, p).ev.status === "pass"; }); };
       for (var gi = 0; gi < sg.length; gi++) { S.rt.v2[sg[gi].key] = sg[gi].value; if (QS.get("fix") === "1" || ok(S.rt.v2)) break; }
-      S.rt.r2 = E.run(s, S.rt.v2); $("#ed4")._sync(); live4(); why4(); setView(view4Data()); hud4Build();
+      S.rt.r2 = E.run(s, S.rt.v2); setView(view5Data());
     }
-    PL.seek(QS.get("t") != null ? +QS.get("t") : s.tEnd); finish4();
+    PL.seek(QS.get("t") != null ? +QS.get("t") : s.tEnd); finish5();
   } else PL.seek(S.rt.done ? s.tEnd : 0);
+  renderRt(); title5();
 }
-function finish4() {
-  var rt = S.rt;
-  rt.done = true;
+function finish5() {
+  var rt = S.rt; rt.done = true;
   rt.reg = BANK.map(function (b) { return { no: b.no, st: E.run(b, rt.v2).ev.status }; });
-  S.hist.push({ problem: sc().code, from: rt.from, v1: rt.r1.ev.status, v2: rt.r2.ev.status, params: Object.assign({}, rt.v2) });
-  res4(); title4(); updCta();
+  S.hist.push({ problem: sc().code, v1: rt.r1.ev.status, v2: rt.r2.ev.status, params: Object.assign({}, rt.v2) });
+  renderRt(); title5(); updCta();
 }
-function run4() { PL.seek(0); PL.play(); }
 
 /* ================= 내비게이션 ================= */
-var IDS = ["0", "1", "2", "3", "4"], SCR = IDS.map(function (id) { return document.getElementById("s" + id); }), cur = -1, looping = false;
+var IDS = ["0", "1", "2", "3", "4", "5"], SCR = IDS.map(function (id) { return document.getElementById("s" + id); }), cur = -1, looping = false;
 function go(i) {
   i = Math.max(0, Math.min(IDS.length - 1, i)); if (i === cur) return;
   PL.pause(); $("#modal").classList.remove("show");
   SCR.forEach(function (s, j) { s.classList.toggle("on", j === i); s.classList.toggle("past", j < i); });
   cur = i; var id = IDS[i];
-  if (id === "1") enter1(); else if (id === "2") enter2(); else if (id === "3") enter3(); else if (id === "4") enter4();
+  if (id === "1") enter1(); else if (id === "2") enter2(); else if (id === "3") enter3(); else if (id === "4") enter4(); else if (id === "5") enter5();
   $("#barFill").style.width = (i / (IDS.length - 1) * 100) + "%";
   $$("#steps span").forEach(function (s, j) { s.classList.toggle("on", j + 1 === i); s.classList.toggle("done", j + 1 < i); });
   ["#bar", "#back", "#steps"].forEach(function (q) { $(q).classList.toggle("hide", i === 0); });
@@ -1745,25 +1682,26 @@ function go(i) {
 }
 function updCta() {
   var b = $("#cta"), id = IDS[cur], label = "", busy = false;
-  if (id === "0") label = view ? "데모 시작" : "지도 불러오는 중…";
-  else if (id === "1") label = "이 문제로 시험하기";
-  else if (id === "2") { label = PL.playing ? "실행 중…" : S.done2 ? "결과 리포트 보기" : "두 전략 실행"; busy = PL.playing; }
-  else if (id === "3") label = (S.runs && (S.runs.s1.ev.status !== "pass" || S.runs.s2.ev.status !== "pass")) ? "오답 재시험 하기" : "오답 재시험 화면 보기";
-  else if (id === "4") { label = PL.playing ? "재시험 중…" : S.rt && S.rt.done ? "다음 문제로 ↺" : "재시험 실행"; busy = PL.playing; }
+  if (id === "0") label = view ? "데모 시작" : "불러오는 중…";
+  else if (id === "1") label = "두 전략에게 문제 내기";
+  else if (id === "2") label = "위험 변화 보기";
+  else if (id === "3") { label = PL.playing ? "실행 중…" : S.done3 ? "결과 리포트 보기" : "두 전략 동시에 실행"; busy = PL.playing; }
+  else if (id === "4") label = "오답 재시험 보기";
+  else if (id === "5") { label = PL.playing ? "재시험 중…" : S.rt && S.rt.done ? "다음 문제로 ↺" : "재시험 실행"; busy = PL.playing; }
   b.textContent = label; b.classList.toggle("busy", busy);
 }
 function next() {
   if (looping || !view) return; var id = IDS[cur];
-  if (id === "2") { if (PL.playing) return; if (!S.done2) return run2(); }
-  if (id === "4") { if (PL.playing) return; if (!S.rt.done) return run4(); return closeLoop(); }
+  if (id === "3") { if (PL.playing) return; if (!S.done3) { PL.seek(0); PL.play(); return; } }
+  if (id === "5") { if (PL.playing) return; if (!S.rt.done) { PL.seek(0); PL.play(); return; } return closeLoop(); }
   go(cur + 1);
 }
 function prev() { if (!looping && cur > 0) go(cur - 1); }
 function closeLoop() {
   looping = true; var fx = $("#loopFx"); fx.classList.add("show");
   setTimeout(function () {
-    S.pi = (S.pi + 1) % BANK.length; S.runs = null; S.done2 = false; S.rt = null; resetParams(); renderList(); renderShips();
-    looping = false; go(1); setTimeout(function () { fx.classList.remove("show"); }, 150);
+    S.pi = (S.pi + 1) % BANK.length; S.runs = null; S.done3 = false; S.rt = null; resetParams();
+    looping = false; cur = -1; go(1); setTimeout(function () { fx.classList.remove("show"); }, 150);
     var t = $("#toast"); t.classList.add("show"); setTimeout(function () { t.classList.remove("show"); }, 3600);
   }, 1300);
 }
@@ -1771,7 +1709,7 @@ $("#cta").onclick = function () { this.blur(); next(); };
 $("#back").onclick = function () { this.blur(); prev(); };
 addEventListener("keydown", function (e) {
   if ($("#modal").classList.contains("show")) { if (e.key === "Escape") $("#modal").classList.remove("show"); return; }
-  var tg = e.target, tag = tg && tg.tagName;
+  var tag = e.target && e.target.tagName;
   if (tag === "INPUT" && (e.key === "ArrowRight" || e.key === "ArrowLeft")) return;
   if (e.key === " " && (tag === "BUTTON" || tag === "INPUT")) return;
   if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); next(); }
@@ -1780,20 +1718,17 @@ addEventListener("keydown", function (e) {
 function fromHash() { var m = location.hash.match(/^#?(\d)/); if (!m) return 0; var i = IDS.indexOf(m[1]); return i < 0 ? 0 : i; }
 addEventListener("hashchange", function () { var i = fromHash(); if (i !== cur) go(i); });
 
-renderList(); renderShips();
 SCR[0].classList.add("on"); cur = 0; updCta(); ["#bar", "#back", "#steps"].forEach(function (q) { $(q).classList.add("hide"); });
 var WANT3D = QS.get("view") === "3d";
 function start(use3d) {
   if (view) return;
   if (use3d && window.SeaView3D) { try { view = new window.SeaView3D({ getScale: function () { return SC; } }); view.kind = "3d"; } catch (err) { console.warn("3D 뷰를 만들지 못해 2D로 표시합니다", err); view = null; } }
   if (!view) view = new SeaMap2D({ getScale: function () { return SC; } });
-  if (view.kind === "2d") $$(".ov.scale").forEach(function (e) { e.textContent = "격자 1칸 = 1해리 · 선박 크기 6배 확대 · 휠로 확대, 끌어서 이동"; });
   var i = fromHash(); cur = -1; go(i);
-  if (QS.get("play") === "1") setTimeout(next, 300); // 확인용: 열자마자 실행
+  if (QS.get("play") === "1") setTimeout(next, 300);
   window.__demo = { S: S, E: E, view: view, PL: PL, go: go };
 }
 if (WANT3D) {
-  // 3D는 선택 사항: three.js(CDN)를 불러와 실행, 실패하면 2D
   addEventListener("seaview-ready", function () { start(true); }, { once: true });
   var m3 = document.createElement("script"); m3.type = "module"; m3.textContent = document.getElementById("v3src").textContent; document.body.appendChild(m3);
   setTimeout(function () { start(false); }, 8000);
@@ -1803,8 +1738,8 @@ if (WANT3D) {
 </script>
 <script>
 /* =====================================================================
-   자동 점검 (?selftest=1): 실제 버튼·슬라이더를 눌러 두 문제의 전체 흐름을 끝까지 진행하고
-   결과를 <pre id="selftest">(JSON)와 문서 제목에 남김. 평소에는 실행되지 않음
+   자동 점검 (?selftest=1): 실제 버튼·슬라이더를 눌러 두 문제의 5화면 흐름을 끝까지 진행하고
+   결과를 숨긴 pre#selftest(JSON)와 문서 제목에 남김. 평소에는 실행되지 않음
    ===================================================================== */
 (function () {
   "use strict";
@@ -1831,67 +1766,61 @@ if (WANT3D) {
     await click(cta());
     for (var pi = 0; pi < 2; pi++) {
       var P = "문제" + (pi + 1) + " · ";
-      // 1 문제 선택
-      ok(P + "문제 선택 화면", scr() === "s1", scr());
-      ok(P + "문제 카드 2개", $$("#plist .pc").length === 2);
-      ok(P + "선박 표 5줄", $$("#ships1 .shr").length === 5);
+      // 1 문제 카드
+      ok(P + "문제 카드 화면", scr() === "s1", scr());
       ok(P + "선택된 문제", D.S.pi === pi, D.S.pi);
-      var cams = $$("#slot1 [data-cam] button");
-      ok(P + "보기 버튼 3개", cams.length === 3);
-      await click(cams[1]); ok(P + "전체 보기", D.view.mode === "all", D.view.mode);
-      await click(cams[0]); ok(P + "맞춤 보기", D.view.mode === "fit", D.view.mode);
-      D.view.cv.dispatchEvent(new WheelEvent("wheel", { deltaY: -240, clientX: 900, clientY: 420, bubbles: true, cancelable: true })); await W(60);
-      ok(P + "휠 확대 → 자유 보기", D.view.mode === "free", D.view.mode);
-      // 2 전략 설정·실행
-      await click(cta()); ok(P + "전략 화면", scr() === "s2", scr());
-      var st1 = D.S.runs.s1.ev.status, st2 = D.S.runs.s2.ev.status;
-      ok(P + "전략 1 실패", st1 === "fail", st1); ok(P + "전략 2 통과", st2 === "pass", st2);
-      var seg = function (k, v) { return $('#ed2 .row[data-k="' + k + '"] button[data-v="' + v + '"]'); };
-      var base = Object.assign({}, D.S.params.s1);
-      await click(seg("scope", "all")); await W(120);
-      ok(P + "옵션 변경 → 다시 계산", D.S.runs.s1.params.scope === "all", D.S.runs.s1.ev.status);
-      ok(P + "탭 부제 갱신", /모든 배/.test($("#ed2 .tab.on small").textContent), $("#ed2 .tab.on small").textContent);
-      await click(seg("scope", base.scope)); await W(120);
-      ok(P + "옵션 되돌리기", D.S.runs.s1.ev.status === st1, D.S.runs.s1.ev.status);
-      var rng = $('#ed2 .row[data-k="dcpa"] input'); rng.value = 1.2; rng.dispatchEvent(new Event("input")); await W(150);
-      ok(P + "슬라이더 → 다시 계산", D.S.runs.s1.params.dcpa === 1.2, D.S.runs.s1.ev.status);
-      rng.value = base.dcpa; rng.dispatchEvent(new Event("input")); await W(150);
-      ok(P + "슬라이더 되돌리기", D.S.runs.s1.ev.status === st1 && D.S.runs.s1.params.dcpa === base.dcpa);
-      await click($('#ed2 .tab[data-k="s2"]')); ok(P + "전략 2 탭", D.S.tab === "s2");
-      await click($('#ed2 .tab[data-k="s1"]'));
-      await click($("#actBtn")); ok(P + "실제 사고 항적 켜기", D.S.showAct === true); await click($("#actBtn"));
+      ok(P + "선박 표 5줄", $$("#tbl1 .tr").length === 5);
+      ok(P + "문제 전환 버튼 2개", $$("#psw button").length === 2);
+      var hit = await until(function () { return D.view.hitsActive > 0; }, 40000);
+      ok(P + "실제 사고 재생 → 충돌 표시", hit, "t=" + D.PL.t.toFixed(1));
+      // 2 판단 비교
+      await click(cta()); ok(P + "판단 비교 화면", scr() === "s2", scr());
+      var st1 = D.S.runs.s1.ev.status;
+      ok(P + "전략 1 실패", st1 === "fail", st1); ok(P + "전략 2 통과", D.S.runs.s2.ev.status === "pass");
+      var before = $("#sc1 .act .v").textContent, base = Object.assign({}, D.S.params.s1);
+      await click($('#sc1 .seg button[data-k="scope"][data-v="all"]')); await W(120);
+      ok(P + "옵션 변경 → 다시 계산", D.S.runs.s1.params.scope === "all" && !!$("#sc1 .calc"), before + " → " + $("#sc1 .act .v").textContent);
+      ok(P + "카드 부제 갱신", /모든 배/.test($("#sc1 .hd small").textContent));
+      await click($('#sc1 .seg button[data-k="scope"][data-v="' + base.scope + '"]')); await W(120);
+      ok(P + "옵션 되돌리기", D.S.runs.s1.ev.status === st1 && $("#sc1 .act .v").textContent === before);
+      await click($("#sc1 .more")); ok(P + "세부 옵션 열기", !!$('#sc1 input[data-k="dcpa"]'));
+      var rng = $('#sc1 input[data-k="dcpa"]'); rng.value = 1.2; rng.dispatchEvent(new Event("input")); await W(150);
+      ok(P + "슬라이더 → 다시 계산", D.S.runs.s1.params.dcpa === 1.2);
+      rng = $('#sc1 input[data-k="dcpa"]'); rng.value = base.dcpa; rng.dispatchEvent(new Event("input")); await W(150);
+      ok(P + "슬라이더 되돌리기", D.S.runs.s1.ev.status === st1);
+      await click($("#sc1 .more")); ok(P + "기본 옵션으로", !!$('#sc1 .seg button[data-k="scope"]'));
+      // 3 위험 변화
+      await click(cta()); ok(P + "위험 변화 화면", scr() === "s3", scr());
       await click(cta()); ok(P + "실행 시작", D.PL.playing, cta().textContent);
-      var ended = await until(function () { return D.S.done2; }, 90000);
+      var ended = await until(function () { return D.S.done3; }, 90000);
       ok(P + "재생 끝까지", ended, "t=" + D.PL.t.toFixed(2) + "/" + D.PL.dur);
-      ok(P + "버튼 → 결과 리포트", /결과 리포트/.test(cta().textContent), cta().textContent);
-      ok(P + "실행 후 제목", /다가갔어요/.test($("#t2").textContent), $("#t2").textContent);
-      ok(P + "HUD 빨간 칸", $$("#hud2 b.bad").length > 0);
-      ok(P + "사건 자막", $("#cap2 .tx").textContent.length > 0, $("#cap2 .tx").textContent);
-      // 3 결과 리포트
-      await click(cta()); ok(P + "리포트 화면", scr() === "s3", scr());
+      ok(P + "결과 제목", /위험해졌어요/.test($("#t3").textContent), $("#t3").textContent);
+      ok(P + "HUD 빨간 칸", $$("#hud3 b.bad").length > 0);
+      ok(P + "자막 = 핵심 위험", /2차 충돌위험/.test($("#cap3").textContent), $("#cap3").textContent);
+      // 4 결과 리포트
+      await click(cta()); ok(P + "리포트 화면", scr() === "s4", scr());
       ok(P + "판정 배지", !!$("#rep .pill.fail") && !!$("#rep .pill.pass"));
-      await click($("#logBtn")); ok(P + "판단 기록 창", $("#modal").classList.contains("show") && $$("#mb li").length >= 2, $$("#mb li").length); await click($("#mx"));
+      await click($("#logBtn")); ok(P + "판단 기록 창", $("#modal").classList.contains("show") && $$("#mb li").length >= 2); await click($("#mx"));
       await click($("#jsonBtn")); var js = null; try { js = JSON.parse($("#mb pre").textContent); } catch (e) {}
-      ok(P + "성적표 JSON", js && js.length === 2 && js[0].result === "FAIL" && js[1].result === "PASS", js && js.map(function (x) { return x.result; }).join(","));
-      await click($("#mx")); ok(P + "창 닫기", !$("#modal").classList.contains("show"));
-      // 4 오답 재시험
-      await click(cta()); ok(P + "재시험 화면", scr() === "s4", scr());
-      var sug = $$("#why4 .sug button"); ok(P + "수정 제안", sug.length > 0, sug.map(function (b) { return b.textContent; }).join(" / "));
-      await click(sug[0]); await W(120);
-      ok(P + "수정됨 표시", $$("#ed4 .row.chg").length === 1);
-      await click(cta()); var e4 = await until(function () { return D.S.rt.done; }, 90000); ok(P + "재시험 끝까지", e4);
+      ok(P + "성적표 JSON", js && js[0].result === "FAIL" && js[1].result === "PASS", js && js.map(function (x) { return x.result; }).join(",")); await click($("#mx"));
+      // 5 오답 재시험
+      await click(cta()); ok(P + "재시험 화면", scr() === "s5", scr());
+      ok(P + "재시험 전 표시", /재시험 전/.test($("#rtc").textContent));
+      var sug = $$("#rtc .sug button"); ok(P + "수정 제안", sug.length > 0, sug.map(function (b) { return b.textContent; }).join(" / "));
+      await click(sug[0]); ok(P + "수정 내용 표시", !/아래에서 고칠 점/.test($("#rtc .rv.v2").textContent), $("#rtc .rv.v2 .d").textContent);
+      await click(cta()); var e5 = await until(function () { return D.S.rt.done; }, 90000); ok(P + "재시험 끝까지", e5);
       ok(P + "v2 통과", D.S.rt.r2.ev.status === "pass", D.S.rt.r2.ev.status);
       R.push({ name: P + "첫 수정 회귀검증", ok: true, info: D.S.rt.reg.map(function (g) { return "문제" + g.no + ":" + g.st; }).join(" ") });
       if (D.S.rt.reg.some(function (g) { return g.st !== "pass"; })) {
-        ok(P + "회귀 실패 제목", /다른 문제에서 실패/.test($("#t4").textContent), $("#t4").textContent);
-        var s2b = $$("#why4 .sug button").filter(function (b) { return !b.classList.contains("used") && /모든 선박/.test(b.textContent); })[0];
+        ok(P + "회귀 실패 제목", /다른 문제에서 실패/.test($("#t5").textContent), $("#t5").textContent);
+        var s2b = $$("#rtc .sug button").filter(function (b) { return !b.classList.contains("used") && /모든 선박/.test(b.textContent); })[0];
         ok(P + "두 번째 제안", !!s2b);
         await click(s2b); await click(cta()); await until(function () { return D.S.rt.done; }, 90000);
       }
       ok(P + "회귀검증 모두 통과", D.S.rt.reg.every(function (g) { return g.st === "pass"; }), D.S.rt.reg.map(function (g) { return "문제" + g.no + ":" + g.st; }).join(" "));
-      ok(P + "재시험 제목", /통과했어요/.test($("#t4").textContent), $("#t4").textContent);
-      await click($("#back")); ok(P + "뒤로 → 리포트", scr() === "s3"); await click(cta());
-      ok(P + "다시 재시험 화면", scr() === "s4" && /다음 문제로/.test(cta().textContent), cta().textContent);
+      ok(P + "재시험 제목", /통과했어요/.test($("#t5").textContent), $("#t5").textContent);
+      await click($("#back")); ok(P + "뒤로 → 리포트", scr() === "s4"); await click(cta());
+      ok(P + "다시 재시험 화면", scr() === "s5" && /다음 문제로/.test(cta().textContent), cta().textContent);
       await click(cta());
       await until(function () { return scr() === "s1" && !$("#loopFx").classList.contains("show"); }, 6000);
       ok(P + "다음 문제로 순환", D.S.pi === (pi + 1) % 2 && scr() === "s1", D.S.pi);
