@@ -393,6 +393,23 @@ svg text{font-family:var(--font)}
 #samples .smp{height:52px;margin-bottom:6px}#samples .smp small{font-size:13px}
 .hud .hr .hn{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rc .mt .rk{font-size:14px;font-weight:600;color:var(--gray)}
+
+/* 충돌 효과 */
+.boom .wave,.boom .core,.boom .btx{transform-box:fill-box;transform-origin:center}
+.boom .wave{opacity:0}
+.boom.go .wave{animation:wave 1.2s ease-out infinite}
+.boom.go .w1{animation-delay:.4s}.boom.go .w2{animation-delay:.8s}
+@keyframes wave{0%{transform:scale(.35);opacity:.95}100%{transform:scale(2.6);opacity:0}}
+.boom.go .core{animation:core .6s ease-out both}
+@keyframes core{0%{transform:scale(.2);fill-opacity:.9}100%{transform:scale(1);fill-opacity:.35}}
+.boom.go .btx{animation:btx .5s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes btx{0%{transform:scale(.3);opacity:0}100%{transform:scale(1);opacity:1}}
+.mapbox .flash{position:absolute;inset:0;background:rgba(220,38,38,.22);opacity:0;pointer-events:none;z-index:4;border-radius:24px}
+.mapbox.shake{animation:shake .5s}
+.mapbox.shake .flash{animation:flash .7s ease-out}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-8px)}40%,60%{transform:translateX(8px)}}
+@keyframes flash{0%{opacity:0}15%{opacity:1}100%{opacity:0}}
+.shot .boom.go .wave{opacity:.35;transform:scale(1.6)}.shot .boom.go .w1{opacity:.2;transform:scale(2.2)}.shot .boom.go .w2{opacity:0}
 </style>
 </head>
 <body>
@@ -1160,8 +1177,10 @@ function simView(svg,hudEl,lgdEl,sc,runs,tEnd){
     r.zoneEl=S("circle",{r:SAFE,"stroke-width":2.2*k,"stroke-dasharray":`${6*k} ${5*k}`},svg);
     r.cl=S("line",{stroke:"#dc2626","stroke-width":2.6*k,"stroke-linecap":"round"},svg);r.clT=S("text",LBL(k,"#dc2626",21),svg);
     r.ship=ownShip(svg,k,r.col);r.lab=S("text",Object.assign({"text-anchor":"middle"},LBL(k,r.col,19)),svg);r.lab.textContent=r.name;
-    if(r.ev.coll){const p=L(r.track,r.ev.coll.t);r.boom=S("g",{transform:`translate(${p.x} ${p.y})`,opacity:0},svg);
-      const bt=S("text",Object.assign({x:0,y:-SAFE-14*k,"text-anchor":"middle"},LBL(k,"#dc2626",26)),r.boom);bt.textContent="충돌";}});
+    if(r.ev.coll){const p=L(r.track,r.ev.coll.t);r.boom=S("g",{class:"boom",transform:`translate(${p.x} ${p.y})`,opacity:0},svg);
+      [0,1,2].forEach(i=>S("circle",{class:"wave w"+i,r:SAFE*.55,fill:"rgba(220,38,38,.18)",stroke:"#dc2626","stroke-width":3*k},r.boom));
+      S("circle",{class:"core",r:SAFE*.32,fill:"#dc2626","fill-opacity":.35},r.boom);
+      const bt=S("text",Object.assign({class:"btx",x:0,y:-SAFE-14*k,"text-anchor":"middle"},LBL(k,"#dc2626",30)),r.boom);bt.textContent="충돌";}});
   hudEl.innerHTML=`<div class="hh">최소 거리 (해리)<span>${runs.map(r=>`<span class="stb" style="--sc:${r.col}">${r.short}</span>`).join("")}</span></div>`;
   const cells={};sc.others.forEach(o=>{const d=document.createElement("div");d.className="hr";
     d.innerHTML=`<span class="sb">${o.id}</span><span class="hn">${o.id} ${o.name||o.type}</span><span class="vv">${runs.map(()=>"<b></b>").join("")}</span>`;hudEl.appendChild(d);cells[o.id]=Array.from(d.querySelectorAll("b"));});
@@ -1178,7 +1197,12 @@ function simView(svg,hudEl,lgdEl,sc,runs,tEnd){
         r.clT.textContent=J(hit.o.id,"과/와")+" "+f1(hit.d)+"해리";r.clT.setAttribute("x",p.x+SAFE+12*k);r.clT.setAttribute("y",p.y+7*k);r.clT.style.opacity=1;}
       else{r.cl.style.opacity=0;r.clT.style.opacity=0;}
       r.lab.setAttribute("x",p.x);r.lab.setAttribute("y",p.y-28*k);r.lab.style.opacity=r.iArr>=0&&t>=r.iArr*DT?0:1;
-      if(r.boom){const on=t>=r.ev.coll.t;r.boom.setAttribute("opacity",on?1:0);if(on){r.lab.style.opacity=0;r.cl.style.opacity=0;r.clT.style.opacity=0;}}});
+      if(r.boom){const on=t>=r.ev.coll.t,box=svg.parentNode,hull=r.ship.querySelector("path");r.boom.setAttribute("opacity",on?1:0);
+        if(on){r.lab.style.opacity=0;r.cl.style.opacity=0;r.clT.style.opacity=0;}
+        if(on&&!r.boomed){r.boomed=true;r.boom.classList.add("go");hull.setAttribute("fill","#dc2626");
+          if(!box.querySelector(".flash")){const f=document.createElement("div");f.className="flash";box.appendChild(f);}
+          box.classList.remove("shake");void box.offsetWidth;box.classList.add("shake");}
+        else if(!on&&r.boomed){r.boomed=false;r.boom.classList.remove("go");hull.setAttribute("fill",r.col);box.classList.remove("shake");}}});
     OS.forEach(s=>{const arr=W[s.o.id],p=L(arr,t);s.trail.setAttribute("points",P(arr,n+1)+" "+p.x.toFixed(4)+","+p.y.toFixed(4));
       s.g.setAttribute("transform",`translate(${p.x} ${p.y}) rotate(${p.h})`);
       const red=!!bad[s.o.id],moved=s.b.kind!=="keep"&&t>=s.b.t;s.hull.setAttribute("fill",red?"#dc2626":moved?"#f08a3c":"#6b7684");s.lab.setAttribute("fill",red?"#dc2626":moved?"#c2410c":"#4e5968");
@@ -1188,7 +1212,7 @@ function simView(svg,hudEl,lgdEl,sc,runs,tEnd){
       else{s.lab.setAttribute("text-anchor","start");s.lab.setAttribute("x",p.x+16*k);s.lab.setAttribute("y",p.y-14*k);}});
     if(hitG)hitG.style.opacity=t<2.5?1:t<4?.25:0;
     sc.others.forEach(o=>runs.forEach((r,j)=>{const d=r.ev.per[o.id].d;let m=9;for(let i=0;i<=n;i++)m=Math.min(m,d[i]);
-      const c=cells[o.id][j];c.textContent=f1(m);c.classList.toggle("bad",m<SAFE);}));
+      const c=cells[o.id][j];c.textContent=m<COLL?"충돌":f1(m);c.classList.toggle("bad",m<SAFE);}));
   };
 }
 
@@ -1294,7 +1318,7 @@ function renderRecs(){
       <div class="top">${i===0?'<span class="best">추천</span>':""}</div>
       <div class="t">${tx.t}</div><div class="a">${tx.a}</div>
       <div class="mm"><svg data-i="${i}" preserveAspectRatio="xMidYMid meet"></svg><div class="ml"><span><i class="n"></i>이 전략</span><span><i></i>지금 모델</span></div></div>
-      <div class="mt"><span class="rk">다른 배 움직임 ${c.r.n}가지 중 안전</span>${bar(c.r)}<span>평균 도착 <b style="${c.r.delay-REFD>REVIEW?"color:var(--warn-ink)":""}">${f1(T0of(sc.own)+c.r.delay)}분</b></span></div></button>`;}).join("");
+      <div class="mt">${bar(c.r)}<span>평균 도착 <b style="${c.r.delay-REFD>REVIEW?"color:var(--warn-ink)":""}">${f1(T0of(sc.own)+c.r.delay)}분</b></span></div></button>`;}).join("");
   $$("#rcs .mm svg").forEach(svg=>recMap(svg,cands[+svg.dataset.i].st));
   renderV2();
 }
@@ -1338,13 +1362,11 @@ function fillCompare(){
   const tm=REC.timeMode&&!e1.fails.length&&!e2.fails.length&&e2.verdict!=="na";
   if(tm){h+=row(dd>.1?"ok":"wn","도착",f1(e1.tArr)+"분 → "+f1(e2.tArr)+"분 ("+(dd>0?"−":"+")+f1(Math.abs(dd))+"분)"+(e1.verdict==="review"&&e2.verdict==="pass"?" · 검토 사유 해소":"")+" · 추가 거리 "+f1(e1.extra)+" → "+f1(e2.extra)+"해리");
     const w2=e2.worst;h+=row(e2.per[w2].min>=SAFE?"ok":"ng","안전","모든 배와 안전영역 유지 · 가장 가까운 배 "+w2+" "+f1(e2.per[w2].min)+"해리 (안전영역 "+SAFE+"해리)");}
-  if(!tm&&m1&&m2)h+=row(m2.min>=SAFE?"ok":"ng",m2.min>m1.min?"개선":"변화",focus+" 최소 거리 "+f1(m1.min)+" → "+f1(m2.min)+"해리"+(m1.min<SAFE&&m2.min>=SAFE?(e1.coll?" · 충돌 해소":e1.fails[0]!==sc.primary?" · 충돌위험 해소":" · 안전영역 침범 해소"):""));
+  if(!tm&&m1&&m2)h+=row(m2.min>=SAFE?"ok":"ng",m2.min>m1.min?"개선":"변화",(e1.coll&&e1.coll.id===focus?J(focus,"과/와")+" 충돌 → 최소 "+f1(m2.min)+"해리 유지":focus+" 최소 거리 "+f1(m1.min)+" → "+f1(m2.min)+"해리")+(m1.min<SAFE&&m2.min>=SAFE?(e1.coll?" · 충돌 해소":e1.fails[0]!==sc.primary?" · 충돌위험 해소":" · 안전영역 침범 해소"):""));
   const others=sc.others.filter(o=>o.id!==focus),worse=others.filter(o=>e2.per[o.id].min<SAFE||e2.per[o.id].min<e1.per[o.id].min-.15);
   if(!tm&&others.length)h+=worse.length?row(worse.some(o=>e2.per[o.id].min<SAFE)?"ng":"wn","회귀",worse.map(o=>o.id+" "+f1(e1.per[o.id].min)+" → "+f1(e2.per[o.id].min)).join(" · ")+"해리 · 다른 배와 거리 감소")
     :row("ok","회귀",others.map(o=>o.id).join("·")+" 안전 거리 유지 ("+others.map(o=>o.id+" "+f1(e2.per[o.id].min)).join(" · ")+"해리)");
   const b=REC.base;
-  h+=tm&&rob.ok>=b.ok?row("ok","강건성","가능한 움직임 "+rob.n+"가지 중 안전 "+b.ok+" → "+rob.ok+"가지 · 빨라져도 안전 유지")
-    :row(rob.ok>b.ok?"ok":rob.ok===b.ok?"wn":"ng","강건성","가능한 움직임 "+rob.n+"가지 중 안전 "+b.ok+" → "+rob.ok+"가지");
   if(!tm&&(e2.verdict==="pass"||e2.verdict==="review"))h+=e2.verdict==="review"?row("wn","남은 것",(e2.arrived?"기준선보다 +"+f1(e2.delay-REFD)+"분 늦게 도착":"목적지 미도착")+" → 검토 사유"):row("ok","도착","기준선보다 "+(e2.delay-REFD>.05?"+"+f1(e2.delay-REFD)+"분":"빠르거나 같게")+" · 추가 거리 "+f1(e2.extra)+"해리");
   $("#dl").innerHTML=h;
   if(tm)buildRouteMap();else buildCmpMap(focus);
@@ -1380,7 +1402,7 @@ function buildCmpMap(f){
   S("circle",{cx:p1.x,cy:p1.y,r:SAFE,fill:bad1?"rgba(220,38,38,.08)":"rgba(139,149,161,.06)",stroke:bad1?"#dc2626":"#8b95a1","stroke-width":2*k,"stroke-dasharray":`${5*k} ${4*k}`},svg);
   S("line",{x1:p1.x,y1:p1.y,x2:c1.x,y2:c1.y,stroke:bad1?"#dc2626":"#8b95a1","stroke-width":2.4*k},svg);
   const g1=ownShip(svg,k,GHOST,.7);g1.setAttribute("transform",`translate(${p1.x} ${p1.y}) rotate(${p1.h})`);
-  const l1=S("text",Object.assign({x:p1.x-SAFE-8*k,y:p1.y+6*k,"text-anchor":"end"},LBL(k,"#dc2626",18)),svg);l1.textContent="1차 · "+f+"와 "+f1(a.ev.per[f].min)+"해리";
+  const l1=S("text",Object.assign({x:p1.x-SAFE-8*k,y:p1.y+6*k,"text-anchor":"end"},LBL(k,"#dc2626",18)),svg);l1.textContent=a.ev.coll&&a.ev.coll.id===f?"1차 · "+J(f,"과/와")+" 충돌":"1차 · "+f+"와 "+f1(a.ev.per[f].min)+"해리";
   const p2=L(b.track,t2),g2=ownShip(svg,k,COL,.7);g2.setAttribute("transform",`translate(${p2.x} ${p2.y}) rotate(${p2.h})`);
   const l2=S("text",Object.assign({x:p2.x,y:p2.y-24*k,"text-anchor":"middle"},LBL(k,COL,18)),svg);l2.textContent="2차 · "+f+"와 "+f1(b.ev.per[f].min)+"해리";
   const fo=sc.others.find(o=>o.id===f),cc=L(W[f],t1);
