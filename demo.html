@@ -1104,7 +1104,7 @@ function eventsFor(sc,run,name,intro){
   if(run.iArr>=0&&!run.ev.fails.length){const e=run.ev;ev.push({t:e.tArr,txt:name+" 목적지 도착 · 곧장 갔을 때보다 "+f1(e.delay)+"분 늦게",chip:"도착 +"+f1(e.delay)+"분",cls:e.delay>REVIEW?"warn":"pass"});}
   const f=run.ev.fails[0],cl=run.ev.coll;
   if(cl)ev.push({t:cl.t,txt:J(cl.id,"과/와")+" 충돌했어요",chip:"충돌 · "+cl.id,cls:"fail"});
-  if(f){const m=run.ev.per[f];if(f!==Pm)ev.push({t:Math.max(.5,m.tIn-1.5),txt:"그런데 "+J(f,"과/와")+" 점점 가까워져요",chip:f+"와 거리 감소",cls:"warn"});
+  if(f){const m=run.ev.per[f];if(f!==Pm)ev.push({t:Math.max(.5,m.tIn-1.5),txt:(avoidedFirst(run.ev,Pm)?"그런데 ":"")+J(f,"과/와")+" 점점 가까워져요",chip:f+"와 거리 감소",cls:"warn"});
     if(!cl||cl.id!==f||cl.t-m.tIn>.3)ev.push({t:m.tIn,txt:J(f,"이/가")+" 안전영역 안으로 들어왔어요",chip:(f!==Pm?"충돌위험 · ":"안전영역 침범 · ")+f,cls:"fail"});}
   return[ev[0]].concat(ev.slice(1).sort((a,b)=>a.t-b.t));
 }
@@ -1199,9 +1199,11 @@ const PL={"3":Player("3"),"6":Player("6")};window.__PL=PL;
 
 /* ---------- 4 시뮬레이션 · 5 결과 ---------- */
 const shortNm=(n,fb)=>n.length<=5?n:/^기본 로직 \d$/.test(n)?"로직 "+n.slice(-1):fb;
-function failTitle(name,ev,Pm){const f=ev.fails[0];
-  if(ev.coll)return ev.coll.id!==Pm&&Pm?J(name,"은/는")+" "+J(Pm,"을/를")+" 피한 뒤, <span class=\"f\">"+J(ev.coll.id,"과/와")+" 충돌했어요</span>":J(name,"은/는")+" <span class=\"f\">"+J(ev.coll.id,"과/와")+" 충돌했어요</span>";
-  return f!==Pm?J(name,"은/는")+" "+J(Pm,"을/를")+" 피한 뒤, <span class=\"f\">"+J(f,"과/와")+" 위험해졌어요</span>":J(name,"은/는")+" <span class=\"f\">"+J(f,"을/를")+" 충분히 피하지 못했어요</span>";}
+function avoidedFirst(ev,Pm){const f=ev.coll?ev.coll.id:ev.fails[0];if(!Pm||!f||f===Pm)return false;
+  const t=ev.coll?ev.coll.t:ev.per[f].tIn,p=ev.per[Pm];return p.min>=SAFE&&p.tMin<t;}
+function failTitle(name,ev,Pm){const f=ev.fails[0],seq=avoidedFirst(ev,Pm);
+  if(ev.coll)return seq?J(name,"은/는")+" "+J(Pm,"을/를")+" 피한 뒤, <span class=\"f\">"+J(ev.coll.id,"과/와")+" 충돌했어요</span>":J(name,"은/는")+" <span class=\"f\">"+J(ev.coll.id,"과/와")+" 충돌했어요</span>";
+  return seq?J(name,"은/는")+" "+J(Pm,"을/를")+" 피한 뒤, <span class=\"f\">"+J(f,"과/와")+" 위험해졌어요</span>":f!==Pm?J(name,"은/는")+" <span class=\"f\">"+J(f,"과/와")+" 안전영역이 겹쳤어요</span>":J(name,"은/는")+" <span class=\"f\">"+J(f,"을/를")+" 충분히 피하지 못했어요</span>";}
 function endCap(pl,run){if(run.ev.fails.length||run.ev.verdict==="na"||run.iArr>=0)return;const w=run.ev.worst;
   pl.caps.push({t:pl.tEnd-.4,txt:"모든 배와 안전영역을 지켰어요"+(w?" · 가장 가까웠던 배 "+w+" "+f1(run.ev.per[w].min)+"해리":""),chip:VNAME[run.ev.verdict],cls:run.ev.verdict==="pass"?"pass":"warn"});}
 function doneTitle(name,run,Pm){const ev=run.ev;
@@ -1220,8 +1222,8 @@ function buildSim(){
 function diagnose(run,Pm,own){const ev=run.ev,f=ev.fails[0],n=run.log.length,first=run.log[0];
   if(ev.verdict==="na")return["판정 불가","모델 응답 오류 "+run.errs+"번 · 형식 오류 "+run.bad+"번"];
   if(!n)return["회피 행동 없음","끝까지 침로·속력 유지"];
-  if(f&&f!==Pm&&n===1)return["처음 판단 뒤 변경 없음",J(Pm,"을/를")+" 피한 뒤 "+J(f,"과/와")+" 가까워지는 동안 명령을 바꾸지 않음"];
-  if(f)return["명령 변경 "+n+"번","바꿨지만 "+J(f,"과/와")+"의 거리를 지키기엔 늦음"];
+  if(f&&f!==Pm&&n===1)return["처음 판단 뒤 변경 없음",(avoidedFirst(ev,Pm)?J(Pm,"을/를")+" 피한 뒤 ":"")+J(f,"과/와")+" 가까워지는 동안 명령을 바꾸지 않음"];
+  if(f)return["명령 변경 "+n+"번","명령을 "+n+"번 바꿨지만 "+J(f,"과/와")+" 안전영역이 겹침"];
   if(first.t>=3)return["늦은 첫 회피","+"+fT(first.t)+"분에 첫 명령 · 여유 시간 감소"];
   if(n>8)return["잦은 조정 "+n+"번","명령이 자주 바뀜 → 검토 후보"];
   return[n===1?"명령 1번":"명령 변경 "+n+"번","+"+fT(first.t)+"분 "+cmdTxt(first,own)+(n>1?" 이후 상황에 따라 조정":" · 이후 유지")];}
@@ -1231,7 +1233,7 @@ function fillReport(){
   let h=`<div class="hc"></div><div class="hc" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 9px">1차 시도</span>${sc.model.name}<span class="unk">${surprises.length?"실행 중 드러난 움직임: "+surprises.map(o=>o.id+" "+behaviorShort(o,sc.actual.beh[o.id])+" (+"+fT(sc.actual.beh[o.id].t)+"분)").join(" · "):"다른 배는 모두 그대로 감"}</span>${pill(ev.verdict)}</div>`;
   const f=ev.fails[0];
   h+=`<div class="lay ${f?"l1":""} r2">① 안전성<small>위반이 확인되면 실패</small></div>`;
-  if(ev.coll){const c=ev.coll,m=ev.per[c.id];h+=cell("c1 l1 r2","충돌 · 대상 "+c.id,"+"+f1(c.t)+"분 충돌 · 최소 "+f1(m.min)+"해리"+(c.id!==Pm&&Pm?" · "+J(Pm,"을/를")+" 피한 뒤 발생":""),"ng");}
+  if(ev.coll){const c=ev.coll,m=ev.per[c.id];h+=cell("c1 l1 r2","충돌 · 대상 "+c.id,"+"+f1(c.t)+"분 충돌 · 최소 "+f1(m.min)+"해리"+(avoidedFirst(ev,Pm)?" · "+J(Pm,"을/를")+" 피한 뒤 발생":""),"ng");}
   else if(f){const m=ev.per[f];h+=cell("c1 l1 r2",(f!==Pm?"충돌위험":"안전영역 침범")+" · 대상 "+f,"+"+f1(m.tIn)+"분 안전영역 진입 · 최소 "+f1(m.min)+"해리 (+"+f1(m.tMin)+"분)","ng");}
   else{const w=ev.worst,m=w&&ev.per[w];h+=cell("r2",ev.verdict==="na"?"판정 불가":"필수 조건 충족",w?"가장 가까운 배 "+w+" "+f1(m.min)+"해리 (+"+f1(m.tMin)+"분)":"주변 배 없음",ev.verdict==="na"?"mu":"ok");}
   const dg=diagnose(r,Pm,sc.own);
@@ -1248,11 +1250,11 @@ function fillReport(){
 /* ---------- 6 개선 방향 추천 ---------- */
 const bar=r=>{const p=Math.round(r.rate*100);return`<div class="rb"><b>${r.ok}/${r.n}</b><span class="bar"><i class="${p>=80?"":p>=50?"mid":"low"}" style="width:${p}%"></i></span></div>`;};
 /* 추천 카드 문구: 이 장면의 배 이름으로 */
-function recText(c,P,F){const st=c.st,per=st.period<1?"30초":st.period+"분",tn=turnTxt(st.turn);
+function recText(c,P,F,seq){const st=c.st,per=st.period<1?"30초":st.period+"분",tn=turnTxt(st.turn);
   if(c.kind==="한 번에")return{t:(F&&F!==P?P+"·"+F+"를":J(P||"다른 배","을/를"))+" 한 번에 크게 피하기",a:tn+"로 돌고, "+(st.hold||8)+"분 뒤 목적지로"};
   if(st.mode==="speed")return{t:"속력을 줄여 "+(P?P+(F&&F!==P?"·"+F:""):"다른 배")+" 먼저 보내기",a:"침로는 목적지로 두고, "+per+"마다 속력만 조절"};
   if(c.kind==="작게 + 재평가")return{t:"조금만 돌고 계속 살피기",a:tn+", "+per+"마다 다시 확인"};
-  return{t:(P?J(P,"을/를")+" 피한 뒤 ":"")+(F&&F!==P?J(F,"도/도"):"다른 배도")+" 다시 보기",a:tn+"로 피하고, "+per+"마다 모든 배 다시 확인"};}
+  return{t:seq?J(P,"을/를")+" 피한 뒤 "+J(F,"도/도")+" 다시 보기":(F?J(F,"까지/까지")+" 계속 살피기":"모든 배를 계속 살피기"),a:tn+"로 피하고, "+per+"마다 모든 배 다시 확인"};}
 /* 작은 항로 그림: 다른 배가 지금처럼 그대로 갈 때 (실제 기록 아님) */
 function recMap(svg,st){
   const sc=SC,W=WORLDS[0],[bw,bh]=size(svg,332,118),r=runOwn(sc.own,paramModel(st),sc.others,W.w),r1=runOn(sc.own,sc.others,sc.model.factory,W);
@@ -1268,10 +1270,10 @@ function recMap(svg,st){
   dot(svg,k,sc.own,"A",COL,8);
 }
 function renderRecs(){
-  const sc=SC,{base,cands}=REC,P=sc.primary,F=(sc.v1.ev.coll&&sc.v1.ev.coll.id)||sc.v1.ev.fails[0]||null;
+  const sc=SC,{base,cands}=REC,P=sc.primary,F=(sc.v1.ev.coll&&sc.v1.ev.coll.id)||sc.v1.ev.fails[0]||null,SEQ=avoidedFirst(sc.v1.ev,P);
   $("#t5").innerHTML="이 모델이 <em>참고할 만한 전략</em>이에요";
   $("#s5sub").textContent="다른 배 움직임을 가정한 "+base.n+"가지 경우 · 지금 모델 "+base.ok+"/"+base.n+" 안전"+(REC.timeMode?" · 도착 +"+f1(base.delay)+"분":"")+" · 잠정 결과";
-  $("#rcs").innerHTML=cands.map((c,i)=>{const tx=recText(c,P,F);return`<button class="rc${i===sel?" on":""}" data-i="${i}">
+  $("#rcs").innerHTML=cands.map((c,i)=>{const tx=recText(c,P,F,SEQ);return`<button class="rc${i===sel?" on":""}" data-i="${i}">
       <div class="top">${i===0?'<span class="best">추천</span>':""}</div>
       <div class="t">${tx.t}</div><div class="a">${tx.a}</div>
       <div class="mm"><svg data-i="${i}" preserveAspectRatio="xMidYMid meet"></svg><div class="ml"><span><i class="n"></i>이 전략</span><span><i></i>지금 모델</span><span>다른 배가 그대로 갈 때</span></div></div>
