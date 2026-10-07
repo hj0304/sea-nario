@@ -237,46 +237,67 @@ svg text{font-family:var(--font)}
 .mlg i.ln{width:20px;height:0;border-radius:0;border-top:3px solid currentColor}
 .mlg i.dl{width:20px;height:0;border-radius:0;border-top:3px dashed #a7b1bc}
 
-/* 2 전략 설정 */
+/* 3 전략 설정 (전략 하나) */
 .stw{display:flex;gap:20px;align-items:stretch}
-.stc{width:410px;border-radius:24px;background:var(--card);position:relative;overflow:hidden;padding:6px 0 4px}
-.stc::before{content:"";position:absolute;left:0;top:0;right:0;height:6px;background:var(--sc)}
-.stc .hd{display:flex;align-items:center;gap:12px;height:76px;padding:8px 22px 0 24px;font-size:22px;font-weight:800}
-.stc .hd .fld{flex:1;height:46px}
-.ctl{padding:12px 26px 12px;border-top:1px solid var(--line)}
+.st1{width:820px;border-radius:24px;background:var(--card);position:relative;overflow:hidden;padding:6px 0 10px;--sc:#0b6bcb}
+.st1::before{content:"";position:absolute;left:0;top:0;right:0;height:6px;background:var(--sc)}
+.st1 .hd{display:flex;align-items:center;gap:12px;height:76px;padding:8px 24px 0;font-size:22px;font-weight:800}
+.st1 .hd .stb{width:auto;padding:0 10px}
+.st1 .hd .fld{width:320px;height:46px}
+.st1 .hd small{margin-left:auto;font-size:16px;font-weight:600;color:var(--gray)}
+.cols{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line)}
+.col+.col{border-left:1px solid var(--line)}
+.col .ch{display:flex;align-items:center;gap:10px;height:56px;padding:0 24px;font-size:19px;font-weight:800;color:var(--ink)}
+.col .ch small{font-size:14px;font-weight:600;color:var(--gray)}
+.tg{margin-left:auto;height:34px;padding:0 14px;border:0;border-radius:999px;font-size:16px;font-weight:800;background:#e5e8eb;color:var(--ink2)}
+.tg.on{background:var(--sc);color:#fff}
+.col.off .ctl{opacity:.35;pointer-events:none}
+.ctl{padding:10px 24px 12px;border-top:1px solid var(--line)}
 .ctl .row{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.ctl .k{font-size:17px;font-weight:600;color:var(--gray)}
-.ctl .vv{font-size:26px;font-weight:800;color:var(--sc);letter-spacing:-.02em;white-space:nowrap}
-.ctl .vv small{font-size:17px;font-weight:600;color:var(--gray);margin-left:6px}
-.ctl input[type=range]{display:block;width:100%;margin:10px 0 2px;accent-color:var(--sc);height:22px;cursor:pointer}
+.ctl .k{font-size:16px;font-weight:600;color:var(--gray)}
+.ctl .vv{font-size:24px;font-weight:800;color:var(--sc);letter-spacing:-.02em;white-space:nowrap}
+.ctl .vv small{font-size:16px;font-weight:600;color:var(--gray);margin-left:6px}
+.ctl input[type=range]{display:block;width:100%;margin:8px 0 2px;accent-color:var(--sc);height:22px;cursor:pointer}
 .ctl .tk{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:#b0b8c1}
+.rehint{padding:0 24px 10px;margin-top:-6px;font-size:14px;font-weight:600;color:var(--gray);line-height:1.4}
 .stmap{width:380px;padding:14px;display:flex;flex-direction:column}
 .stmap svg{flex:1;width:100%;min-height:0;border-radius:16px}
-.scr.on .stc.s1c{animation:up .55s .2s both}.scr.on .stc.s2c{animation:up .55s .35s both}
+.scr.on .st1{animation:up .55s .2s both}
+
+/* 결과 리포트: 전략 하나 */
+.rep.one{grid-template-columns:200px 900px;width:1100px}
+.rep .hc .unk{margin-left:14px;font-size:16px;font-weight:600;color:var(--gray)}
 
 /* 6 전략 추천 */
-.rcnow{display:flex;align-items:center;gap:12px;font-size:21px;font-weight:600;color:var(--ink2);margin-bottom:20px;white-space:nowrap}
+.rcnow{display:flex;align-items:center;gap:12px;font-size:21px;font-weight:600;color:var(--ink2);margin-bottom:18px;white-space:nowrap}
 .rcnow .pill{height:34px;font-size:18px;padding:0 12px;border-radius:10px}
+.rcnow .stb{width:auto;padding:0 9px}
 .rcs{display:flex;gap:20px}
-.rc{width:384px;border:0;text-align:left;border-radius:24px;background:var(--card);padding:22px 26px 20px;box-shadow:inset 0 0 0 2px transparent;transition:box-shadow .2s,background .2s,transform .2s;display:flex;flex-direction:column;gap:12px;color:var(--ink)}
+.rc{width:384px;border:0;text-align:left;border-radius:24px;background:var(--card);padding:20px 26px 20px;box-shadow:inset 0 0 0 2px transparent;transition:box-shadow .2s,background .2s;display:flex;flex-direction:column;gap:11px;color:var(--ink)}
 .rc:hover{background:#eceff3}
 .rc.on{background:#fff;box-shadow:inset 0 0 0 3px var(--blue),0 14px 32px -20px rgba(11,107,203,.7)}
-.rc .top{display:flex;align-items:center;gap:8px;height:32px}
-.rc .top .pill{height:32px;font-size:16px;padding:0 11px;border-radius:9px;margin-left:auto}
+.rc .top{display:flex;align-items:center;gap:8px;height:30px}
 .rc .best{display:inline-flex;align-items:center;height:30px;padding:0 11px;border-radius:9px;font-size:15px;font-weight:800;background:var(--blue);color:#fff}
 .rc .kd{font-size:15px;font-weight:700;color:var(--gray)}
-.rc .t{font-size:25px;font-weight:800;letter-spacing:-.02em;line-height:1.3}
-.rc .a{font-size:19px;font-weight:600;color:var(--ink2);line-height:1.45}
+.rc .t{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1.3}
+.rc .a{font-size:18px;font-weight:600;color:var(--ink2);line-height:1.45;min-height:52px}
 .rc .a b{color:var(--blue)}
-.rc .mt{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:7px;font-size:18px;font-weight:600;color:var(--ink2)}
+.rc .mt{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:7px;font-size:17px;font-weight:600;color:var(--ink2)}
 .rc .mt b{color:var(--ink);font-variant-numeric:tabular-nums}
-.rc .mt b.ng{color:var(--fail)}.rc .mt b.ok{color:var(--pass)}
-.rcnote{margin-top:16px;font-size:16px;font-weight:600;color:var(--gray)}
+.rb{display:flex;align-items:center;gap:10px}
+.rb .bar{flex:1;height:10px;border-radius:5px;background:#e5e8eb;overflow:hidden}
+.rb .bar i{display:block;height:100%;border-radius:5px;background:var(--pass)}
+.rb .bar i.mid{background:var(--warn)}.rb .bar i.low{background:var(--fail)}
+.rb b{font-size:20px}
+.rcnote{margin-top:16px;max-width:1180px;text-align:center;font-size:16px;font-weight:600;color:var(--gray);line-height:1.5}
 .scr.on .rc{animation:up .5s both}.scr.on .rc:nth-child(2){animation-delay:.12s}.scr.on .rc:nth-child(3){animation-delay:.24s}
 .dr.ng .ic{background:var(--fail)}
 .hud .hh .stb{text-align:center;justify-content:center}
 .mlg i.ln,.mlg i.dl{background:none}
 #map3,#map6{height:452px}
+.cond button{margin-left:8px;height:28px;padding:0 10px;border:0;border-radius:8px;background:#fff;color:var(--blue);font-size:15px;font-weight:700}
+.cond button:hover{background:#d6e9fd}
+.dl .dr{height:54px}
 </style>
 </head>
 <body>
@@ -305,13 +326,12 @@ svg text{font-family:var(--font)}
           <div id="rows"></div>
           <div class="tadd"><button id="addShip">+ 선박 추가</button><button class="ghost" id="resetShips">예시로 되돌리기</button><span class="hint">값을 고치면 그림에 바로 반영 · 그림에서 배를 끌어 위치 이동</span></div>
         </div>
-        <div class="card pic"><svg id="m1" preserveAspectRatio="xMidYMid meet"></svg><div class="mlg"><span><i style="background:#0b6bcb"></i>자선</span><span><i style="background:#dc2626"></i>충돌 위험</span><span><i style="background:#f08a3c"></i>근접</span><span><i style="background:#6b7684"></i>그 외</span></div></div>
+        <div class="card pic"><svg id="m1" preserveAspectRatio="xMidYMid meet"></svg><div class="mlg"><span><i style="background:#dc2626"></i>지금처럼 가면 충돌 위험</span><span><i style="background:#f08a3c"></i>근접</span><span><i style="background:#6b7684"></i>그 외</span></div></div>
       </div>
       <div class="conds">
-        <span class="cond"><b>출처</b>AIS 동적정보 항적 (예시 장면)</span>
         <span class="cond"><b>관계</b><span id="rel"></span></span>
         <span class="cond"><b>안전영역</b>0.5해리</span>
-        <span class="cond rp">타선 고정 Replay</span>
+        <span class="cond rp">다른 배의 앞으로 움직임: 실행 전까지 비공개 · 기록 <span id="recNo"></span><button id="reRec">다른 기록</button></span>
         <span class="cond ex">예시 데이터</span>
       </div>
     </div>
@@ -319,13 +339,12 @@ svg text{font-family:var(--font)}
 
   <!-- 3 전략 설정 -->
   <section class="scr" id="s2">
-    <h2 class="h1">같은 상황에 줄 <em>두 가지 회피 전략</em>을 정해요</h2>
-    <div class="sub">같은 초기 조건 · 같은 주변 선박 움직임(타선 고정 Replay) · 같은 선회·감속 제약</div>
+    <h2 class="h1">이 장면에서 쓸 <em>회피 전략</em>을 정해요</h2>
+    <div class="sub">다른 배가 앞으로 어떻게 움직일지는 모르는 채로 정해요</div>
     <div class="vis">
       <div class="stw">
-        <div class="stc s1c" data-i="0"></div>
-        <div class="stc s2c" data-i="1"></div>
-        <div class="card stmap"><svg id="m2" preserveAspectRatio="xMidYMid meet"></svg><div class="mlg"><span style="color:#0b6bcb"><i class="ln"></i>전략 1</span><span style="color:#7c4dff"><i class="ln"></i>전략 2</span><span><i class="dl"></i>주변 배</span></div></div>
+        <div class="st1" id="st1"></div>
+        <div class="card stmap"><svg id="m2" preserveAspectRatio="xMidYMid meet"></svg><div class="mlg"><span style="color:#0b6bcb"><i class="ln"></i>처음 계획</span><span><i class="dl"></i>다른 배: 지금 방향 (6분)</span></div></div>
       </div>
     </div>
   </section>
@@ -336,7 +355,7 @@ svg text{font-family:var(--font)}
     <div class="vis">
       <div class="mapbox" id="map3"><svg id="m3" preserveAspectRatio="xMidYMid meet"></svg>
         <div class="hud" id="hud3"></div>
-        <div class="rptag"><span>타선 고정 Replay</span></div>
+        <div class="rptag"><span id="rp3"></span></div>
         <div class="lgd" id="lgd3"></div>
       </div>
       <div class="cap" id="cap3"><span class="tm num"></span><span class="tx"></span><span class="chip off"></span></div>
@@ -351,18 +370,18 @@ svg text{font-family:var(--font)}
         <span class="st"><i style="background:var(--pass)"></i>통과</span><span class="st"><i style="background:var(--warn)"></i>검토 필요</span><span class="st"><i style="background:var(--fail)"></i>실패</span><span class="st"><i style="background:#a7b1bc"></i>판정 불가</span>
         <span class="prov" style="margin-left:10px">잠정 판정 · 전문가 검토 전</span>
       </div>
-      <div class="rep" id="rep"></div>
+      <div class="rep one" id="rep"></div>
     </div>
   </section>
 
   <!-- 6 전략 방안 추천 -->
   <section class="scr" id="s5">
     <h2 class="h1" id="t5"></h2>
-    <div class="sub">같은 문제에서 안전 조건을 지키는 행동을 찾아 제안해요</div>
+    <div class="sub">실제 기록은 보지 않고, 다른 배가 할 수 있는 움직임을 여러 가지로 가정해 시험해 봐요</div>
     <div class="vis">
       <div class="rcnow" id="rcnow"></div>
       <div class="rcs" id="rcs"></div>
-      <div class="rcnote">같은 동역학 가정(선회 15°/분 · 감속 2노트/분)에서 행동 후보를 실행해 보고 고른 결과예요 · 하나를 골라 재시험해요</div>
+      <div class="rcnote" id="rcnote"></div>
     </div>
   </section>
 
@@ -372,7 +391,7 @@ svg text{font-family:var(--font)}
     <div class="vis">
       <div class="mapbox" id="map6"><svg id="m6" preserveAspectRatio="xMidYMid meet"></svg>
         <div class="hud" id="hud6"></div>
-        <div class="rptag"><span>같은 문제 · 타선 고정 Replay</span></div>
+        <div class="rptag"><span id="rp6"></span></div>
         <div class="lgd" id="lgd6"></div>
       </div>
       <div class="cap" id="cap6"><span class="tm num"></span><span class="tx"></span><span class="chip off"></span></div>
@@ -385,7 +404,7 @@ svg text{font-family:var(--font)}
     <div class="vis">
       <div class="rt">
         <div class="card rtc">
-          <div class="ch">기록 <b>S-0412</b> · 평가 기준 <b>v0.3</b> · 동역학 가정 <b>v0.1</b> · 타선 고정 Replay<span class="prov" style="margin-left:auto">잠정 판정</span></div>
+          <div class="ch">기록 <b id="recNo7"></b> · 평가 기준 <b>v0.3</b> · 동역학 가정 <b>v0.1</b> · 같은 문제 재생<span class="prov" style="margin-left:auto">잠정 판정</span></div>
           <div class="rv v1" id="rv1"></div>
           <div class="rarr"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b0b8c1" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15M6 13l6 6 6-6"/></svg></div>
           <div class="rv v2" id="rv2"></div>
@@ -419,9 +438,10 @@ function fit(){const s=Math.min(innerWidth/1440,innerHeight/900);$("#stage").sty
 addEventListener("resize",fit);fit();
 
 /* ---------- 계산 엔진 (단위: 해리, 분 · 예시값) ----------
-   화면은 북쪽이 위. 자선은 선회율 15°/분, 감속·가속 2노트/분 제약 (가정)
-   주변 배는 입력한 속력·방향 그대로 직진 (타선 고정 Replay) */
-const DEG=Math.PI/180,DT=0.05,TEND=20,N=Math.round(TEND/DT)+1,SAFE=0.5,NEAR=2,TURN=15,ACC=2,REVIEW=5;
+   화면은 북쪽이 위. 자선은 선회 15°/분, 감속·가속 2노트/분 제약 (가정)
+   다른 배의 앞으로 움직임(직진·변침·감속·정지·가속)은 장면마다 '기록'으로 정해 두지만,
+   전략·재평가·추천은 그 기록을 보지 않는다. 볼 수 있는 것은 각 시점의 위치·속력·방향뿐 */
+const DEG=Math.PI/180,DT=0.05,TEND=20,N=Math.round(TEND/DT)+1,SAFE=0.5,NEAR=2,TURN=15,ACC=2,REVIEW=5,HOR=12,NWORLD=30;
 const dir=h=>[Math.sin(h*DEG),-Math.cos(h*DEG)];
 const nrm=a=>((a%360)+360)%360;
 const d180=a=>nrm(a+180)-180;
@@ -430,28 +450,70 @@ const pad3=h=>String(Math.round(nrm(h))%360).padStart(3,"0");
 const fT=t=>(Math.round(t*2)/2).toString();
 const TYPES=["화물선","컨테이너선","유조선","여객선","어선","예인선","레저선박"];
 const LET="ABCDEFGHIJ",MAXS=6;
-const STCOL=["#0b6bcb","#7c4dff"],STSOFT=["rgba(11,107,203,.07)","rgba(124,77,255,.06)"];
+const COL="#0b6bcb",SOFT="rgba(11,107,203,.07)",GHOST="#e57373";
 
-/* 받침 있는 말 뒤 조사 고르기 (전략 1은 / 전략 2는, B를 ...) */
-function lastSound(w){w=String(w).replace(/[′'\s]+$/,"");const c=w.slice(-1);
+/* 받침에 맞는 조사 (전략 1은 / B를 / v2는 ...) */
+function lastSound(w){w=String(w).replace(/[′'\s)]+$/,"");const c=w.slice(-1);
   if(/\d/.test(c))return{"0":1,"1":2,"3":1,"6":1,"7":2,"8":2}[c]||0;
   const code=c.charCodeAt(0);if(code>=0xAC00&&code<=0xD7A3){const j=(code-0xAC00)%28;return j===8?2:j?1:0;}
   return /[LRlr]/.test(c)?2:/[MNmn]/.test(c)?1:0;}
 const J=(w,p)=>{const [a,b]=p.split("/"),s=lastSound(w);return w+(p==="으로/로"?(s===1?a:b):(s?a:b));};
 
-function runOwn(own,legs){const a=[];let x=own.x,y=own.y,h=own.hdg,s=own.spd;
-  for(let i=0;i<N;i++){const t=i*DT;a.push({x,y,h});
-    let th=own.hdg,ts=own.spd;legs.forEach(l=>{if(t>=l.t){th=l.hdg;ts=l.spd;}});
-    h+=Math.max(-TURN*DT,Math.min(TURN*DT,d180(th-h)));s+=Math.max(-ACC*DT,Math.min(ACC*DT,ts-s));
+/* 재현 가능한 난수 */
+function hashStr(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function rng(seed){let a=seed>>>0;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+
+/* 다른 배가 할 수 있는 움직임 (선종별로 얼마나 자주 바꾸는지만 다름) */
+const ERR={"어선":1.7,"레저선박":1.7,"예인선":1.1,"여객선":.8};
+function drawBehavior(o,r){
+  const pm=Math.min(.75,.38*(ERR[o.type]||.7));if(r()>pm)return{kind:"keep"};
+  const t=+(1.5+r()*12).toFixed(1),k=r(),sg=r()<.5?-1:1;
+  if(k<.38)return{kind:"turn",t,dh:sg*Math.round(20+r()*40),f:1};
+  if(k<.62)return{kind:"slow",t,dh:0,f:+(.3+r()*.3).toFixed(2)};
+  if(k<.74)return{kind:"stop",t,dh:0,f:0};
+  if(k<.88)return{kind:"fast",t,dh:0,f:+(1.2+r()*.2).toFixed(2)};
+  return{kind:"turnslow",t,dh:sg*Math.round(20+r()*30),f:+(.5+r()*.2).toFixed(2)};
+}
+function behaviorText(o,b){const to=Math.round(o.spd*b.f);
+  return b.kind==="turn"?(b.dh>0?"우현":"좌현")+"으로 "+Math.abs(b.dh)+"° 꺾었어요":b.kind==="slow"?to+"노트로 감속했어요":b.kind==="stop"?"멈추기 시작했어요":b.kind==="fast"?to+"노트로 가속했어요":(b.dh>0?"우현":"좌현")+"으로 꺾으며 감속했어요";}
+function behaviorShort(o,b){const to=Math.round(o.spd*b.f);
+  return b.kind==="turn"?(b.dh>0?"우현 ":"좌현 ")+Math.abs(b.dh)+"° 변침":b.kind==="slow"?to+"노트로 감속":b.kind==="stop"?"정지":b.kind==="fast"?to+"노트로 가속":"변침+감속";}
+function runOther(o,b){const a=[],tr=o.len<50?30:o.len<150?20:10,ac=o.len<50?3:1.5;let x=o.x,y=o.y,h=o.hdg,s=o.spd;
+  for(let i=0;i<N;i++){const t=i*DT;a.push({x,y,h,s});
+    let th=o.hdg,ts=o.spd;if(b.kind!=="keep"&&t>=b.t){th=o.hdg+b.dh;ts=o.spd*b.f;}
+    h+=Math.max(-tr*DT,Math.min(tr*DT,d180(th-h)));s+=Math.max(-ac*DT,Math.min(ac*DT,ts-s));
     const [ux,uy]=dir(h);x+=ux*s/60*DT;y+=uy*s/60*DT;}return a;}
-function runLine(o){const [u,v]=dir(o.hdg),a=[];for(let i=0;i<N;i++){const t=i*DT;a.push({x:o.x+u*o.spd/60*t,y:o.y+v*o.spd/60*t,h:o.hdg});}return a;}
+const straight=o=>runOther(o,{kind:"keep"});
+
+/* 자선 = 전략 실행. 재평가는 그 순간 보이는 위치·속력·방향만으로 판단 (다른 배는 지금처럼 간다고 가정) */
+function cpa(px,py,vx,vy,o){const dx=o.x-px,dy=o.y-py,[u,v]=dir(o.h),wx=u*o.s/60-vx,wy=v*o.s/60-vy,w2=wx*wx+wy*wy;
+  const t=w2<1e-9?0:Math.max(0,Math.min(HOR,-(dx*wx+dy*wy)/w2));return Math.hypot(dx+wx*t,dy+wy*t);}
+function runOwn(own,st,others,world){
+  const a=[],log=[];let x=own.x,y=own.y,h=own.hdg,s=own.spd,th=own.hdg,ts=own.spd,started=false,next=Infinity,checks=0;
+  const hs=[-60,-45,-30,-15,0,15,30,45,60].map(d=>own.hdg+d);
+  for(let i=0;i<N;i++){const t=i*DT;
+    if(!started&&t>=st.start-1e-9){started=true;th=own.hdg+st.turn;ts=Math.max(0,own.spd+st.dv);log.push({t,th,ts,why:"first"});next=t+(st.re?st.period:Infinity);}
+    else if(started&&st.re&&t>=next-1e-9){next=t+st.period;checks++;
+      const obs=others.map(o=>world[o.id][i]);
+      const cost=(hh,sp)=>{const [u,v]=dir(hh),vx=u*sp/60,vy=v*sp/60;let risk=0,worst=null,wd=9;
+        obs.forEach((o,j)=>{const d=cpa(x,y,vx,vy,o);if(d<st.margin)risk+=st.margin-d;if(d<wd){wd=d;worst=others[j].id;}});
+        return{c:risk*100+Math.abs(d180(hh-own.hdg))*.01+(own.spd-sp)*.08,risk,worst};};
+      const cur=cost(th,ts);let best={c:cur.c,h:th,s:ts,r:cur};
+      const sps=[ts,own.spd,Math.max(2,own.spd-4),Math.max(2,own.spd-7)].filter((v,k,arr)=>arr.indexOf(v)===k);
+      hs.concat([th]).forEach(hh=>sps.forEach(sp=>{const r=cost(hh,sp);if(r.c<best.c-1e-9)best={c:r.c,h:hh,s:sp,r};}));
+      if(cur.c-best.c>.05&&(Math.abs(d180(best.h-th))>.5||best.s!==ts)){
+        log.push({t,th:best.h,ts:best.s,why:cur.risk>0?"risk":"back",ship:cur.risk>0?cur.worst:null,prev:th,pts:ts});th=best.h;ts=best.s;}}
+    a.push({x,y,h});
+    h+=Math.max(-TURN*DT,Math.min(TURN*DT,d180(th-h)));s+=Math.max(-ACC*DT,Math.min(ACC*DT,ts-s));
+    const [ux,uy]=dir(h);x+=ux*s/60*DT;y+=uy*s/60*DT;}
+  return{track:a,log,checks};}
 function L(arr,t){t=Math.max(0,Math.min(TEND,t));const f=t/DT,i=Math.min(Math.floor(f),N-2),u=f-i,p=arr[i],q=arr[i+1];return{x:p.x+(q.x-p.x)*u,y:p.y+(q.y-p.y)*u,h:p.h+(q.h-p.h)*u};}
 const nT=t=>Math.min(N,Math.round(t/DT)+1);
 
-/* 한 번의 실행 채점: 선박별 거리 시계열, 안전영역 침범, 효율(항로 이탈·시간) */
-function evaluate(track,own,others,lines){
+/* 한 번의 실행 채점 */
+function evaluate(track,own,others,world){
   const per={};let tClear=0;
-  others.forEach(o=>{const ln=lines[o.id];let mn=99,tm=0,tin=-1;const d=new Array(N);
+  others.forEach(o=>{const ln=world[o.id];let mn=99,tm=0,tin=-1;const d=new Array(N);
     for(let i=0;i<N;i++){const v=Math.hypot(track[i].x-ln[i].x,track[i].y-ln[i].y);d[i]=v;if(v<mn){mn=v;tm=i*DT;}if(tin<0&&v<SAFE)tin=i*DT;}
     per[o.id]={d,min:mn,tMin:tm,tIn:tin};if(mn<NEAR)tClear=Math.max(tClear,tm);});
   tClear=Math.min(TEND,Math.max(tClear+2,8));
@@ -463,24 +525,27 @@ function evaluate(track,own,others,lines){
   return{per,delay,dev,fails,worst,verdict:fails.length?"fail":delay>REVIEW?"review":"pass"};
 }
 const VNAME={pass:"통과",review:"검토 필요",fail:"실패",na:"판정 불가"};
-const pill=(v,cls)=>`<span class="pill ${v==="review"?"warn":v}${cls?" "+cls:""}">${VNAME[v]}</span>`;
+const pill=v=>`<span class="pill ${v==="review"?"warn":v}">${VNAME[v]}</span>`;
 
-/* ---------- 상황 (2번 화면에서 편집) ---------- */
+/* ---------- 상황 ---------- */
 function defaultShips(){
   const own={id:"A",own:true,type:"화물선",len:210,spd:13,hdg:72,x:0,y:0};
-  const o=runOwn(own,[]),s1=runOwn(own,[{t:.5,hdg:102,spd:13}]),at=(a,t)=>a[Math.round(t/DT)];
+  const run=(legs)=>{const a=[];let x=0,y=0,h=72,s=13;for(let i=0;i<N;i++){const t=i*DT;a.push({x,y});let th=72,ts=13;legs.forEach(l=>{if(t>=l[0]){th=l[1];ts=l[2];}});
+    h+=Math.max(-TURN*DT,Math.min(TURN*DT,d180(th-h)));s+=Math.max(-ACC*DT,Math.min(ACC*DT,ts-s));const [ux,uy]=dir(h);x+=ux*s/60*DT;y+=uy*s/60*DT;}return a;};
+  const o=run([]),s1=run([[.5,102,13]]),at=(a,t)=>a[Math.round(t/DT)];
   const back=(p,h,s,t)=>{const [u,v]=dir(h);return{x:+(p.x-u*s/60*t).toFixed(2),y:+(p.y-v*s/60*t).toFixed(2)};};
   const B=back(at(o,11),340,8,11);
   const a=at(s1,16.5),nc=dir(192),C=back({x:a.x+nc[0]*.2,y:a.y+nc[1]*.2},260,6,16.5);
   const o7=at(o,7),nd=dir(72-90),D=back({x:o7.x+nd[0]*.8,y:o7.y+nd[1]*.8},240,11,7);
   return[own,Object.assign({id:"B",type:"어선",len:22,spd:8,hdg:340},B),Object.assign({id:"C",type:"예인선",len:30,spd:6,hdg:260},C),Object.assign({id:"D",type:"화물선",len:180,spd:11,hdg:240},D)];
 }
-const defaultStrats=()=>[{name:"단순 기준 전략",turn:30,dv:0,start:.5},{name:"다선박 고려 전략",turn:15,dv:-3,start:.5}];
-let ships=defaultShips(),strats=defaultStrats();
+const DEFAULT_REC=1;
+const defaultStrat=()=>({name:"내 회피 전략",turn:30,dv:0,start:.5,re:false,period:1,margin:1});
+let ships=defaultShips(),strat=defaultStrat(),recSeed=DEFAULT_REC;
 
-/* 원래 침로로 갔을 때의 관계 (2번 화면 표시용) */
-function baseState(){const own=ships[0],others=ships.slice(1),lines={};others.forEach(o=>lines[o.id]=runLine(o));
-  const orig=runOwn(own,[]);return{own,others,lines,orig,eo:evaluate(orig,own,others,lines)};}
+/* 지금 보이는 대로 (다들 지금처럼 간다면) */
+function observed(){const own=ships[0],others=ships.slice(1),pred={};others.forEach(o=>pred[o.id]=straight(o));
+  const orig=runOwn(own,{turn:0,dv:0,start:99,re:false},others,pred).track;return{own,others,pred,orig,eo:evaluate(orig,own,others,pred)};}
 function bearing(p,q){return nrm(Math.atan2(q.x-p.x,-(q.y-p.y))/DEG);}
 function encounter(a,t){const rel=nrm(bearing(a,t)-a.hdg),relT=nrm(bearing(t,a)-t.hdg),dh=nrm(t.hdg-a.hdg);
   if(dh>=165&&dh<=195&&(rel<=20||rel>=340))return"정면";
@@ -519,15 +584,19 @@ function ownShip(svg,k,col,sz){const g=S("g",{},svg);
   S("path",{d:HULL(k*(sz||.8)),fill:col,stroke:"#fff","stroke-width":2.2*k,"stroke-linejoin":"round"},g);
   S("rect",{x:-4.5*k,y:7*k,width:9*k,height:6*k,rx:2*k,fill:"#fff","fill-opacity":.85},g);return g;}
 const size=(svg,dw,dh)=>[svg.clientWidth||dw,svg.clientHeight||dh];
+function vec(svg,k,p,h,spd,col,mins){const [u,v]=dir(h),Lm=spd/60*(mins||6),x2=p.x+u*Lm,y2=p.y+v*Lm;if(spd<=0)return;
+  S("line",{x1:p.x,y1:p.y,x2,y2,stroke:col,"stroke-width":3*k,"stroke-dasharray":`${6*k} ${5*k}`,"stroke-linecap":"round",opacity:.8},svg);
+  S("path",{d:`M0 ${-9*k}L${7*k} ${5*k}L${-7*k} ${5*k}Z`,fill:col,transform:`translate(${x2} ${y2}) rotate(${h})`},svg);}
+function dot(svg,k,p,id,col,r){const g=S("g",{transform:`translate(${p.x} ${p.y})`},svg);S("circle",{r:r*k,fill:col,stroke:"#fff","stroke-width":2.5*k},g);
+  const t=S("text",{x:0,y:r*.38*k,"text-anchor":"middle","font-size":r*1.05*k,"font-weight":800,fill:"#fff","pointer-events":"none"},g);t.textContent=id;return g;}
 
-/* ---------- 2 상황 설정: 표 + 배치 그림 ---------- */
+/* ---------- 2 상황 설정 ---------- */
 const X_ICON='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 const LIM={len:[5,400],spd:[0,30],hdg:[0,359]};
 function renderRows(){
-  const rows=$("#rows"),n=ships.length;
-  rows.style.setProperty("--rh",Math.min(72,Math.floor(288/n))+"px");
+  const rows=$("#rows"),n=ships.length,rh=Math.min(72,Math.floor(288/n))+"px";
   rows.innerHTML=ships.map(s=>{const opts=TYPES.map(t=>`<option${t===s.type?" selected":""}>${t}</option>`).join("");
-    return `<div class="tr${s.own?" me":""}${s.fresh?" new":""}" data-id="${s.id}" style="--rh:${Math.min(72,Math.floor(288/n))}px">
+    return `<div class="tr${s.own?" me":""}${s.fresh?" new":""}" data-id="${s.id}" style="--rh:${rh}">
       <span class="nm"><span class="sb${s.own?" own":""}">${s.id}</span>${s.own?'자선<small style="font-size:16px;color:var(--gray);font-weight:600">시험 대상</small>':s.id}</span>
       <label class="fld sel"><select data-k="type" aria-label="${s.id} 선종">${opts}</select></label>
       <label class="fld"><input class="num" type="number" data-k="len" min="5" max="400" step="1" value="${s.len}" aria-label="${s.id} 길이"><i>m</i></label>
@@ -549,32 +618,30 @@ $("#addShip").onclick=()=>{if(ships.length>=MAXS)return;const id=[...LET].find(l
   for(let b=0;b<360;b+=15){const [u,v]=dir(b),p={x:A.x+u*2.6,y:A.y+v*2.6},d=Math.min(...ships.map(s=>Math.hypot(s.x-p.x,s.y-p.y)));if(d>bd){bd=d;best={b,p};}}
   ships.push({id,type:"화물선",len:120,spd:10,hdg:Math.round(nrm(best.b+180)/5)*5%360,x:+best.p.x.toFixed(2),y:+best.p.y.toFixed(2),fresh:true});
   renderRows();shipChanged();};
-$("#resetShips").onclick=()=>{ships=defaultShips();renderRows();shipChanged();};
+$("#resetShips").onclick=()=>{ships=defaultShips();recSeed=DEFAULT_REC;renderRows();shipChanged();};
+$("#reRec").onclick=()=>{recSeed++;$("#recNo").textContent="#"+recSeed;};
 
 let drag=null,picVB=null;
 function renderPic(){
-  const svg=$("#m1"),[bw,bh]=size(svg,344,330),st=baseState();
+  const svg=$("#m1"),[bw,bh]=size(svg,344,330),st=observed();
+  $("#recNo").textContent="#"+recSeed;
   svg.textContent="";
   if(!drag||!picVB){const boxes=[];ships.forEach(s=>{const [u,v]=dir(s.hdg),L6=s.spd/60*6;boxes.push([s,-34,-34,34,34]);boxes.push([{x:s.x+u*L6,y:s.y+v*L6},-14,-14,14,14]);});
     picVB=fitVB(boxes,bw,bh,[10,40,10,14]);}
   const vb=picVB,k=vb[2]/bw;setVB(svg,vb);seaGrid(svg,vb,k);north(svg,vb,k,20);
-  /* 그대로 가면 충돌하는 배: 그 시점의 두 위치 */
-  st.others.forEach(o=>{const m=st.eo.per[o.id];if(m.min>=SAFE)return;const a=L(st.orig,m.tMin),b=L(st.lines[o.id],m.tMin);
+  /* 지금처럼 가면 부딪히는 배: 그 시점의 두 위치 */
+  st.others.forEach(o=>{const m=st.eo.per[o.id];if(m.min>=SAFE)return;const a=L(st.orig,m.tMin),b=L(st.pred[o.id],m.tMin);
     S("line",{x1:a.x,y1:a.y,x2:b.x,y2:b.y,stroke:"#dc2626","stroke-width":2*k,"stroke-dasharray":`${3*k} ${3*k}`},svg);
     const g=S("g",{transform:`translate(${a.x} ${a.y})`},svg);
     S("path",{d:`M${-6*k} ${-6*k}L${6*k} ${6*k}M${6*k} ${-6*k}L${-6*k} ${6*k}`,stroke:"#dc2626","stroke-width":3*k,"stroke-linecap":"round"},g);
     const t=S("text",Object.assign({x:0,y:-12*k,"text-anchor":"middle"},LBL(k,"#dc2626",14)),g);t.textContent="+"+fT(m.tMin)+"분 "+o.id;});
-  ships.forEach(s=>{const own=!!s.own,col=own?"#0b6bcb":SCOL[status(st.eo.per[s.id]?st.eo.per[s.id].min:9)];
-    const [u,v]=dir(s.hdg),L6=s.spd/60*6,x2=s.x+u*L6,y2=s.y+v*L6;
-    if(s.spd>0){S("line",{x1:s.x,y1:s.y,x2,y2,stroke:col,"stroke-width":3*k,"stroke-dasharray":`${6*k} ${5*k}`,"stroke-linecap":"round",opacity:own?1:.75},svg);
-      S("path",{d:`M0 ${-9*k}L${7*k} ${5*k}L${-7*k} ${5*k}Z`,fill:col,transform:`translate(${x2} ${y2}) rotate(${s.hdg})`},svg);}
-    const r=(own?17:14)*Math.max(.85,Math.min(1.35,.8+s.len/350))*k;
+  ships.forEach(s=>{const own=!!s.own,col=own?COL:SCOL[status(st.eo.per[s.id]?st.eo.per[s.id].min:9)];
+    vec(svg,k,s,s.hdg,s.spd,col);
+    const r=(own?17:14)*Math.max(.85,Math.min(1.35,.8+s.len/350));
     const g=S("g",{class:"shp","data-id":s.id,transform:`translate(${s.x} ${s.y})`},svg);
-    S("circle",{r:r+8*k,fill:"transparent"},g);
-    S("circle",{r,fill:col,stroke:"#fff","stroke-width":3*k},g);
-    const tx=S("text",{x:0,y:r*.36,"text-anchor":"middle","font-size":r*1.05,"font-weight":800,fill:"#fff","pointer-events":"none"},g);tx.textContent=s.id;
-    if(own){const lb=S("text",Object.assign({x:0,y:r+18*k,"text-anchor":"middle"},LBL(k,"#0b6bcb",15)),svg);lb.textContent="자선";}});
-  /* 관계 요약 */
+    S("circle",{r:(r+8)*k,fill:"transparent"},g);S("circle",{r:r*k,fill:col,stroke:"#fff","stroke-width":3*k},g);
+    const tx=S("text",{x:0,y:r*.36*k,"text-anchor":"middle","font-size":r*1.05*k,"font-weight":800,fill:"#fff","pointer-events":"none"},g);tx.textContent=s.id;
+    if(own){const lb=S("text",Object.assign({x:s.x,y:s.y+(r+18)*k,"text-anchor":"middle"},LBL(k,COL,15)),svg);lb.textContent="자선";}});
   const risk=[],near=[];st.others.forEach(o=>{const m=st.eo.per[o.id].min;if(m<SAFE)risk.push(o.id+" "+encounter(st.own,o));else if(m<NEAR)near.push(o.id);});
   $("#rel").textContent=risk.concat(near.length?[near.join("·")+" 근접"]:[]).join(" · ")||"가까운 배 없음 (위험 장면 아님)";
 }
@@ -588,86 +655,83 @@ function svgPt(svg,e){const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.client
   svg.addEventListener("pointerup",end);svg.addEventListener("pointercancel",end);
 })();
 
-/* ---------- 3 전략 설정 ---------- */
+/* ---------- 3 전략 설정 (하나) ---------- */
 const turnTxt=d=>{d=Math.round(d);return d>0?"우현 "+d+"°":d<0?"좌현 "+(-d)+"°":"침로 유지";};
 const spdTxt=(own,dv)=>dv===0?own.spd+"노트 유지":Math.max(0,own.spd+dv)+"노트 "+(dv<0?"감속":"가속");
-function actTxt(st,own){const t=turnTxt(st.turn),s=st.dv===0?"":(st.dv<0?Math.max(0,own.spd+st.dv)+"노트 감속":Math.max(0,own.spd+st.dv)+"노트 가속");
+function actTxt(st,own){const s=st.dv===0?"":Math.max(0,own.spd+st.dv)+"노트 "+(st.dv<0?"감속":"가속"),t=turnTxt(st.turn);
   return st.turn===0?(s||"침로·속력 유지"):s?s+" + "+t:t;}
-const legsOf=(st,own)=>[{t:st.start,hdg:own.hdg+st.turn,spd:Math.max(0,own.spd+st.dv)}].concat(st.leg2?[st.leg2]:[]);
-function renderStratCards(){
-  const own=ships[0];
-  $$(".stc").forEach(card=>{const i=+card.dataset.i,st=strats[i];
-    card.innerHTML=`<div class="hd"><span class="stb">${i+1}</span><label class="fld"><input data-k="name" value="${st.name.replace(/"/g,"&quot;")}" maxlength="14" aria-label="전략 ${i+1} 이름"></label></div>
-      <div class="ctl"><div class="row"><span class="k">변침</span><span class="vv" data-o="turn"></span></div><input type="range" data-k="turn" min="-60" max="60" step="5" value="${st.turn}" aria-label="전략 ${i+1} 변침"><div class="tk"><span>좌현 60°</span><span>유지</span><span>우현 60°</span></div></div>
-      <div class="ctl"><div class="row"><span class="k">속력</span><span class="vv" data-o="dv"></span></div><input type="range" data-k="dv" min="${-own.spd}" max="5" step="1" value="${st.dv}" aria-label="전략 ${i+1} 속력 변화"><div class="tk"><span>정지</span><span>지금 ${own.spd}노트</span><span>+5노트</span></div></div>
-      <div class="ctl"><div class="row"><span class="k">행동 시작</span><span class="vv" data-o="start"></span></div><input type="range" data-k="start" min="0" max="6" step="0.5" value="${st.start}" aria-label="전략 ${i+1} 행동 시작"><div class="tk"><span>바로</span><span>+3분</span><span>+6분</span></div></div>`;
-    updStratText(card);});
+const stratTxt=(st,own)=>"+"+st.start+"분 "+actTxt(st,own)+(st.re?" · 재평가 "+(st.period<1?"30초":st.period+"분")+"마다(판단 거리 "+st.margin+"해리)":" · 재평가 없음");
+function renderStrat(){
+  const own=ships[0],st=strat,el=$("#st1");
+  el.innerHTML=`<div class="hd"><span class="stb">v1</span><label class="fld"><input data-k="name" value="${st.name.replace(/"/g,"&quot;")}" maxlength="14" aria-label="전략 이름"></label><small>자선 ${own.spd}노트 · ${pad3(own.hdg)}°</small></div>
+    <div class="cols">
+      <div class="col"><div class="ch">처음 행동<small>지금 보이는 상황으로 정해요</small></div>
+        <div class="ctl"><div class="row"><span class="k">변침</span><span class="vv" data-o="turn"></span></div><input type="range" data-k="turn" min="-60" max="60" step="5" value="${st.turn}" aria-label="변침"><div class="tk"><span>좌현 60°</span><span>유지</span><span>우현 60°</span></div></div>
+        <div class="ctl"><div class="row"><span class="k">속력</span><span class="vv" data-o="dv"></span></div><input type="range" data-k="dv" min="${-own.spd}" max="5" step="1" value="${st.dv}" aria-label="속력 변화"><div class="tk"><span>정지</span><span>지금 ${own.spd}노트</span><span>+5노트</span></div></div>
+        <div class="ctl"><div class="row"><span class="k">행동 시작</span><span class="vv" data-o="start"></span></div><input type="range" data-k="start" min="0" max="6" step="0.5" value="${st.start}" aria-label="행동 시작"><div class="tk"><span>바로</span><span>+3분</span><span>+6분</span></div></div></div>
+      <div class="col${st.re?"":" off"}"><div class="ch">가면서 다시 판단<button class="tg${st.re?" on":""}" data-k="re" aria-pressed="${st.re}">${st.re?"켬":"끔"}</button></div>
+        <div class="rehint">실행 중에 다른 배의 <b>지금</b> 위치·속력·방향만 보고 위험하면 다시 피하고, 괜찮으면 원래 침로로 돌아가요. 앞으로의 움직임은 몰라요</div>
+        <div class="ctl"><div class="row"><span class="k">다시 보는 간격</span><span class="vv" data-o="period"></span></div><input type="range" data-k="period" min="0.5" max="3" step="0.5" value="${st.period}" aria-label="재평가 간격"><div class="tk"><span>30초</span><span>3분</span></div></div>
+        <div class="ctl"><div class="row"><span class="k">피하기 시작할 거리</span><span class="vv" data-o="margin"></span></div><input type="range" data-k="margin" min="0.5" max="2" step="0.1" value="${st.margin}" aria-label="판단 거리"><div class="tk"><span>0.5해리</span><span>2해리</span></div></div></div>
+    </div>`;
+  updStratText();
 }
-function updStratText(card){const st=strats[+card.dataset.i],own=ships[0];
-  card.querySelector('[data-o="turn"]').innerHTML=turnTxt(st.turn)+(st.turn?`<small>${pad3(own.hdg+st.turn)}°</small>`:"");
-  card.querySelector('[data-o="dv"]').textContent=spdTxt(own,st.dv);
-  card.querySelector('[data-o="start"]').textContent=st.start===0?"바로":"+"+st.start+"분 뒤";}
-$("#s2").addEventListener("input",e=>{const el=e.target,card=el.closest(".stc");if(!card)return;const st=strats[+card.dataset.i],k=el.dataset.k;
-  if(k==="name"){st.name=el.value.trim()||"전략 "+(+card.dataset.i+1);return;}
-  st[k]=parseFloat(el.value);updStratText(card);renderPreview();});
+function updStratText(){const st=strat,own=ships[0],el=$("#st1");
+  el.querySelector('[data-o="turn"]').innerHTML=turnTxt(st.turn)+(st.turn?`<small>${pad3(own.hdg+st.turn)}°</small>`:"");
+  el.querySelector('[data-o="dv"]').textContent=spdTxt(own,st.dv);
+  el.querySelector('[data-o="start"]').textContent=st.start===0?"바로":"+"+st.start+"분 뒤";
+  el.querySelector('[data-o="period"]').textContent=st.period<1?"30초마다":st.period+"분마다";
+  el.querySelector('[data-o="margin"]').textContent=st.margin.toFixed(1)+"해리 안";}
+$("#st1").addEventListener("input",e=>{const k=e.target.dataset.k;if(!k)return;
+  if(k==="name"){strat.name=e.target.value.trim()||"내 회피 전략";return;}
+  strat[k]=parseFloat(e.target.value);updStratText();renderPreview();});
+$("#st1").addEventListener("click",e=>{const b=e.target.closest("[data-k=re]");if(!b)return;strat.re=!strat.re;renderStrat();renderPreview();});
 function renderPreview(){
-  const svg=$("#m2");if(!svg)return;const [bw,bh]=size(svg,352,360),st=baseState(),own=st.own,boxes=[];
-  const tr=strats.map(s=>runOwn(own,legsOf(s,own))),stop=nT(14);
-  tr.forEach(a=>a.slice(0,stop).forEach((p,i)=>{if(i%5===0)boxes.push([p,-16,-16,16,16]);}));
-  st.others.forEach(o=>{boxes.push([o,-16,-16,16,16]);boxes.push([st.lines[o.id][stop-1],-8,-8,8,8]);});
+  const svg=$("#m2");const [bw,bh]=size(svg,352,360),ob=observed(),own=ob.own,boxes=[];
+  const plan=runOwn(own,Object.assign({},strat,{re:false}),ob.others,ob.pred).track,stop=nT(14);
+  plan.slice(0,stop).forEach((p,i)=>{if(i%5===0)boxes.push([p,-16,-16,16,16]);});
+  ob.others.forEach(o=>{const [u,v]=dir(o.hdg),L6=o.spd/60*6;boxes.push([o,-16,-16,16,16]);boxes.push([{x:o.x+u*L6,y:o.y+v*L6},-10,-10,10,10]);});
   const vb=fitVB(boxes,bw,bh,[10,40,10,10]),k=vb[2]/bw;svg.textContent="";setVB(svg,vb);seaGrid(svg,vb,k);north(svg,vb,k,20);
-  st.others.forEach(o=>{S("polyline",{points:P(st.lines[o.id],stop),fill:"none",stroke:"#a7b1bc","stroke-width":2.4*k,"stroke-dasharray":`${6*k} ${6*k}`},svg);
-    const g=S("g",{transform:`translate(${o.x} ${o.y})`},svg);S("circle",{r:12*k,fill:"#6b7684",stroke:"#fff","stroke-width":2.5*k},g);
-    const t=S("text",{x:0,y:4.5*k,"text-anchor":"middle","font-size":13*k,"font-weight":800,fill:"#fff"},g);t.textContent=o.id;});
-  S("polyline",{points:P(st.orig,stop),fill:"none",stroke:"#0b6bcb","stroke-width":2*k,"stroke-dasharray":`${2*k} ${7*k}`,"stroke-linecap":"round",opacity:.4},svg);
-  tr.forEach((a,i)=>{S("polyline",{points:P(a,stop),fill:"none",stroke:STCOL[i],"stroke-width":4*k,"stroke-linecap":"round","stroke-linejoin":"round",opacity:.9},svg);
-    const e=a[stop-1],g=S("g",{transform:`translate(${e.x} ${e.y})`},svg);S("circle",{r:11*k,fill:STCOL[i],stroke:"#fff","stroke-width":2.5*k},g);
-    const t=S("text",{x:0,y:4.5*k,"text-anchor":"middle","font-size":13*k,"font-weight":800,fill:"#fff"},g);t.textContent=i+1;});
-  const og=S("g",{transform:`translate(${own.x} ${own.y})`},svg);S("circle",{r:14*k,fill:"#0b6bcb",stroke:"#fff","stroke-width":3*k},og);
-  const ot=S("text",{x:0,y:5.5*k,"text-anchor":"middle","font-size":15*k,"font-weight":800,fill:"#fff"},og);ot.textContent="A";
-  const cap=S("text",Object.assign({x:vb[0]+12*k,y:vb[1]+24*k},LBL(k,"#4e5968",14)),svg);cap.textContent="14분 동안의 계획 항로";
+  ob.others.forEach(o=>{vec(svg,k,o,o.hdg,o.spd,"#8b95a1");dot(svg,k,o,o.id,"#6b7684",12);});
+  S("polyline",{points:P(ob.orig,stop),fill:"none",stroke:COL,"stroke-width":2*k,"stroke-dasharray":`${2*k} ${7*k}`,"stroke-linecap":"round",opacity:.4},svg);
+  S("polyline",{points:P(plan,stop),fill:"none",stroke:COL,"stroke-width":4*k,"stroke-linecap":"round","stroke-linejoin":"round",opacity:.9},svg);
+  dot(svg,k,own,"A",COL,14);
+  const cap=S("text",Object.assign({x:vb[0]+12*k,y:vb[1]+24*k},LBL(k,"#4e5968",14)),svg);cap.textContent=strat.re?"처음 계획 (가면서 바뀔 수 있음)":"14분 동안의 계획 항로";
 }
 
-/* ---------- 시나리오 실행 (4~8번 화면) ---------- */
-function scenario(){const b=baseState();const runs=strats.map((st,i)=>{const track=runOwn(b.own,legsOf(st,b.own));
-  return{i,name:"전략 "+(i+1),badge:String(i+1),col:STCOL[i],soft:STSOFT[i],st,act:actTxt(st,b.own),track,ev:evaluate(track,b.own,b.others,b.lines)};});
-  return Object.assign(b,{primary:b.eo.worst,runs});}
+/* ---------- 실제 기록 · 실행 · 강건성 ---------- */
+function world(others,seed,salt){const w={},beh={};others.forEach(o=>{const b=seed===0?{kind:"keep"}:drawBehavior(o,rng(hashStr(salt+":"+seed+":"+o.id)));beh[o.id]=b;w[o.id]=runOther(o,b);});return{w,beh};}
+function runOn(own,others,st,W){const r=runOwn(own,st,others,W.w);return Object.assign(r,{ev:evaluate(r.track,own,others,W.w)});}
+/* 강건성: 실제 기록 대신, 일어날 수 있는 움직임 NWORLD가지 (첫 번째는 모두 그대로) */
+function robust(own,others,st,worlds){let ok=0,wmin=99,dsum=0,dn=0;
+  worlds.forEach(W=>{const r=runOn(own,others,st,W);const m=Math.min(...others.map(o=>r.ev.per[o.id].min));wmin=Math.min(wmin,m);if(!r.ev.fails.length){ok++;dsum+=r.ev.delay;dn++;}});
+  return{ok,n:worlds.length,rate:ok/worlds.length,wmin,delay:dn?dsum/dn:0};}
 
-/* 전략 방안 추천: 같은 엔진으로 행동 후보를 실행해 보고 고른다 */
+let SC=null,KEY="",REC=null,sel=0,RT=null,WORLDS=null;
+function scenario(){const ob=observed(),actual=world(ob.others,recSeed,"rec");
+  const v1=runOn(ob.own,ob.others,strat,actual);
+  return Object.assign(ob,{primary:ob.eo.worst,actual,v1,st:strat});}
+
+/* 전략 방안 추천: 실제 기록은 쓰지 않는다 */
 function recommend(sc){
-  const {own,others,lines,primary}=sc,rk=r=>({fail:0,review:1,pass:2})[r.ev.verdict]*100-r.ev.delay;
-  const tgt=sc.runs.slice().sort((a,b)=>rk(a)-rk(b))[0],st=tgt.st,b1=legsOf(st,own)[0];
-  const focus=tgt.ev.fails[0]||null;
-  const worstMin=ev=>Math.min(...others.map(o=>ev.per[o.id].min));
-  const score=ev=>ev.verdict==="pass"?3000-ev.delay+.3*Math.min(worstMin(ev),1.5):ev.verdict==="review"?2000-ev.delay:1000+worstMin(ev)*100;
-  const run=legs=>{const track=runOwn(own,legs),ev=evaluate(track,own,others,lines);return{legs,track,ev,sc:score(ev)};};
-  const pick=list=>{let b=null;list.forEach(l=>{const r=run(l);if(!b||r.sc>b.sc+1e-9)b=r;});return b;};
+  const {own,others}=sc;
+  WORLDS=[];for(let k=0;k<NWORLD;k++)WORLDS.push(world(others,k,"ens"));
+  const base=robust(own,others,sc.st,WORLDS);
+  const score=r=>r.rate*1000+Math.min(r.wmin,1.5)*20-r.delay*5-Math.max(0,r.delay-REVIEW)*30;
+  const mk=(kind,title,cfgs)=>{let b=null;cfgs.forEach(c=>{const st=Object.assign({},sc.st,c),r=robust(own,others,st,WORLDS),s=score(r);if(!b||s>b.s+1e-9)b={kind,title,st,r,s};});return b;};
   const out=[];
-  /* ① 재평가 추가: 첫 행동은 그대로, 주 대상을 지난 뒤 한 번 더 조정 */
-  if(focus&&focus!==primary&&tgt.ev.per[primary]){
-    const ta=Math.round((tgt.ev.per[primary].tMin+.5)*2)/2,lim=tgt.ev.per[focus].tIn-.5,ts=[ta-1,ta,ta+1,ta+2].filter(t=>t>=st.start+1&&t<lim);
-    if(!ts.length)ts.push(Math.max(st.start+1,Math.round((lim-2)*2)/2));
-    const L2=[];ts.forEach(t=>{for(let d=-40;d<=40;d+=5)[0,-2,-4,-6].forEach(dv=>{const sp=b1.spd+dv;if(sp>=3||(dv===0&&sp>=0))L2.push([b1,{t,hdg:b1.hdg+d,spd:sp}]);});
-      [0,-2,-4].forEach(dv=>{const sp=b1.spd+dv;if(sp>=3||dv===0)L2.push([b1,{t,hdg:own.hdg,spd:sp}]);});});
-    const r=pick(L2);if(r){const l=r.legs[1],ret=Math.abs(d180(l.hdg-own.hdg))<.1;
-      r.kind="재평가 추가";r.title=`${J(primary,"을/를")} 지난 뒤 ${J(focus,"을/를")} 다시 평가`;
-      r.desc=`처음 행동(${tgt.act})은 그대로 · <b>+${fT(l.t)}분</b>에 ${ret?"원래 침로("+pad3(own.hdg)+"°) 복귀":turnTxt(d180(l.hdg-b1.hdg))+"("+pad3(l.hdg)+"°)"}${l.spd!==b1.spd?" · "+l.spd+"노트로 감속":""}`;out.push(r);}}
-  /* ② 처음부터 다르게: 같은 시점에 한 번만 행동 */
-  {const L1=[];for(let d=-60;d<=60;d+=5)[0,-2,-4,-6,-8].forEach(dv=>{const sp=own.spd+dv;if(sp>=2||dv===0)L1.push([{t:st.start,hdg:own.hdg+d,spd:sp}]);});
-    const r=pick(L1);if(r){const l=r.legs[0];r.kind="한 번에 다르게";r.title="처음부터 다르게 피하기";
-      r.desc=`<b>+${fT(l.t)}분</b>에 ${actTxt({turn:Math.round(d180(l.hdg-own.hdg)),dv:l.spd-own.spd},own)} · 이후 유지`;out.push(r);}}
-  /* ③ 감속 위주: 크게 돌지 않고 속력으로 순서를 기다림 */
-  {const L3=[];for(let d=-10;d<=10;d+=5)for(let dv=-1;dv>=-Math.min(10,own.spd-1);dv--)L3.push([{t:Math.min(st.start,.5),hdg:own.hdg+d,spd:own.spd+dv}]);
-    const r=L3.length&&pick(L3);if(r){const l=r.legs[0];r.kind="감속 위주";r.title="감속해서 먼저 보내기";
-      r.desc=`<b>+${fT(l.t)}분</b>에 ${actTxt({turn:Math.round(d180(l.hdg-own.hdg)),dv:l.spd-own.spd},own)} · 큰 변침 없이 순서 조정`;out.push(r);}}
-  const seen={},uniq=out.filter(r=>{const key=JSON.stringify(r.legs.map(l=>[l.t,Math.round(l.hdg),l.spd]));if(seen[key])return false;return seen[key]=true;});
-  uniq.sort((a,b)=>b.sc-a.sc);
-  /* 이미 통과한 전략이면 시간을 줄이는 후보만 */
-  const cands=tgt.ev.verdict==="pass"?uniq.filter(c=>c.ev.verdict==="pass"&&c.ev.delay<tgt.ev.delay-.1):uniq;
-  return{tgt,focus:focus||tgt.ev.worst,cands};
+  if(!sc.st.re)out.push(mk("처음 행동 그대로","가면서 다시 판단하기",[{re:true,period:1,margin:1},{re:true,period:.5,margin:1},{re:true,period:1,margin:1.3},{re:true,period:.5,margin:1.3}]));
+  else out.push(mk("재평가 조정","더 자주, 더 일찍 피하기",[{period:Math.max(.5,sc.st.period-.5),margin:Math.min(2,sc.st.margin+.3)},{period:.5,margin:Math.min(2,sc.st.margin+.5)},{period:sc.st.period,margin:Math.min(2,sc.st.margin+.3)}]));
+  const both=[];[10,20,30].forEach(t=>[-3,-5].forEach(dv=>both.push({turn:t,dv,re:true,period:1,margin:1.2})));
+  out.push(mk("처음 행동 + 재평가","처음엔 덜 돌고 감속, 가면서 조정",both));
+  const one=[];[20,30,45,60].forEach(t=>[0,-4,-7].forEach(dv=>one.push({turn:t,dv,re:false})));
+  out.push(mk("한 번에","처음에 크게 피하고 끝까지 유지",one));
+  out.forEach(c=>{c.desc=stratTxt(c.st,own).replace(/^\+(\S+)분 /,"<b>+$1분</b> ");});
+  const seen={},cands=out.filter(c=>{const k=JSON.stringify(c.st);if(seen[k])return false;return seen[k]=true;}).sort((a,b)=>b.s-a.s);
+  return{base,cands};
 }
 
-/* 캡션 이벤트 */
+/* 캡션 */
 function lastAt(list,t){let c=list[0];list.forEach(e=>{if(t>=e.t)c=e;});return c;}
 function setCap(el,c,state){
   if(state.cur===c)return;
@@ -677,74 +741,70 @@ function setCap(el,c,state){
   if(!SHOT){el.classList.remove("fx");void el.offsetWidth;el.classList.add("fx");}
   state.cur=c;
 }
-function eventsFor(sc,runs,intro,start){
-  const Pm=sc.primary,ev=[{t:-1,txt:intro},{t:0,txt:start}];
-  const live=runs.filter(r=>!r.ghost);
-  if(Pm){const ok=live.filter(r=>r.ev.per[Pm].min>=SAFE);
-    if(ok.length){const t=Math.max(...ok.map(r=>r.ev.per[Pm].tMin))+.3;
-      ev.push({t,txt:(ok.length===live.length&&live.length>1?"두 전략 모두 ":J(ok[0].name,"은/는")+" ")+J(Pm,"과/와")+"는 안전하게 지나갔어요",chip:Pm+" 최소 "+ok.map(r=>f1(r.ev.per[Pm].min)).join(" · ")+"해리",cls:"pass"});}}
-  live.forEach(r=>{const f=r.ev.fails[0];if(!f)return;const m=r.ev.per[f];
-    if(f!==Pm){ev.push({t:Math.max(.5,m.tIn-1.5),txt:"그런데 "+J(r.name,"은/는")+" "+J(f,"과/와")+" 점점 가까워져요",chip:f+"와 DCPA 감소",cls:"warn"});
-      ev.push({t:m.tIn,txt:r.name+": "+J(f,"이/가")+" 안전영역 안으로 들어왔어요",chip:"2차 충돌위험 · "+f,cls:"fail"});}
-    else ev.push({t:m.tIn,txt:r.name+": "+J(f,"이/가")+" 안전영역 안으로 들어왔어요",chip:"안전영역 침범 · "+f,cls:"fail"});});
-  live.filter(r=>!r.ev.fails.length&&r.focus).forEach(r=>{const m=r.ev.per[r.focus];
-    ev.push({t:m.tMin+.2,txt:r.name+": "+J(r.focus,"과/와")+" 최소 "+f1(m.min)+"해리를 지켰어요",chip:"안전영역 밖",cls:"pass"});});
-  const head=ev.slice(0,2),rest=ev.slice(2).sort((a,b)=>a.t-b.t);return head.concat(rest);
+function backTxt(l,own){const out=[],prevLog=l;if(Math.abs(d180(l.th-own.hdg))<Math.abs(d180(l.prev-own.hdg))-.5)out.push(Math.abs(d180(l.th-own.hdg))<.5?"원래 침로 "+pad3(own.hdg)+"°로 복귀":"침로 "+pad3(l.th)+"°로 조금 복귀");
+  if(l.ts>(l.pts==null?l.ts:l.pts))out.push(l.ts+"노트로 회복");return(out.join(" · ")||"침로 "+pad3(l.th)+"° · "+l.ts+"노트로 조정");}
+function eventsFor(sc,run,name,intro){
+  const Pm=sc.primary,own=sc.own,ev=[{t:-1,txt:intro}];
+  run.log.forEach((l,i)=>{if(l.why==="first")ev.push({t:l.t,txt:name+": "+actTxt({turn:Math.round(d180(l.th-own.hdg)),dv:l.ts-own.spd},own)});
+    else if(i<6)ev.push({t:l.t+.01,txt:l.why==="risk"?"다시 판단: "+J(l.ship,"과/와")+" 가까워질 것 같아 "+turnTxt(d180(l.th-l.prev))+(l.ts!==own.spd?" · "+l.ts+"노트":""):"다시 판단: 위험이 줄어 "+backTxt(l,own),chip:"재평가",cls:""});});
+  sc.others.forEach(o=>{const b=sc.actual.beh[o.id];if(b.kind!=="keep"&&b.t<TEND)ev.push({t:b.t,txt:J(o.id,"이/가")+" "+behaviorText(o,b),chip:"미리 몰랐던 움직임",cls:"warn"});});
+  if(Pm){const m=run.ev.per[Pm];if(m.min>=SAFE)ev.push({t:m.tMin+.3,txt:J(Pm,"과/와")+"는 안전하게 지나갔어요",chip:Pm+" 최소 "+f1(m.min)+"해리",cls:"pass"});}
+  const f=run.ev.fails[0];
+  if(f){const m=run.ev.per[f];if(f!==Pm)ev.push({t:Math.max(.5,m.tIn-1.5),txt:"그런데 "+J(f,"과/와")+" 점점 가까워져요",chip:f+"와 거리 감소",cls:"warn"});
+    ev.push({t:m.tIn,txt:J(f,"이/가")+" 안전영역 안으로 들어왔어요",chip:(f!==Pm?"2차 충돌위험 · ":"안전영역 침범 · ")+f,cls:"fail"});}
+  else{const w=run.ev.worst;if(w&&w!==Pm){const m=run.ev.per[w];ev.push({t:m.tMin+.2,txt:J(w,"과/와")+"도 최소 "+f1(m.min)+"해리를 지켰어요",chip:"안전영역 밖",cls:"pass"});}}
+  return[ev[0]].concat(ev.slice(1).sort((a,b)=>a.t-b.t));
 }
-function animEnd(sc,runs){let te=8;runs.forEach(r=>sc.others.forEach(o=>{const m=r.ev.per[o.id];if(m.min<NEAR)te=Math.max(te,m.tMin+1);if(m.tIn>=0)te=Math.max(te,m.tIn+1.5);}));return Math.min(TEND,te);}
+function animEnd(sc,runs){let te=8;runs.forEach(r=>sc.others.forEach(o=>{const m=r.ev.per[o.id];if(m.min<NEAR)te=Math.max(te,m.tMin+1);if(m.tIn>=0)te=Math.max(te,m.tIn+1.5);}));
+  sc.others.forEach(o=>{const b=sc.actual.beh[o.id];if(b.kind!=="keep")te=Math.max(te,Math.min(TEND,b.t+2));});return Math.min(TEND,te);}
 
-/* 움직이는 지도: runs를 같은 지도에 (ghost = 지난 결과를 옅게 고정) */
+/* 움직이는 지도: 다른 배는 지나온 길만 보인다 (앞으로 갈 길은 그리지 않음) */
 function simView(svg,hudEl,lgdEl,sc,runs,tEnd){
-  const [bw,bh]=size(svg,1200,452),stop=nT(tEnd),boxes=[];
+  const [bw,bh]=size(svg,1200,452),stop=nT(tEnd),boxes=[],W=sc.actual.w;
   runs.forEach(r=>r.track.slice(0,stop).forEach((p,i)=>{if(i%4===0)boxes.push([p,-58,-58,58,58]);}));
-  sc.others.forEach(o=>sc.lines[o.id].slice(0,stop).forEach((p,i)=>{if(i%4===0)boxes.push([p,-20,-30,110,40]);}));
+  sc.others.forEach(o=>W[o.id].slice(0,stop).forEach((p,i)=>{if(i%4===0)boxes.push([p,-20,-30,110,40]);}));
   const vb=fitVB(boxes,bw,bh,[300,12,30,50]),k=vb[2]/bw;svg.textContent="";setVB(svg,vb);seaGrid(svg,vb,k);north(svg,vb,k,34,78);
-  /* 원래 항로 + 그대로 가면 주 대상과 충돌 */
   const o0=sc.orig[0],oE=sc.orig[stop-1];
-  S("line",{x1:o0.x,y1:o0.y,x2:oE.x,y2:oE.y,stroke:"#0b6bcb","stroke-width":2.4*k,"stroke-dasharray":`${2*k} ${8*k}`,"stroke-linecap":"round",opacity:.4},svg);
+  S("line",{x1:o0.x,y1:o0.y,x2:oE.x,y2:oE.y,stroke:COL,"stroke-width":2.4*k,"stroke-dasharray":`${2*k} ${8*k}`,"stroke-linecap":"round",opacity:.4},svg);
   const origL=S("text",Object.assign({x:oE.x,y:oE.y-14*k,"text-anchor":"end"},LBL(k,"#5b8fc7",16)),svg);origL.textContent="원래 항로";
   let hitG=null;const pm=sc.primary&&sc.eo.per[sc.primary];
   if(pm&&pm.min<SAFE){const h=L(sc.orig,pm.tMin);hitG=S("g",{transform:`translate(${h.x} ${h.y})`},svg);
     S("circle",{r:20*k,fill:"rgba(220,38,38,.08)",stroke:"#dc2626","stroke-width":2.2*k,"stroke-dasharray":`${5*k} ${4*k}`},hitG);
     S("path",{d:`M${-7*k} ${-7*k}L${7*k} ${7*k}M${7*k} ${-7*k}L${-7*k} ${7*k}`,stroke:"#dc2626","stroke-width":3.4*k,"stroke-linecap":"round"},hitG);
-    const t=S("text",Object.assign({x:0,y:-30*k,"text-anchor":"middle"},LBL(k,"#dc2626",17)),hitG);t.textContent="그대로 가면 "+J(sc.primary,"과/와")+" 충돌";}
-  sc.others.forEach(o=>S("polyline",{points:P(sc.lines[o.id],stop),fill:"none",stroke:"#a7b1bc","stroke-width":2.4*k,"stroke-dasharray":`${6*k} ${6*k}`,"stroke-linecap":"round"},svg));
-  /* 지난 결과(ghost): 전체 항적 + 문제 지점 */
+    const t=S("text",Object.assign({x:0,y:-30*k,"text-anchor":"middle"},LBL(k,"#dc2626",17)),hitG);t.textContent="지금처럼 가면 "+J(sc.primary,"과/와")+" 충돌";}
   runs.filter(r=>r.ghost).forEach(r=>{S("polyline",{points:P(r.track,stop),fill:"none",stroke:r.col,"stroke-width":3.4*k,"stroke-dasharray":`${7*k} ${6*k}`,"stroke-linecap":"round",opacity:.85},svg);
-    const f=r.ev.fails[0];if(!f)return;const m=r.ev.per[f],p=L(r.track,m.tMin),c=L(sc.lines[f],m.tMin);
+    const f=r.ev.fails[0];if(!f)return;const m=r.ev.per[f],p=L(r.track,m.tMin),c=L(W[f],m.tMin);
     S("circle",{cx:p.x,cy:p.y,r:SAFE,fill:"rgba(220,38,38,.06)",stroke:"#dc2626","stroke-width":2*k,"stroke-dasharray":`${5*k} ${4*k}`,opacity:.8},svg);
     S("line",{x1:p.x,y1:p.y,x2:c.x,y2:c.y,stroke:"#dc2626","stroke-width":2.2*k,opacity:.8},svg);
     const g=ownShip(svg,k,r.col,.7);g.setAttribute("transform",`translate(${p.x} ${p.y}) rotate(${p.h})`);g.setAttribute("opacity",.85);
     const t=S("text",Object.assign({x:p.x-SAFE-8*k,y:p.y+6*k,"text-anchor":"end"},LBL(k,"#dc2626",17)),svg);t.textContent=r.name+" · "+f+"와 "+f1(m.min)+"해리";});
   const live=runs.filter(r=>!r.ghost);
-  live.forEach(r=>S("polyline",{points:P(r.track,stop),fill:"none",stroke:r.col,"stroke-width":2.4*k,"stroke-dasharray":`${6*k} ${6*k}`,"stroke-linecap":"round",opacity:.3},svg));
+  const OS=sc.others.map(o=>{const trail=S("polyline",{fill:"none",stroke:"#a7b1bc","stroke-width":2.6*k,"stroke-dasharray":`${6*k} ${5*k}`,"stroke-linecap":"round"},svg);
+    const g=S("g",{},svg),hull=S("path",{d:shapeOf(o.type)(k*szOf(o)),fill:"#6b7684",stroke:"#fff","stroke-width":2*k,"stroke-linejoin":"round"},g);
+    const lab=S("text",LBL(k,"#4e5968"),svg);lab.textContent=o.id+" "+o.type;return{o,trail,g,hull,lab,b:sc.actual.beh[o.id]};});
   live.forEach(r=>{r.trk=S("polyline",{fill:"none",stroke:r.col,"stroke-width":4.5*k,"stroke-linecap":"round","stroke-linejoin":"round",opacity:.92},svg);
     r.zoneEl=S("circle",{r:SAFE,"stroke-width":2.2*k,"stroke-dasharray":`${6*k} ${5*k}`},svg);
-    r.cl=S("line",{stroke:"#dc2626","stroke-width":2.6*k,"stroke-linecap":"round"},svg);r.clT=S("text",LBL(k,"#dc2626",21),svg);});
-  const OS=sc.others.map(o=>{const g=S("g",{},svg),hull=S("path",{d:shapeOf(o.type)(k*szOf(o)),fill:"#6b7684",stroke:"#fff","stroke-width":2*k,"stroke-linejoin":"round"},g);
-    const lab=S("text",LBL(k,"#4e5968"),svg);lab.textContent=o.id+" "+o.type;return{o,g,hull,lab};});
-  live.forEach((r,j)=>{r.ship=ownShip(svg,k,r.col);r.lab=S("text",Object.assign({"text-anchor":"middle"},LBL(k,r.col,19)),svg);r.lab.textContent=r.name;r.j=j;});
-  /* HUD: 선박별 최소 거리 (지금까지) */
-  hudEl.innerHTML=`<div class="hh">최소 거리 (해리)<span>${runs.map(r=>`<span class="stb" style="--sc:${r.col}">${r.short||r.name.replace(/\s/g,"")}</span>`).join("")}</span></div>`;
+    r.cl=S("line",{stroke:"#dc2626","stroke-width":2.6*k,"stroke-linecap":"round"},svg);r.clT=S("text",LBL(k,"#dc2626",21),svg);
+    r.ship=ownShip(svg,k,r.col);r.lab=S("text",Object.assign({"text-anchor":"middle"},LBL(k,r.col,19)),svg);r.lab.textContent=r.name;});
+  hudEl.innerHTML=`<div class="hh">최소 거리 (해리)<span>${runs.map(r=>`<span class="stb" style="--sc:${r.col}">${r.short}</span>`).join("")}</span></div>`;
   const cells={};sc.others.forEach(o=>{const d=document.createElement("div");d.className="hr";
     d.innerHTML=`<span class="sb">${o.id}</span>${o.id} ${o.type}<span class="vv">${runs.map(()=>"<b></b>").join("")}</span>`;hudEl.appendChild(d);cells[o.id]=Array.from(d.querySelectorAll("b"));});
   const ft=document.createElement("div");ft.className="ft";ft.textContent="빨간 칸 = 안전영역 침범";hudEl.appendChild(ft);
-  lgdEl.innerHTML=runs.map(r=>`<span><i style="border-top:${r.ghost?"3px dashed":"4px solid"} ${r.col}"></i>${r.name}</span>`).join("")+`<span><i></i>주변 배 (기록 항적)</span><span><i class="z"></i>안전영역 ${SAFE}해리</span>`;
+  lgdEl.innerHTML=runs.map(r=>`<span><i style="border-top:${r.ghost?"3px dashed":"4px solid"} ${r.col}"></i>${r.name}</span>`).join("")+`<span><i></i>다른 배 (지나온 길)</span><span><i class="z"></i>안전영역 ${SAFE}해리</span>`;
   return function render(t){
     const n=Math.min(N-1,Math.floor(t/DT)),bad={};
     live.forEach(r=>{const p=L(r.track,t);r.p=p;r.trk.setAttribute("points",P(r.track,n+1)+" "+p.x.toFixed(4)+","+p.y.toFixed(4));
       r.ship.setAttribute("transform",`translate(${p.x} ${p.y}) rotate(${p.h})`);
-      let hit=null,hd=9;sc.others.forEach(o=>{const q=L(sc.lines[o.id],t),d=Math.hypot(p.x-q.x,p.y-q.y);if(d<SAFE&&d<hd){hd=d;hit={o,q,d};bad[o.id]=1;}});
+      let hit=null,hd=9;sc.others.forEach(o=>{const q=L(W[o.id],t),d=Math.hypot(p.x-q.x,p.y-q.y);if(d<SAFE&&d<hd){hd=d;hit={o,q,d};bad[o.id]=1;}});
       r.zoneEl.setAttribute("cx",p.x);r.zoneEl.setAttribute("cy",p.y);
       r.zoneEl.setAttribute("fill",hit?"rgba(220,38,38,.12)":r.soft);r.zoneEl.setAttribute("stroke",hit?"#dc2626":r.col);r.zoneEl.setAttribute("stroke-opacity",hit?1:.5);
       if(hit){r.cl.setAttribute("x1",p.x);r.cl.setAttribute("y1",p.y);r.cl.setAttribute("x2",hit.q.x);r.cl.setAttribute("y2",hit.q.y);r.cl.style.opacity=1;
         r.clT.textContent=J(hit.o.id,"과/와")+" "+f1(hit.d)+"해리";r.clT.setAttribute("x",p.x+SAFE+12*k);r.clT.setAttribute("y",p.y+7*k);r.clT.style.opacity=1;}
-      else{r.cl.style.opacity=0;r.clT.style.opacity=0;}});
-    /* 자선 라벨: 겹치지 않게 위/왼쪽으로 */
-    live.forEach(r=>{const p=r.p;if(r.j===1||live.length===1){r.lab.setAttribute("text-anchor","middle");r.lab.setAttribute("x",p.x);r.lab.setAttribute("y",p.y-28*k);}
-      else{r.lab.setAttribute("text-anchor","end");r.lab.setAttribute("x",p.x-26*k);r.lab.setAttribute("y",p.y+8*k);}});
-    OS.forEach(s=>{const p=L(sc.lines[s.o.id],t);s.g.setAttribute("transform",`translate(${p.x} ${p.y}) rotate(${p.h})`);
-      const red=!!bad[s.o.id];s.hull.setAttribute("fill",red?"#dc2626":"#6b7684");s.lab.setAttribute("fill",red?"#dc2626":"#4e5968");
+      else{r.cl.style.opacity=0;r.clT.style.opacity=0;}
+      r.lab.setAttribute("x",p.x);r.lab.setAttribute("y",p.y-28*k);});
+    OS.forEach(s=>{const arr=W[s.o.id],p=L(arr,t);s.trail.setAttribute("points",P(arr,n+1)+" "+p.x.toFixed(4)+","+p.y.toFixed(4));
+      s.g.setAttribute("transform",`translate(${p.x} ${p.y}) rotate(${p.h})`);
+      const red=!!bad[s.o.id],moved=s.b.kind!=="keep"&&t>=s.b.t;s.hull.setAttribute("fill",red?"#dc2626":moved?"#f08a3c":"#6b7684");s.lab.setAttribute("fill",red?"#dc2626":moved?"#c2410c":"#4e5968");
       let ax=0,ay=0;live.forEach(r=>{const dx=p.x-r.p.x,dy=p.y-r.p.y,d=Math.hypot(dx,dy);if(d<130*k){ax+=dx/(d||1);ay+=dy/(d||1);}});
       if(ax||ay){const m=Math.hypot(ax,ay);ax/=m;ay/=m;s.lab.setAttribute("text-anchor",ax<-.3?"end":ax>.3?"start":"middle");
         s.lab.setAttribute("x",p.x+ax*22*k);s.lab.setAttribute("y",p.y+ay*30*k+(ay>0?10*k:0));}
@@ -757,92 +817,98 @@ function simView(svg,hudEl,lgdEl,sc,runs,tEnd){
 
 /* 재생기 (4 시뮬레이션, 7 재시험 공통) */
 function Player(id){
-  const P={id,a:0,playing:false,done:false,last:0,raf:0,cap:{},dur:11,tEnd:10,render:()=>{},caps:[{t:-1,txt:""}],tPre:"",tDone:""};
+  const Pl={id,a:0,playing:false,done:false,last:0,raf:0,cap:{},dur:11,tEnd:10,render:()=>{},caps:[{t:-1,txt:""}],tPre:"",tDone:""};
   const capEl=$("#cap"+id),titleEl=$("#t"+id);
-  P.upd=a=>{P.a=a;const t=a/P.dur*P.tEnd;P.render(t);const pre=a<=0&&!P.playing&&!P.done;
-    setCap(capEl,pre?P.caps[0]:lastAt(P.caps.slice(1),t),P.cap);capEl.querySelector(".tm").textContent=pre?"":"+"+Math.floor(t)+"분";};
-  P.title=()=>{titleEl.innerHTML=P.done?P.tDone:P.tPre;if(!SHOT){titleEl.style.animation="none";void titleEl.offsetWidth;titleEl.style.animation="";}};
-  const loop=now=>{if(!P.playing)return;const dt=Math.min(.1,(now-P.last)/1000);P.last=now;const a=Math.min(P.dur,P.a+dt);P.upd(a);
-    if(a>=P.dur){P.playing=false;P.done=true;updCta();setTimeout(P.title,300);return;}P.raf=requestAnimationFrame(loop);};
-  P.play=()=>{if(P.playing||P.done)return;P.playing=true;P.last=performance.now();updCta();P.raf=requestAnimationFrame(loop);};
-  P.pause=()=>{P.playing=false;cancelAnimationFrame(P.raf);};
-  P.reset=()=>{P.pause();P.done=false;P.cap={};P.upd(0);P.title();};
-  P.finish=()=>{P.pause();P.done=true;P.upd(P.dur);P.title();};
-  $("#map"+id).addEventListener("click",()=>{if(IDS[cur]===id&&!P.playing){if(P.done)P.reset();P.play();}});
-  return P;
+  Pl.upd=a=>{Pl.a=a;const t=a/Pl.dur*Pl.tEnd;Pl.render(t);const pre=a<=0&&!Pl.playing&&!Pl.done;
+    setCap(capEl,pre?Pl.caps[0]:lastAt(Pl.caps.slice(1),t),Pl.cap);capEl.querySelector(".tm").textContent=pre?"":"+"+Math.floor(t)+"분";};
+  Pl.title=()=>{titleEl.innerHTML=Pl.done?Pl.tDone:Pl.tPre;if(!SHOT){titleEl.style.animation="none";void titleEl.offsetWidth;titleEl.style.animation="";}};
+  const loop=now=>{if(!Pl.playing)return;const dt=Math.min(.1,(now-Pl.last)/1000);Pl.last=now;const a=Math.min(Pl.dur,Pl.a+dt);Pl.upd(a);
+    if(a>=Pl.dur){Pl.playing=false;Pl.done=true;updCta();setTimeout(Pl.title,300);return;}Pl.raf=requestAnimationFrame(loop);};
+  Pl.play=()=>{if(Pl.playing||Pl.done)return;Pl.playing=true;Pl.last=performance.now();updCta();Pl.raf=requestAnimationFrame(loop);};
+  Pl.pause=()=>{Pl.playing=false;cancelAnimationFrame(Pl.raf);};
+  Pl.reset=()=>{Pl.pause();Pl.done=false;Pl.cap={};Pl.upd(0);Pl.title();};
+  Pl.finish=()=>{Pl.pause();Pl.done=true;Pl.upd(Pl.dur);Pl.title();};
+  $("#map"+id).addEventListener("click",()=>{if(IDS[cur]===id&&!Pl.playing){if(Pl.done)Pl.reset();Pl.play();}});
+  return Pl;
 }
 const PL={"3":Player("3"),"6":Player("6")};
 
 /* ---------- 4 시뮬레이션 · 5 결과 ---------- */
-let SC=null,KEY="",REC=null,sel=0,RT=null;
+function failTitle(name,ev,Pm){const f=ev.fails[0];
+  return f!==Pm?J(name,"은/는")+" "+J(Pm,"을/를")+" 피한 뒤, <span class=\"f\">"+J(f,"과/와")+" 위험해졌어요</span>":J(name,"은/는")+" <span class=\"f\">"+J(f,"을/를")+" 충분히 피하지 못했어요</span>";}
+function endCap(pl,run){if(run.ev.fails.length)return;const w=run.ev.worst;
+  pl.caps.push({t:pl.tEnd-.4,txt:"모든 배와 안전영역을 지켰어요"+(w?" · 가장 가까웠던 배 "+w+" "+f1(run.ev.per[w].min)+"해리":""),chip:VNAME[run.ev.verdict],cls:run.ev.verdict==="pass"?"pass":"warn"});}
 function buildSim(){
-  const sc=SC,pl=PL["3"],Pm=sc.primary;
-  pl.tEnd=animEnd(sc,sc.runs);
-  pl.render=simView($("#m3"),$("#hud3"),$("#lgd3"),sc,sc.runs,pl.tEnd);
-  pl.caps=eventsFor(sc,sc.runs,"같은 순간에서 두 전략을 함께 출발시켜요",sc.runs.map(r=>J(r.name,"은/는")+" "+r.act).join(", "));
-  pl.tPre=Pm?J(Pm,"을/를")+" 피한 뒤, 다른 배의 위험은 어떻게 될까요?":"두 전략은 주변 배와 얼마나 떨어질까요?";
-  const bad=sc.runs.find(r=>r.ev.fails.length);
-  if(bad){const f=bad.ev.fails[0];pl.tDone=f!==Pm?J(bad.name,"은/는")+" "+J(Pm,"을/를")+" 피한 뒤, <span class=\"f\">"+J(f,"과/와")+" 위험해졌어요</span>":J(bad.name,"은/는")+" <span class=\"f\">"+J(Pm,"을/를")+" 충분히 피하지 못했어요</span>";}
-  else pl.tDone="두 전략 모두 <em>안전영역을 지켰어요</em>";
+  const sc=SC,pl=PL["3"],Pm=sc.primary,v1=Object.assign({name:"v1",short:"v1",col:COL,soft:SOFT},sc.v1);
+  pl.tEnd=animEnd(sc,[v1]);
+  pl.render=simView($("#m3"),$("#hud3"),$("#lgd3"),sc,[v1],pl.tEnd);
+  $("#rp3").textContent="기록 #"+recSeed+" 재생 · 다른 배 움직임은 실행 중에 드러나요";
+  pl.caps=eventsFor(sc,sc.v1,sc.st.name,"다른 배가 어떻게 움직일지 모르는 채로 출발해요");endCap(pl,sc.v1);
+  pl.tPre=Pm?J(Pm,"을/를")+" 피한 뒤, 다른 배와는 어떻게 될까요?":"주변 배와 얼마나 떨어질까요?";
+  pl.tDone=sc.v1.ev.fails.length?failTitle(sc.st.name,sc.v1.ev,Pm):sc.v1.ev.verdict==="pass"?J(sc.st.name,"은/는")+" <em>안전영역을 지켰어요</em>":J(sc.st.name,"은/는")+" 안전했지만 <span class=\"f\">시간이 많이 늘었어요</span>";
   pl.reset();
 }
 function fillReport(){
-  const sc=SC,Pm=sc.primary,cell=(cls,m,d,mcls,tag)=>`<div class="cl ${cls}"><div class="m ${mcls||""}">${m}${tag?' <span class="tag">진단값</span>':""}</div><div class="d">${d}</div></div>`;
-  let h='<div class="hc"></div>'+sc.runs.map(r=>`<div class="hc" style="--sc:${r.col}"><span class="stb">${r.badge}</span>${r.st.name}${pill(r.ev.verdict)}</div>`).join("");
-  const anyFail=sc.runs.some(r=>r.ev.fails.length);
-  h+=`<div class="lay ${anyFail?"l1":""} r2">① 안전성<small>위반이 확인되면 실패</small></div>`;
-  sc.runs.forEach(r=>{const f=r.ev.fails[0];
-    if(f){const m=r.ev.per[f];h+=cell("c1 l1 r2",(f!==Pm?"2차 충돌위험":"안전영역 침범")+" · 대상 "+f,"+"+f1(m.tIn)+"분 안전영역 진입 · 최소 "+f1(m.min)+"해리 (+"+f1(m.tMin)+"분)","ng");}
-    else{const w=r.ev.worst,m=w&&r.ev.per[w];h+=cell("r2","필수 조건 충족",w?"가장 가까운 배 "+w+" "+f1(m.min)+"해리 (+"+f1(m.tMin)+"분)":"주변 배 없음","ok");}});
+  const sc=SC,Pm=sc.primary,r=sc.v1,ev=r.ev,st=sc.st,cell=(cls,m,d,mcls,tag)=>`<div class="cl ${cls}"><div class="m ${mcls||""}">${m}${tag?' <span class="tag">진단값</span>':""}</div><div class="d">${d}</div></div>`;
+  const surprises=sc.others.filter(o=>sc.actual.beh[o.id].kind!=="keep");
+  let h=`<div class="hc"></div><div class="hc" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 9px">v1</span>${st.name}<span class="unk">${surprises.length?"실행 중 드러난 움직임: "+surprises.map(o=>o.id+" "+behaviorShort(o,sc.actual.beh[o.id])+" (+"+fT(sc.actual.beh[o.id].t)+"분)").join(" · "):"다른 배는 모두 그대로 감"}</span>${pill(ev.verdict)}</div>`;
+  const f=ev.fails[0];
+  h+=`<div class="lay ${f?"l1":""} r2">① 안전성<small>위반이 확인되면 실패</small></div>`;
+  if(f){const m=ev.per[f];h+=cell("c1 l1 r2",(f!==Pm?"2차 충돌위험":"안전영역 침범")+" · 대상 "+f,"+"+f1(m.tIn)+"분 안전영역 진입 · 최소 "+f1(m.min)+"해리 (+"+f1(m.tMin)+"분)","ng");}
+  else{const w=ev.worst,m=w&&ev.per[w];h+=cell("r2","필수 조건 충족",w?"가장 가까운 배 "+w+" "+f1(m.min)+"해리 (+"+f1(m.tMin)+"분)":"주변 배 없음","ok");}
   h+='<div class="lay r3">② 행동 진단<small>안전 판정과 따로 기록</small></div>';
-  sc.runs.forEach(r=>{const f=r.ev.fails[0],st=r.st;
-    if(f&&f!==Pm)h+=cell("r3","늦은 재평가",J(Pm,"을/를")+" 회피한 뒤 "+J(f,"과/와")+"의 관계를 다시 따지지 않음","",1);
-    else if(st.start>=3)h+=cell("r3","늦은 회피 시작","+"+st.start+"분에 첫 행동 · 여유 시간 감소","",1);
-    else if(st.turn===0&&st.dv===0)h+=cell("r3","회피 행동 없음","침로·속력을 그대로 유지","",1);
-    else h+=cell("r3","조정 1회","+"+st.start+"분에 "+r.act+" · 이후 유지","",1);});
-  h+='<div class="lay r4">③ 운항 효율<small>통과한 결과끼리만 비교</small></div>';
-  sc.runs.forEach(r=>{if(r.ev.fails.length)h+=cell("r4","비교 제외","안전을 점수로 상쇄하지 않아요","mu");
-    else h+=cell("r4","항로 이탈 "+f1(r.ev.dev)+"해리 · 시간 +"+f1(r.ev.delay)+"분",r.ev.verdict==="review"?"기준 범위(+"+REVIEW+"분) 초과 → 검토 사유":"같은 문제의 다른 통과 결과와 비교");});
+  const adj=r.log.filter(l=>l.why!=="first").length;
+  if(!st.re&&f&&f!==Pm)h+=cell("r3","재평가 없음",J(Pm,"을/를")+" 피한 뒤 "+J(f,"과/와")+"의 관계를 다시 보지 않음 · 처음 행동("+actTxt(st,sc.own)+")만 유지","",1);
+  else if(st.re&&f)h+=cell("r3","재평가 "+r.checks+"번 · 조정 "+adj+"번","다시 판단했지만 "+J(f,"과/와")+"의 거리를 지키기엔 늦음 → 간격·판단 거리 검토","",1);
+  else if(st.start>=3)h+=cell("r3","늦은 회피 시작","+"+st.start+"분에 첫 행동 · 여유 시간 감소","",1);
+  else if(st.re)h+=cell("r3","재평가 "+r.checks+"번 · 조정 "+adj+"번",adj>3?"조정이 잦음 → 검토 후보":"상황 변화에 따른 조정","",1);
+  else h+=cell("r3","조정 1회","+"+st.start+"분에 "+actTxt(st,sc.own)+" · 이후 유지","",1);
+  h+='<div class="lay r4">③ 운항 효율<small>안전할 때만 비교</small></div>';
+  h+=f?cell("r4","비교 제외","안전을 점수로 상쇄하지 않아요","mu"):cell("r4","항로 이탈 "+f1(ev.dev)+"해리 · 시간 +"+f1(ev.delay)+"분",ev.verdict==="review"?"기준 범위(+"+REVIEW+"분) 초과 → 검토 사유":"기준 범위 안");
   $("#rep").innerHTML=h;
 }
 
 /* ---------- 6 전략 방안 추천 ---------- */
+const bar=r=>{const p=Math.round(r.rate*100);return`<div class="rb"><b>${r.ok}/${r.n}</b><span class="bar"><i class="${p>=80?"":p>=50?"mid":"low"}" style="width:${p}%"></i></span></div>`;};
 function renderRecs(){
-  const {tgt,focus,cands}=REC,fm=focus&&tgt.ev.per[focus];
-  $("#t5").innerHTML=tgt.ev.verdict==="pass"?J(tgt.name,"을/를")+" <em>더 효율적으로</em> 고쳐 볼 수 있어요":J(tgt.name,"을/를")+" <em>이렇게 고쳐</em> 볼 수 있어요";
-  $("#rcnow").innerHTML=`지금 <span class="stb" style="--sc:${tgt.col}">${tgt.badge}</span><b>${tgt.st.name}</b>${pill(tgt.ev.verdict)}`+(fm?`<span>${focus} 최소 ${f1(fm.min)}해리${tgt.ev.verdict!=="fail"?" · 시간 +"+f1(tgt.ev.delay)+"분":""}</span>`:"");
-  $("#rcs").innerHTML=cands.map((c,i)=>{const m=focus&&c.ev.per[focus],ok=m&&m.min>=SAFE;
-    return `<button class="rc${i===sel?" on":""}" data-i="${i}">
-      <div class="top">${i===0?'<span class="best">추천</span>':""}<span class="kd">${c.kind}</span>${pill(c.ev.verdict)}</div>
+  const sc=SC,{base,cands}=REC;
+  $("#t5").innerHTML=J(sc.st.name,"을/를")+" <em>이렇게 바꿔</em> 볼 수 있어요";
+  $("#rcnow").innerHTML=`지금 <span class="stb" style="--sc:${COL}">v1</span><b>${sc.st.name}</b>${pill(sc.v1.ev.verdict)}<span>가능한 움직임 ${base.n}가지 중 <b>${base.ok}가지</b>에서 안전</span>`;
+  $("#rcs").innerHTML=cands.map((c,i)=>`<button class="rc${i===sel?" on":""}" data-i="${i}">
+      <div class="top">${i===0?'<span class="best">추천</span>':""}<span class="kd">${c.kind}</span></div>
       <div class="t">${c.title}</div><div class="a">${c.desc}</div>
-      <div class="mt">${m?`<span>${focus} 최소 거리 <b class="${fm.min<SAFE?"ng":""}">${f1(fm.min)}</b> → <b class="${ok?"ok":"ng"}">${f1(m.min)}해리</b></span>`:""}
-      <span>가장 가까운 배 <b>${c.ev.worst} ${f1(c.ev.per[c.ev.worst].min)}해리</b></span>
-      <span>시간 <b>+${f1(c.ev.delay)}분</b> · 항로 이탈 <b>${f1(c.ev.dev)}해리</b></span></div></button>`;}).join("")||'<div class="rcnote">이 상황에서 찾은 행동 후보가 없어요</div>';
+      <div class="mt"><span>가능한 움직임 ${c.r.n}가지 중 안전</span>${bar(c.r)}
+      <span>가장 나쁜 경우 최소 거리 <b>${f1(c.r.wmin)}해리</b></span>
+      <span>평균 시간 <b style="${c.r.delay>REVIEW?"color:var(--warn-ink)":""}">+${f1(c.r.delay)}분</b>${c.r.delay>REVIEW?" · 검토 기준 초과":""}</span></div></button>`).join("");
+  $("#rcnote").innerHTML=`다른 배 ${sc.others.length}척이 <b>그대로 가기·변침·감속·정지·가속</b>할 수 있다고 보고 만든 ${NWORLD}가지 경우로 시험했어요 (어선·레저선박은 더 자주 바뀐다고 가정). 시뮬레이션에서 본 실제 기록은 쓰지 않아요`;
 }
 $("#rcs").addEventListener("click",e=>{const b=e.target.closest(".rc");if(!b)return;sel=+b.dataset.i;$$("#rcs .rc").forEach((x,i)=>x.classList.toggle("on",i===sel));buildRetest();});
 
 /* ---------- 7 재시험 · 8 비교 ---------- */
 function buildRetest(){
-  const sc=SC,{tgt,focus,cands}=REC,c=cands[sel]||{legs:legsOf(tgt.st,sc.own),track:tgt.track,ev:tgt.ev,desc:"+"+tgt.st.start+"분에 "+tgt.act+" (바꾼 것 없음)"};
-  const v1={name:tgt.name+" (첫 시도)",short:"v1",col:"#e57373",track:tgt.track,ev:tgt.ev,ghost:true};
-  const v2={name:tgt.name+"′",short:"v2",badge:tgt.badge+"′",col:tgt.col,soft:tgt.soft,track:c.track,ev:c.ev,focus};
-  RT={tgt,focus,c,v1,v2};
+  const sc=SC,c=REC.cands[sel],st2=Object.assign({},c.st,{name:sc.st.name}),r2=runOn(sc.own,sc.others,st2,sc.actual);
+  const v1=Object.assign({name:"v1 (첫 시도)",short:"v1",col:GHOST,ghost:true},sc.v1);
+  const v2=Object.assign({name:"v2",short:"v2",col:COL,soft:SOFT},r2);
+  RT={c,st2,v1,v2};
   const pl=PL["6"];pl.tEnd=animEnd(sc,[v1,v2]);
   pl.render=simView($("#m6"),$("#hud6"),$("#lgd6"),sc,[v1,v2],pl.tEnd);
-  pl.caps=eventsFor(sc,[v1,v2],"첫 시도 항적은 그대로 두고, 고친 전략을 같은 문제에 다시 넣어요",J(v2.name,"은/는")+" "+c.desc.replace(/<[^>]+>/g,""));
-  const m=focus&&c.ev.per[focus];
-  pl.tPre="고친 "+J(v2.name,"으로/로")+" 같은 문제를 다시 풀어요";
-  pl.tDone=c.ev.fails.length?J(v2.name,"도/도")+" <span class=\"f\">"+J(c.ev.fails[0],"과/와")+" 안전영역이 겹쳤어요</span>":J(v2.name,"은/는")+" <em>"+J(focus,"과/와")+" "+f1(m.min)+"해리</em>를 지켰어요";
+  $("#rp6").textContent="같은 기록 #"+recSeed+" 재생";
+  pl.caps=eventsFor(sc,r2,"v2","첫 시도 항적은 그대로 두고, 바꾼 전략(v2)을 같은 기록에 다시 넣어요");endCap(pl,r2);
+  const f=sc.v1.ev.fails[0]||sc.v1.ev.worst,m=f&&r2.ev.per[f];
+  pl.tPre="바꾼 전략 v2로 같은 문제를 다시 풀어요";
+  pl.tDone=r2.ev.fails.length?failTitle("v2",r2.ev,sc.primary):"v2는 <em>"+J(f,"과/와")+" "+f1(m.min)+"해리</em>를 지켰어요";
   pl.reset();
   fillCompare();
 }
 function fillCompare(){
-  const sc=SC,{tgt,focus,c,v2}=RT,e1=tgt.ev,e2=c.ev,m1=focus&&e1.per[focus],m2=focus&&e2.per[focus];
+  const sc=SC,{c,st2,v2}=RT,e1=sc.v1.ev,e2=v2.ev,focus=e1.fails[0]||e1.worst,m1=focus&&e1.per[focus],m2=focus&&e2.per[focus],own=sc.own;
   const dd=e1.delay-e2.delay;
   $("#t7").innerHTML="첫 시도와 비교하면, "+(e2.verdict==="fail"?"아직 <span class=\"f\">고칠 게 남았어요</span>":e1.verdict==="fail"?"<em>안전 문제는 풀렸어요</em>":e1.verdict==="review"&&e2.verdict==="pass"?"<em>통과</em>로 바뀌었어요":dd>.1?"<em>시간이 "+f1(dd)+"분 줄었어요</em>":"큰 차이는 없어요");
-  const desc1=e1.fails.length?(e1.fails[0]!==sc.primary?"2차 충돌위험":"안전영역 침범")+" · "+J(e1.fails[0],"과/와")+" 최소 "+f1(e1.per[e1.fails[0]].min)+"해리":"시간 +"+f1(e1.delay)+"분";
-  $("#rv1").innerHTML=`<span class="who" style="--sc:${tgt.col}"><span class="stb">${tgt.badge}</span>${tgt.name} <small>v1</small></span>${pill(e1.verdict)}<span class="d ${e1.fails.length?"ng":""}">${desc1}</span>`;
-  $("#rv2").innerHTML=`<span class="who" style="--sc:${tgt.col}"><span class="stb">${v2.badge}</span>${v2.name} <small>v2</small></span>${pill(e2.verdict)}<span class="d">${c.desc.replace(/<[^>]+>/g,"").replace(/^처음 행동\([^)]*\)은 그대로 · /,"")}</span>`;
+  $("#recNo7").textContent="#"+recSeed;
+  const desc1=e1.fails.length?(e1.fails[0]!==sc.primary?"2차 충돌위험":"안전영역 침범")+" · "+J(e1.fails[0],"과/와")+" "+f1(e1.per[e1.fails[0]].min)+"해리":"시간 +"+f1(e1.delay)+"분";
+  const short=st=>actTxt(st,own)+(st.re?" · 재평가 "+(st.period<1?"30초":st.period+"분"):" · 재평가 없음");
+  $("#rv1").innerHTML=`<span class="who" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 8px">v1</span>첫 시도</span>${pill(e1.verdict)}<span class="d ${e1.fails.length?"ng":""}">${desc1}</span>`;
+  $("#rv2").innerHTML=`<span class="who" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 8px">v2</span>${c.title.length>9?"바꾼 전략":c.title}</span>${pill(e2.verdict)}<span class="d">${short(st2)}</span>`;
   const ic={ok:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',wn:'<path d="M12 6v8M12 18.5v.3"/>',ng:'<path d="M7 7l10 10M17 7L7 17"/>'};
   const row=(cls,k,txt)=>`<div class="dr ${cls}"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">${ic[cls]}</svg></span><span class="k">${k}</span>${txt}</div>`;
   let h="";
@@ -850,45 +916,46 @@ function fillCompare(){
   const others=sc.others.filter(o=>o.id!==focus),worse=others.filter(o=>e2.per[o.id].min<SAFE||e2.per[o.id].min<e1.per[o.id].min-.15);
   if(others.length)h+=worse.length?row(worse.some(o=>e2.per[o.id].min<SAFE)?"ng":"wn","회귀",worse.map(o=>o.id+" "+f1(e1.per[o.id].min)+" → "+f1(e2.per[o.id].min)).join(" · ")+"해리 · 다른 배와 거리 감소")
     :row("ok","회귀",others.map(o=>o.id).join("·")+" 안전 거리 유지 ("+others.map(o=>o.id+" "+f1(e2.per[o.id].min)).join(" · ")+"해리)");
-  if(e2.verdict!=="fail")h+=e2.verdict==="review"?row("wn","남은 것","시간 +"+f1(e2.delay)+"분 · 기준 범위(+"+REVIEW+"분) 초과 → 검토 사유"):row("ok","효율","시간 +"+f1(e2.delay)+"분 · 항로 이탈 "+f1(e2.dev)+"해리 · 기준 범위 안");
+  const b=REC.base,r=c.r;
+  h+=row(r.ok>b.ok?"ok":r.ok===b.ok?"wn":"ng","강건성","가능한 움직임 "+r.n+"가지 중 안전 "+b.ok+" → "+r.ok+"가지");
+  if(e2.verdict!=="fail")h+=e2.verdict==="review"?row("wn","남은 것","시간 +"+f1(e2.delay)+"분 · 기준 범위(+"+REVIEW+"분) 초과 → 검토 사유"):row("ok","효율","시간 +"+f1(e2.delay)+"분 · 항로 이탈 "+f1(e2.dev)+"해리");
   $("#dl").innerHTML=h;
-  buildCmpMap();
-  $("#lg7").innerHTML=`<span><i></i>${tgt.name} (v1)</span><span><i class="n" style="border-top-color:${tgt.col}"></i>${v2.name} (v2)</span>`;
+  buildCmpMap(focus);
+  $("#lg7").innerHTML=`<span><i></i>v1 첫 시도</span><span><i class="n"></i>v2</span>`;
 }
-function buildCmpMap(){
-  const svg=$("#m7"),[bw,bh]=size(svg,372,420),sc=SC,{tgt,focus,c}=RT;
-  const f=focus,t1=f?tgt.ev.per[f].tMin:TEND/2,t2=f?c.ev.per[f].tMin:TEND/2,stop=nT(Math.min(TEND,Math.max(t1,t2)+2)),a0=nT(Math.max(0,Math.min(t1,t2)-6)),boxes=[];
-  tgt.track.slice(a0,stop).forEach(p=>boxes.push([p,-60,-40,40,60]));c.track.slice(a0,stop).forEach(p=>boxes.push([p,-40,-50,40,40]));
-  if(f)sc.lines[f].slice(a0,stop).forEach(p=>boxes.push([p,-20,-20,90,44]));
+function buildCmpMap(f){
+  const svg=$("#m7"),[bw,bh]=size(svg,372,420),sc=SC,W=sc.actual.w,a=sc.v1,b=RT.v2;
+  const t1=f?a.ev.per[f].tMin:TEND/2,t2=f?b.ev.per[f].tMin:TEND/2,stop=nT(Math.min(TEND,Math.max(t1,t2)+2)),a0=nT(Math.max(0,Math.min(t1,t2)-6)),boxes=[];
+  a.track.slice(a0,stop).forEach(p=>boxes.push([p,-60,-40,40,60]));b.track.slice(a0,stop).forEach(p=>boxes.push([p,-40,-50,40,40]));
+  if(f)W[f].slice(a0,stop).forEach(p=>boxes.push([p,-20,-20,90,44]));
   const vb=fitVB(boxes,bw,bh,[8,8,8,8]),k=vb[2]/bw;svg.textContent="";setVB(svg,vb);seaGrid(svg,vb,k);
-  if(f)S("polyline",{points:P(sc.lines[f],stop),fill:"none",stroke:"#a7b1bc","stroke-width":2.4*k,"stroke-dasharray":`${6*k} ${6*k}`},svg);
-  S("polyline",{points:P(tgt.track,stop),fill:"none",stroke:"#e57373","stroke-width":3.4*k,"stroke-dasharray":`${7*k} ${6*k}`,"stroke-linecap":"round"},svg);
-  S("polyline",{points:P(c.track,stop),fill:"none",stroke:tgt.col,"stroke-width":4*k,"stroke-linecap":"round","stroke-linejoin":"round"},svg);
+  if(f)S("polyline",{points:P(W[f],stop),fill:"none",stroke:"#a7b1bc","stroke-width":2.4*k,"stroke-dasharray":`${6*k} ${6*k}`},svg);
+  S("polyline",{points:P(a.track,stop),fill:"none",stroke:GHOST,"stroke-width":3.4*k,"stroke-dasharray":`${7*k} ${6*k}`,"stroke-linecap":"round"},svg);
+  S("polyline",{points:P(b.track,stop),fill:"none",stroke:COL,"stroke-width":4*k,"stroke-linecap":"round","stroke-linejoin":"round"},svg);
   if(!f)return;
-  const p1=L(tgt.track,t1),c1=L(sc.lines[f],t1),bad1=tgt.ev.per[f].min<SAFE;
+  const p1=L(a.track,t1),c1=L(W[f],t1),bad1=a.ev.per[f].min<SAFE;
   S("circle",{cx:p1.x,cy:p1.y,r:SAFE,fill:bad1?"rgba(220,38,38,.08)":"rgba(139,149,161,.06)",stroke:bad1?"#dc2626":"#8b95a1","stroke-width":2*k,"stroke-dasharray":`${5*k} ${4*k}`},svg);
   S("line",{x1:p1.x,y1:p1.y,x2:c1.x,y2:c1.y,stroke:bad1?"#dc2626":"#8b95a1","stroke-width":2.4*k},svg);
-  const g1=ownShip(svg,k,"#e57373",.7);g1.setAttribute("transform",`translate(${p1.x} ${p1.y}) rotate(${p1.h})`);
-  const l1=S("text",Object.assign({x:p1.x-SAFE-8*k,y:p1.y+6*k,"text-anchor":"end"},LBL(k,"#dc2626",18)),svg);l1.textContent="v1 · "+f+"와 "+f1(tgt.ev.per[f].min)+"해리";
-  const p2=L(c.track,t2),g2=ownShip(svg,k,tgt.col,.7);g2.setAttribute("transform",`translate(${p2.x} ${p2.y}) rotate(${p2.h})`);
-  const l2=S("text",Object.assign({x:p2.x,y:p2.y-24*k,"text-anchor":"middle"},LBL(k,tgt.col,18)),svg);l2.textContent="v2 · "+f+"와 "+f1(c.ev.per[f].min)+"해리";
-  const fo=sc.others.find(o=>o.id===f),cc=L(sc.lines[f],t1);
+  const g1=ownShip(svg,k,GHOST,.7);g1.setAttribute("transform",`translate(${p1.x} ${p1.y}) rotate(${p1.h})`);
+  const l1=S("text",Object.assign({x:p1.x-SAFE-8*k,y:p1.y+6*k,"text-anchor":"end"},LBL(k,"#dc2626",18)),svg);l1.textContent="v1 · "+f+"와 "+f1(a.ev.per[f].min)+"해리";
+  const p2=L(b.track,t2),g2=ownShip(svg,k,COL,.7);g2.setAttribute("transform",`translate(${p2.x} ${p2.y}) rotate(${p2.h})`);
+  const l2=S("text",Object.assign({x:p2.x,y:p2.y-24*k,"text-anchor":"middle"},LBL(k,COL,18)),svg);l2.textContent="v2 · "+f+"와 "+f1(b.ev.per[f].min)+"해리";
+  const fo=sc.others.find(o=>o.id===f),cc=L(W[f],t1);
   S("path",{d:shapeOf(fo.type)(k*szOf(fo)),fill:"#6b7684",stroke:"#fff","stroke-width":2*k,transform:`translate(${cc.x} ${cc.y}) rotate(${cc.h})`},svg);
   const cl=S("text",Object.assign({x:cc.x+14*k,y:cc.y+34*k},LBL(k,"#4e5968",16)),svg);cl.textContent=f+" "+fo.type;
 }
 
 /* 상황·전략이 바뀌었으면 4~8번 화면을 다시 계산 */
-function refresh(){const key=JSON.stringify([ships,strats]);if(key===KEY)return;KEY=key;
+function refresh(){const key=JSON.stringify([ships,strat,recSeed]);if(key===KEY)return;KEY=key;
   SC=scenario();buildSim();fillReport();REC=recommend(SC);sel=0;renderRecs();buildRetest();
-  window.__DEMO={SC,REC};}
+  window.__DEMO={SC,REC,RT};}
 
 /* ---------- 화면 목록 ---------- */
 const IDS=["0","1","2","3","4","5","6","7"];
 const SCR=IDS.map(id=>document.getElementById("s"+id));
-const CTA={"0":"데모 시작","1":"전략 정하기","2":"이 전략으로 시험하기","4":"전략 방안 추천받기","5":"이 방안으로 재시험","7":"다시 처음으로 ↺"};
-renderRows();renderStratCards();
+const CTA={"0":"데모 시작","1":"전략 정하기","2":"이 전략으로 시험하기","4":"전략 개선안 보기","5":"이 방안으로 재시험","7":"다시 처음으로 ↺"};
+renderRows();renderStrat();renderPic();renderPreview();
 requestAnimationFrame(()=>{renderPic();renderPreview();});
-renderPic();renderPreview();
 
 /* ---------- 내비게이션 ---------- */
 let cur=-1,looping=false;
@@ -896,7 +963,7 @@ function go(i){
   i=Math.max(0,Math.min(IDS.length-1,i));if(i===cur)return;const prev=cur;
   if(PL[IDS[prev]])PL[IDS[prev]].pause();
   if(i>=3)refresh();
-  if(IDS[i]==="2")renderStratCards();
+  if(IDS[i]==="2")renderStrat();
   SCR.forEach((s,j)=>{s.classList.toggle("on",j===i);s.classList.toggle("past",j<i);});
   cur=i;const id=IDS[i];
   const pl=PL[id];if(pl){if(SHOT)pl.finish();else if(!pl.done)pl.reset();}
@@ -909,7 +976,7 @@ function go(i){
 }
 function updCta(){
   const b=$("#cta"),id=IDS[cur],pl=PL[id];let label=CTA[id],busy=false;
-  if(pl){label=pl.playing?"실행 중…":pl.done?(id==="3"?"결과 리포트 보기":"첫 시도와 비교하기"):(id==="3"?"두 전략 동시에 실행":"재시험 실행");busy=pl.playing;}
+  if(pl){label=pl.playing?"실행 중…":pl.done?(id==="3"?"결과 리포트 보기":"첫 시도와 비교하기"):(id==="3"?"시험 실행":"재시험 실행");busy=pl.playing;}
   b.textContent=label;b.classList.toggle("busy",busy);
 }
 function next(){
@@ -929,6 +996,11 @@ addEventListener("keydown",e=>{if(e.target.closest&&e.target.closest("input,sele
   if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){e.preventDefault();next();}else if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();prev();}});
 function fromHash(){const m=location.hash.match(/^#?(\d)/);if(!m)return 0;const i=IDS.indexOf(m[1]);return i<0?0:i;}
 addEventListener("hashchange",()=>go(fromHash()));
+
+/* 개발용: 기록 번호별 결과 훑기 */
+window.__seeds=n=>{const out=[];const keep=recSeed;for(let s=1;s<=n;s++){recSeed=s;const sc=scenario();
+  out.push(s+": "+sc.v1.ev.verdict+" "+(sc.v1.ev.fails[0]||"")+" | "+sc.others.map(o=>o.id+":"+sc.actual.beh[o.id].kind+(sc.actual.beh[o.id].t?"@"+sc.actual.beh[o.id].t:"")).join(" "));}
+  recSeed=keep;return out;};
 
 go(fromHash());
 const HOLD=params.get("t");
