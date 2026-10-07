@@ -42,14 +42,14 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <nav class="tabs"><div><a href="./summary.html">한 장 요약</a><a href="./">전체 기획안</a><a href="./mockup.html" aria-current="page">데모</a><a href="./deck.html">발표자료</a></div></nav>
 <main>
 <h1>서비스 데모</h1>
-<p>실제 충돌 사고 2건을 조사보고서(NTSB·JTSB)의 AIS 위치표로 다시 만든 문제로, 자율운항 AI 전략을 브라우저에서 직접 시험하는 데모입니다. 왼쪽 옵션을 바꾸면 AI 판단, 3D 항적, 판정이 그 자리에서 다시 계산됩니다. 판정은 데모용 회피 알고리즘과 평가 기준 v0.3에 따른 잠정 판정이며, 주변 선박은 기록 항적대로만 움직입니다(타선 고정 Replay).</p>
-<p><a class="btn" href="demo.html">인터랙티브 데모 열기</a> → 아래 버튼이나 → 키로 진행, 지도는 끌어서 돌려 볼 수 있음</p>
+<p>실제 충돌 사고 2건을 조사보고서(NTSB·JTSB)의 AIS 위치표로 다시 만든 문제로, 자율운항 AI 전략을 브라우저에서 직접 시험하는 데모입니다. 왼쪽 옵션을 바꾸면 AI 판단, 예상 항적, 판정이 그 자리에서 다시 계산됩니다. 판정은 데모용 회피 알고리즘과 평가 기준 v0.3에 따른 잠정 판정이며, 주변 선박은 기록 항적대로만 움직입니다(타선 고정 Replay).</p>
+<p><a class="btn" href="demo.html">인터랙티브 데모 열기</a> → 아래 버튼이나 → 키로 진행, 지도는 휠로 확대하고 끌어서 이동</p>
 <h2>1. 문제 선택 · 실제 사고 재현</h2>
 <p>조사보고서의 AIS 위치표로 사고 장면을 다시 만들었습니다(문제 1: 2017 USS Fitzgerald, 문제 2: 2013 도쿄만 SAKURA HARMONY). 자선 기준 COLREG 관계와 DCPA·TCPA는 화면에서 자동 계산합니다.</p>
 <img class="shot" src="mockup/1.png" width="2880" height="1800" alt="1. 문제 선택 · 실제 사고 재현 데모 화면" loading="lazy">
-<h2>2. 전략 설정·실행 (3D)</h2>
+<h2>2. 전략 설정·실행</h2>
 <p>판단 대상, 회피 수단, 회피 시작 시점, 목표 통과 거리, 재평가 주기를 바꾸면 AI 판단과 예상 항적을 바로 다시 계산합니다. 전략 1은 ACX Crystal만 보고 피한 뒤 Wan Hai 266에 0.33해리까지 다가갑니다.</p>
-<img class="shot" src="mockup/2.png" width="2880" height="1800" alt="2. 전략 설정·실행 (3D) 데모 화면" loading="lazy">
+<img class="shot" src="mockup/2.png" width="2880" height="1800" alt="2. 전략 설정·실행 데모 화면" loading="lazy">
 <h2>3. 결과 리포트</h2>
 <p>안전성, 행동 진단, 운항 효율을 나눠 전략별로 판정합니다. 판단 기록과 성적표 데이터(JSON)도 같은 계산에서 나옵니다(잠정 판정).</p>
 <img class="shot" src="mockup/3.png" width="2880" height="1800" alt="3. 결과 리포트 데모 화면" loading="lazy">
