@@ -88,7 +88,6 @@ a{color:inherit}
 .mapc{position:relative;flex:1;border-radius:22px;overflow:hidden;background:#eef5fc;min-height:0}
 .sea3d{position:absolute;inset:0}
 .sea3d canvas{display:block;position:absolute;left:0;top:0}
-.sea2d canvas{cursor:grab;touch-action:none}
 .sea3d-labels{position:absolute!important;inset:0;pointer-events:none}
 .lbl>span{display:inline-block;transform:translateY(-12px);font:700 13px/1 var(--font);padding:5px 8px;border-radius:8px;background:rgba(255,255,255,.93);color:#4e5968;white-space:nowrap;box-shadow:0 2px 8px -3px rgba(25,31,40,.35);letter-spacing:-.01em}
 .lbl.tg>span{transform:translate(calc(50% + 16px),-4px)}
@@ -275,7 +274,7 @@ a{color:inherit}
     <div class="logo"><svg width="60" height="60" viewBox="0 0 40 40"><path d="M6 24c4.7-3.5 9.3-3.5 14 0s9.3 3.5 14 0" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M6 15c4.7-3.5 9.3-3.5 14 0s9.3 3.5 14 0" stroke="#9fcbf5" stroke-width="3.4" fill="none" stroke-linecap="round"/></svg></div>
     <h1 class="cover-t">씨나리오</h1>
     <div class="cover-s">한 배를 피한 AI가, <b>다른 배의 위험</b>까지 낮췄는지 시험해요</div>
-    <div class="cover-f"><span class="chip gray" id="coverN">실제 사고 문제 2개</span><span class="chip gray">전략을 바꾸면 바로 다시 계산</span><span class="chip gray">사고 항적 재현</span></div>
+    <div class="cover-f"><span class="chip gray" id="coverN">실제 사고 문제 2개</span><span class="chip gray">전략을 바꾸면 바로 다시 계산</span><span class="chip gray">3D 재현</span></div>
   </section>
 
   <!-- 1 문제 선택 -->
@@ -356,283 +355,6 @@ a{color:inherit}
   <div id="modal"><div class="box"><div class="mh"><span id="mt"></span><small id="ms"></small><button id="mx" aria-label="닫기">✕</button></div><div class="mb" id="mb"></div></div></div>
 </div>
 
-<!-- 3D 보기(?view=3d)일 때만 모듈로 실행 -->
-<script type="text/plain" id="v3src">
-/* =====================================================================
-   3D 해역 뷰 (Three.js). 좌표: 1 단위 = 1해리, X 동쪽, -Z 북쪽, Y 위
-   window.SeaView3D = class, 준비되면 "seaview-ready" 이벤트
-   ===================================================================== */
-import * as THREE from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { CSS2DRenderer, CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
-import { Line2 } from "three/addons/lines/Line2.js";
-import { LineMaterial } from "three/addons/lines/LineMaterial.js";
-import { LineGeometry } from "three/addons/lines/LineGeometry.js";
-
-const DEG = Math.PI / 180;
-const SHIP_SCALE = 6;          // 선박은 보기 쉽게 6배 확대
-const SEA = 0xcfe3f6, SKY = 0xeef5fc;
-
-function waterNormals(size) {
-  const data = new Uint8Array(size * size * 4);
-  const waves = [[3, 1, .9], [1, 4, .7], [5, -2, .5], [-2, 7, .35], [9, 3, .25]];
-  for (let j = 0; j < size; j++) for (let i = 0; i < size; i++) {
-    let dx = 0, dy = 0;
-    for (const [a, b, amp] of waves) {
-      const ph = 2 * Math.PI * (a * i + b * j) / size, c = Math.cos(ph) * amp;
-      dx += c * a; dy += c * b;
-    }
-    const n = new THREE.Vector3(-dx * .05, -dy * .05, 1).normalize(), k = (j * size + i) * 4;
-    data[k] = (n.x * .5 + .5) * 255; data[k + 1] = (n.y * .5 + .5) * 255; data[k + 2] = (n.z * .5 + .5) * 255; data[k + 3] = 255;
-  }
-  const tex = new THREE.DataTexture(data, size, size, THREE.RGBAFormat);
-  tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.needsUpdate = true;
-  return tex;
-}
-
-function hullShape(L, B) {
-  const s = new THREE.Shape();
-  s.moveTo(0, L / 2);
-  s.bezierCurveTo(B * .42, L * .36, B / 2, L * .2, B / 2, L * .05);
-  s.lineTo(B / 2, -L * .42); s.quadraticCurveTo(B / 2, -L / 2, B * .3, -L / 2);
-  s.lineTo(-B * .3, -L / 2); s.quadraticCurveTo(-B / 2, -L / 2, -B / 2, -L * .42);
-  s.lineTo(-B / 2, L * .05); s.bezierCurveTo(-B / 2, L * .2, -B * .42, L * .36, 0, L / 2);
-  return s;
-}
-function extrude(shape, h, mat) {
-  const g = new THREE.ExtrudeGeometry(shape, { depth: h, bevelEnabled: false, curveSegments: 10 });
-  g.rotateX(-Math.PI / 2);
-  const m = new THREE.Mesh(g, mat); m.castShadow = true; return m;
-}
-function box(w, h, l, mat, x, y, z) {
-  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, l), mat); m.position.set(x, y + h / 2, z); m.castShadow = true; return m;
-}
-const CONT = [0xd9534f, 0x3f7fbf, 0xe8a33d, 0x4c9f70, 0x8a6bbf, 0xc9ced6, 0x2f6f8f];
-
-// 선박 모델: bow → -Z
-function makeShip(type, lenM, beamM, color, opts = {}) {
-  const L = Math.max(.2, lenM / 1852 * SHIP_SCALE), B = Math.max(.045, (beamM || lenM / 7) / 1852 * SHIP_SCALE * 1.15);
-  const g = new THREE.Group();
-  const T = opts.ghost ? { transparent: true, opacity: .45, depthWrite: false } : {};
-  const hullMat = new THREE.MeshStandardMaterial(Object.assign({ color, roughness: .55, metalness: .05 }, T));
-  const deckMat = new THREE.MeshStandardMaterial(Object.assign({ color: 0xf4f6f8, roughness: .7 }, T));
-  const darkMat = new THREE.MeshStandardMaterial(Object.assign({ color: 0x46505c, roughness: .6 }, T));
-  const H = Math.max(.018, B * .38);
-  g.add(extrude(hullShape(L, B), H, hullMat));
-  const top = H;
-  if (type === "container") {
-    const rows = 7, len = L * .62, w = B * .78;
-    for (let r = 0; r < rows; r++) {
-      const z = -L * .32 + (r + .5) * len / rows + L * .02;
-      const h = H * (1.1 + ((r * 37) % 3) * .25);
-      const mat = new THREE.MeshStandardMaterial(Object.assign({ color: CONT[(r * 3 + (opts.seed || 0)) % CONT.length], roughness: .8 }, T));
-      g.add(box(w, h, len / rows * .9, mat, 0, top, z));
-    }
-    g.add(box(B * .82, H * 2.2, L * .07, deckMat, 0, top, L * .36));
-  } else if (type === "warship") {
-    g.add(box(B * .62, H * 1.4, L * .26, new THREE.MeshStandardMaterial(Object.assign({ color: 0x9aa6b2, roughness: .6 }, T)), 0, top, -L * .02));
-    g.add(box(B * .4, H * 1.2, L * .1, new THREE.MeshStandardMaterial(Object.assign({ color: 0xaab4bf, roughness: .6 }, T)), 0, top + H * 1.4, -L * .04));
-    g.add(box(B * .5, H * .9, L * .16, new THREE.MeshStandardMaterial(Object.assign({ color: 0x9aa6b2, roughness: .6 }, T)), 0, top, L * .2));
-    const mast = new THREE.Mesh(new THREE.CylinderGeometry(B * .03, B * .05, H * 3.2), darkMat); mast.position.set(0, top + H * 2.2, -L * .02); g.add(mast);
-  } else if (type === "tug") {
-    g.add(box(B * .7, H * 1.5, L * .3, deckMat, 0, top, -L * .12));
-    g.add(box(B * .5, H * 1, L * .18, deckMat, 0, top + H * 1.5, -L * .14));
-  } else if (type === "fishing") {
-    g.add(box(B * .7, H * 1.4, L * .26, deckMat, 0, top, L * .1));
-    const mast = new THREE.Mesh(new THREE.CylinderGeometry(B * .04, B * .05, H * 4), darkMat); mast.position.set(0, top + H * 2, -L * .18); g.add(mast);
-  } else if (type === "lpg" || type === "tanker") { // 일반 탱커 모양 (탱크 형식은 표현하지 않음)
-    g.add(box(B * .56, H * .5, L * .62, new THREE.MeshStandardMaterial(Object.assign({ color: 0xc9d1da, roughness: .7 }, T)), 0, top, -L * .06));
-    g.add(box(B * .1, H * .55, L * .6, darkMat, 0, top + H * .5, -L * .06));
-    g.add(box(B * .74, H * .8, L * .05, darkMat, 0, top, -L * .1));
-    g.add(box(B * .82, H * 2.2, L * .09, deckMat, 0, top, L * .37));
-  } else { // cargo / bulk / tanker / ferry
-    const n = 5;
-    for (let i = 0; i < n; i++) g.add(box(B * .66, H * .5, L * .1, darkMat, 0, top, -L * .33 + i * L * .13));
-    g.add(box(B * .82, H * 2.2, L * .08, deckMat, 0, top, L * .37));
-  }
-  g.userData.hullMat = hullMat; g.userData.baseColor = new THREE.Color(color); g.userData.L = L;
-  return g;
-}
-
-function lineMat(color, width, dashed, opacity = 1) {
-  const m = new LineMaterial({ color, linewidth: width, dashed: !!dashed, dashSize: .18, gapSize: .14, transparent: opacity < 1, opacity, worldUnits: false });
-  if (dashed) m.defines.USE_DASH = "";
-  return m;
-}
-function mkLine(pts, mat) {
-  const g = new LineGeometry(); g.setPositions(pts);
-  const l = new Line2(g, mat); l.computeLineDistances(); l.renderOrder = 2; return l;
-}
-function flat(track, y = .004) { const a = []; for (const p of track) a.push(p.x, y, -p.y); return a; }
-function label(text, cls) {
-  const d = document.createElement("div"); d.className = "lbl " + (cls || "");
-  const sp = document.createElement("span"); sp.textContent = text; d.appendChild(sp);
-  const o = new CSS2DObject(d); o.span = sp; return o;
-}
-
-class SeaView3D {
-  constructor(opts = {}) {
-    this.getScale = opts.getScale || (() => 1);
-    const el = this.el = document.createElement("div"); el.className = "sea3d";
-    const r = this.renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
-    r.setClearColor(SKY); r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
-    r.outputColorSpace = THREE.SRGBColorSpace;
-    el.appendChild(r.domElement);
-    const lr = this.labels = new CSS2DRenderer(); lr.domElement.className = "sea3d-labels"; el.appendChild(lr.domElement);
-    const sc = this.scene = new THREE.Scene(); sc.background = new THREE.Color(SKY); sc.fog = new THREE.Fog(SKY, 30, 80);
-    this.camera = new THREE.PerspectiveCamera(38, 1.6, .05, 400);
-    this.controls = new OrbitControls(this.camera, r.domElement);
-    Object.assign(this.controls, { enableDamping: true, dampingFactor: .08, maxPolarAngle: 1.45, minDistance: 1.2, maxDistance: 60, screenSpacePanning: false });
-    this.controls.addEventListener("start", () => { if (this.mode === "chase") this.mode = "free"; this.onUser && this.onUser(); });
-    sc.add(new THREE.HemisphereLight(0xffffff, 0xb9d3ec, 1.6));
-    const sun = this.sun = new THREE.DirectionalLight(0xffffff, 1.6); sun.position.set(-8, 14, 6); sun.castShadow = true;
-    sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -14, right: 14, top: 14, bottom: -14, near: 1, far: 60 });
-    sun.shadow.bias = -.0005; sc.add(sun); sc.add(sun.target);
-    this.normals = waterNormals(256); this.normals.repeat.set(40, 40);
-    const sea = this.sea = new THREE.Mesh(new THREE.PlaneGeometry(400, 400),
-      new THREE.MeshStandardMaterial({ color: SEA, roughness: .42, metalness: .05, normalMap: this.normals, normalScale: new THREE.Vector2(.35, .35) }));
-    sea.rotation.x = -Math.PI / 2; sea.receiveShadow = true; sc.add(sea);
-    this.world = new THREE.Group(); sc.add(this.world);
-    this.mode = "oblique"; this.t = 0; this.data = null; this.clock = new THREE.Clock();
-    this._loop = this._loop.bind(this); requestAnimationFrame(this._loop);
-    this._ro = new ResizeObserver(() => this.resize()); this._ro.observe(el);
-  }
-  mount(container) { if (this.el.parentNode !== container) container.appendChild(this.el); this.resize(); }
-  resize() {
-    const w = this.el.clientWidth, h = this.el.clientHeight; if (!w || !h) return;
-    const pr = Math.min(2.5, (window.devicePixelRatio || 1) * this.getScale());
-    this.renderer.setPixelRatio(pr); this.renderer.setSize(w, h, false);
-    this.renderer.domElement.style.width = w + "px"; this.renderer.domElement.style.height = h + "px";
-    this.labels.setSize(w, h); this.camera.aspect = w / h; this.camera.updateProjectionMatrix();
-    this.lineMats && this.lineMats.forEach(m => m.resolution.set(w * pr, h * pr));
-    this.size = [w, h];
-  }
-  _reg(m) { this.lineMats.push(m); const s = this.size || [800, 500], pr = this.renderer.getPixelRatio(); m.resolution.set(s[0] * pr, s[1] * pr); return m; }
-
-  /* d = {dt, safe, targets:[{id,name,kind,type,len,beam,track}], owns:[{key,label,color,type,len,beam,track,ghost,planned}], markers:[{x,y,text,until}], grid:true} */
-  setData(d) {
-    const W = this.world;
-    W.traverse(o => { if (o.element && o.element.parentNode) o.element.parentNode.removeChild(o.element); });
-    while (W.children.length) W.remove(W.children[0]);
-    this.lineMats = []; this.data = d;
-    // 범위
-    let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
-    const all = d.targets.map(t => t.track).concat(d.owns.map(o => o.track));
-    all.forEach(tr => tr.forEach(p => { x0 = Math.min(x0, p.x); x1 = Math.max(x1, p.x); y0 = Math.min(y0, p.y); y1 = Math.max(y1, p.y); }));
-    // 화면 맞춤은 사건이 벌어지는 구간(focus)만 사용
-    let fx0 = x0, fy0 = y0, fx1 = x1, fy1 = y1;
-    if (d.box) ({ x0: fx0, y0: fy0, x1: fx1, y1: fy1 } = d.box);
-    this.bounds = { x0, y0, x1, y1, cx: (fx0 + fx1) / 2, cy: (fy0 + fy1) / 2, size: Math.max(fx1 - fx0, fy1 - fy0, 3), w: fx1 - fx0, h: fy1 - fy0 };
-    // 격자 (1해리)
-    const gp = [], gx0 = Math.floor(x0) - 2, gx1 = Math.ceil(x1) + 2, gy0 = Math.floor(y0) - 2, gy1 = Math.ceil(y1) + 2;
-    for (let x = gx0; x <= gx1; x++) gp.push(x, .001, -gy0, x, .001, -gy1);
-    for (let y = gy0; y <= gy1; y++) gp.push(gx0, .001, -y, gx1, .001, -y);
-    const gg = new THREE.BufferGeometry(); gg.setAttribute("position", new THREE.Float32BufferAttribute(gp, 3));
-    W.add(new THREE.LineSegments(gg, new THREE.LineBasicMaterial({ color: 0xa9c7e6, transparent: true, opacity: .55 })));
-    this.sun.position.set(this.bounds.cx - 8, 14, -this.bounds.cy + 6); this.sun.target.position.set(this.bounds.cx, 0, -this.bounds.cy);
-    // 타선
-    this.tg = d.targets.map((T, i) => {
-      const line = mkLine(flat(T.track), this._reg(lineMat(0x7d8b99, 2.6, true, .95))); W.add(line);
-      const ship = makeShip(T.type, T.len, T.beam, 0x6b7684, { seed: i * 2 }); W.add(ship);
-      const lb = label(T.name, "tg"); lb.position.set(0, .28, 0); ship.add(lb);
-      return { T, ship, lb };
-    });
-    // 자선(전략별)
-    this.ow = d.owns.map(O => {
-      const col = new THREE.Color(O.color);
-      if (O.planned !== false) W.add(mkLine(flat(O.track, .006), this._reg(lineMat(col, 2.6, true, .55))));
-      const trail = mkLine(flat(O.track, .008), this._reg(lineMat(col, O.ghost ? 3.4 : 5.5, !!O.ghost, O.ghost ? .85 : 1)));
-      W.add(trail);
-      const ship = makeShip(O.type || "cargo", O.len, O.beam, col, { ghost: O.ghost }); W.add(ship);
-      const ring = new THREE.Mesh(new THREE.RingGeometry(d.safe * .975, d.safe, 96), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: .75, depthWrite: false, side: THREE.DoubleSide }));
-      ring.rotation.x = -Math.PI / 2; ring.position.y = .01; ring.renderOrder = 3;
-      const disc = new THREE.Mesh(new THREE.CircleGeometry(d.safe, 96), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: .07, depthWrite: false }));
-      disc.rotation.x = -Math.PI / 2; disc.position.y = .009; disc.renderOrder = 3;
-      if (!O.ghost) { W.add(ring); W.add(disc); }
-      const lb = label(O.label, O.ghost ? "own ghost" : "own"); lb.element.style.setProperty("--c", O.color); lb.position.set(0, .34, 0); ship.add(lb);
-      const warnMat = this._reg(lineMat(0xdc2626, 3.2, false));
-      const warn = mkLine([0, .02, 0, 1, .02, 0], warnMat); warn.visible = false; W.add(warn);
-      const wl = label("", "warn"); wl.visible = false; W.add(wl);
-      return { O, ship, ring, disc, trail, warn, wl, col };
-    });
-    // 표식
-    this.mk = (d.markers || []).map(M => {
-      const g = new THREE.Group(); g.position.set(M.x, .012, -M.y);
-      const r = new THREE.Mesh(new THREE.RingGeometry(.2, .24, 48), new THREE.MeshBasicMaterial({ color: 0xdc2626, transparent: true, opacity: .9, depthWrite: false }));
-      r.rotation.x = -Math.PI / 2; g.add(r);
-      const xm = new THREE.MeshBasicMaterial({ color: 0xdc2626 });
-      const a = new THREE.Mesh(new THREE.BoxGeometry(.26, .01, .04), xm); a.rotation.y = Math.PI / 4; g.add(a);
-      const b = a.clone(); b.rotation.y = -Math.PI / 4; g.add(b);
-      const lb = label(M.text, "hit"); lb.position.set(0, .3, 0); g.add(lb);
-      W.add(g); return { M, g };
-    });
-    this.setTime(this.t || 0);
-    if (!this.keepCam) this.cam(this.mode === "chase" ? "chase" : this.mode === "top" ? "top" : "oblique", true);
-  }
-  setTime(t) {
-    const d = this.data; if (!d) return; this.t = t;
-    const dt = d.dt, n = d.targets[0].track.length;
-    const at = (tr, tt) => { const f = Math.max(0, Math.min(tr.length - 1.001, tt / dt)), i = Math.floor(f), u = f - i, p = tr[i], q = tr[i + 1];
-      let dh = ((q.h - p.h) % 360 + 540) % 360 - 180; return { x: p.x + (q.x - p.x) * u, y: p.y + (q.y - p.y) * u, h: p.h + dh * u }; };
-    const idx = Math.max(1, Math.min(n - 1, Math.round(t / dt)));
-    const tp = this.tg.map(o => { const p = at(o.T.track, t); o.ship.position.set(p.x, 0, -p.y); o.ship.rotation.y = -p.h * DEG; o.p = p; o.hot = false; return p; });
-    this.ow.forEach(o => {
-      const p = at(o.O.track, t); o.p = p;
-      o.ship.position.set(p.x, 0, -p.y); o.ship.rotation.y = -p.h * DEG;
-      o.trail.geometry.instanceCount = idx;
-      o.ring.position.set(p.x, .01, -p.y); o.disc.position.set(p.x, .009, -p.y);
-      let worst = null;
-      if (!o.O.ghost) this.tg.forEach(g => { const dd = Math.hypot(g.p.x - p.x, g.p.y - p.y); if (dd < d.safe && (!worst || dd < worst.d)) worst = { g, d: dd }; });
-      const bad = !!worst;
-      o.ring.material.color.set(bad ? 0xdc2626 : o.col); o.disc.material.color.set(bad ? 0xdc2626 : o.col); o.disc.material.opacity = bad ? .16 : .07;
-      o.warn.visible = bad; o.wl.visible = bad;
-      if (bad) {
-        o.warn.geometry.setPositions([p.x, .03, -p.y, worst.g.p.x, .03, -worst.g.p.y]); o.warn.computeLineDistances();
-        o.wl.position.set((p.x + worst.g.p.x) / 2, .2, -(p.y + worst.g.p.y) / 2); o.wl.span.textContent = worst.g.T.name.replace(/^[A-Z] · /, "") + " " + worst.d.toFixed(2) + "해리";
-        worst.g.hot = true;
-      }
-    });
-    this.tg.forEach(g => { g.ship.userData.hullMat.color.set(g.hot ? 0xdc2626 : 0x6b7684); g.lb.element.classList.toggle("hot", g.hot); g.lb.visible = !g.hot; });
-    this.mk.forEach(m => { m.g.visible = m.M.until == null || t < m.M.until; });
-  }
-  cam(mode, instant) {
-    this.mode = mode; const b = this.bounds; if (!b) return;
-    const fov = this.camera.fov * DEG, asp = this.camera.aspect;
-    const need = Math.max(b.h, b.w / asp, 2.5);
-    const dist = need / (2 * Math.tan(fov / 2)) * (mode === "top" ? 1.05 : 0.8);
-    const el0 = 50 * DEG, az0 = 200 * DEG;
-    // 아래쪽(카메라 쪽) 내용이 시간 막대에 가리지 않도록 시선 중심을 카메라 쪽으로 조금 당김
-    const tgt = mode === "oblique" ? new THREE.Vector3(b.cx + Math.sin(az0) * need * .1, 0, -b.cy - Math.cos(az0) * need * .1) : new THREE.Vector3(b.cx, 0, -b.cy);
-    let pos;
-    if (mode === "top") pos = new THREE.Vector3(b.cx, dist, -b.cy + .001);
-    else if (mode === "chase") { this.controls.target.copy(tgt); this._chase(true); return; }
-    else pos = new THREE.Vector3(tgt.x + Math.sin(az0) * Math.cos(el0) * dist, Math.sin(el0) * dist, tgt.z - Math.cos(az0) * Math.cos(el0) * dist);
-    if (instant) { this.camera.position.copy(pos); this.controls.target.copy(tgt); this.controls.update(); this._anim = null; }
-    else this._anim = { p0: this.camera.position.clone(), t0: this.controls.target.clone(), p1: pos, t1: tgt, k: 0 };
-  }
-  _chase(instant) {
-    const o = this.ow && (this.ow.find(x => x.O.key === this.chaseKey) || this.ow.find(x => !x.O.ghost)); if (!o) return;
-    const p = o.p || o.O.track[0], h = p.h * DEG, fx = Math.sin(h), fz = -Math.cos(h);
-    const pos = new THREE.Vector3(p.x - fx * 2.4, 1.15, -p.y - fz * 2.4), tgt = new THREE.Vector3(p.x + fx * 2.2, 0, -p.y + fz * 2.2);
-    if (instant) { this.camera.position.copy(pos); this.controls.target.copy(tgt); }
-    else { this.camera.position.lerp(pos, .12); this.controls.target.lerp(tgt, .12); }
-  }
-  _loop() {
-    requestAnimationFrame(this._loop);
-    if (!this.el.isConnected || !this.el.offsetParent) return;
-    const e = this.clock.getElapsedTime(); this.normals.offset.set(e * .004, e * .007);
-    if (this._anim) { const a = this._anim; a.k = Math.min(1, a.k + .06); const s = a.k * a.k * (3 - 2 * a.k);
-      this.camera.position.lerpVectors(a.p0, a.p1, s); this.controls.target.lerpVectors(a.t0, a.t1, s); if (a.k >= 1) this._anim = null; }
-    if (this.mode === "chase") this._chase(false);
-    this.controls.update();
-    this.renderer.render(this.scene, this.camera); this.labels.render(this.scene, this.camera);
-  }
-  snapshot() { this.renderer.render(this.scene, this.camera); this.labels.render(this.scene, this.camera); }
-}
-window.SeaView3D = SeaView3D;
-window.dispatchEvent(new Event("seaview-ready"));
-
-</script>
 <script>
 /* =====================================================================
    씨나리오 시험 엔진 (데모용)
@@ -1046,212 +768,6 @@ var SCENARIOS = [
 </script>
 <script>
 /* =====================================================================
-   2D 해역 지도 (Canvas, 외부 라이브러리 없음). 북쪽이 위, 1해리 격자
-   API는 3D 뷰와 같음: mount / resize / setData / setTime / cam / mode / onUser
-   ===================================================================== */
-var SeaMap2D = (function () {
-  "use strict";
-  var DEG = Math.PI / 180, SHIP_SCALE = 6;
-  var FONT = '"Pretendard Local","Pretendard Variable",Pretendard,"Malgun Gothic",sans-serif';
-  function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
-  function n180(a) { return ((a % 360) + 540) % 360 - 180; }
-  // rAF가 멈춘 상황(가려진 창 등)에서도 다음 단계가 실행되도록 타이머를 함께 건다
-  function frame(fn) { var done = false, r, t; function go() { if (done) return; done = true; cancelAnimationFrame(r); clearTimeout(t); fn(); } r = requestAnimationFrame(go); t = setTimeout(go, 40); }
-  function rgba(hex, a) { var n = parseInt(hex.slice(1), 16); return "rgba(" + (n >> 16 & 255) + "," + (n >> 8 & 255) + "," + (n & 255) + "," + a + ")"; }
-
-  function Map2D(opts) {
-    opts = opts || {};
-    this.kind = "2d"; this.getScale = opts.getScale || function () { return 1; };
-    this.camModes = [["fit", "맞춤"], ["all", "전체"], ["follow", "자선 따라가기"]];
-    this.el = document.createElement("div"); this.el.className = "sea3d sea2d";
-    this.cv = document.createElement("canvas"); this.el.appendChild(this.cv);
-    this.ctx = this.cv.getContext("2d");
-    this.t = 0; this.mode = "fit"; this.v = { cx: 0, cy: 0, k: 60 }; this.w = 0; this.h = 0;
-    var self = this, drag = null;
-    this.cv.addEventListener("wheel", function (e) {
-      if (!self.data) return; e.preventDefault();
-      var r = self.cv.getBoundingClientRect(), sx = (e.clientX - r.left) / r.width * self.w, sy = (e.clientY - r.top) / r.height * self.h;
-      var p = self.toWorld(sx, sy);
-      self.v.k = clamp(self.v.k * Math.exp(-e.deltaY * .0015), 6, 900);
-      var q = self.toScreen(p.x, p.y); self.v.cx += (q[0] - sx) / self.v.k; self.v.cy -= (q[1] - sy) / self.v.k;
-      self._user(); self.draw();
-    }, { passive: false });
-    this.cv.addEventListener("pointerdown", function (e) {
-      if (!self.data) return; drag = { x: e.clientX, y: e.clientY, cx: self.v.cx, cy: self.v.cy };
-      try { self.cv.setPointerCapture(e.pointerId); } catch (err) {}
-      self.cv.style.cursor = "grabbing";
-    });
-    this.cv.addEventListener("pointermove", function (e) {
-      if (!drag) return; var r = self.cv.getBoundingClientRect(), f = self.w / r.width;
-      var dx = (e.clientX - drag.x) * f, dy = (e.clientY - drag.y) * f;
-      if (Math.abs(dx) + Math.abs(dy) > 2) { self.v.cx = drag.cx - dx / self.v.k; self.v.cy = drag.cy + dy / self.v.k; self._user(); self.draw(); }
-    });
-    function end() { drag = null; self.cv.style.cursor = ""; }
-    this.cv.addEventListener("pointerup", end); this.cv.addEventListener("pointercancel", end);
-    if (window.ResizeObserver) new ResizeObserver(function () { self.resize(); }).observe(this.el);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { self.draw(); });
-  }
-  Map2D.prototype._user = function () { this._anim = null; if (this.mode !== "free") { this.mode = "free"; if (this.onUser) this.onUser(); } };
-  Map2D.prototype.mount = function (c) { if (this.el.parentNode !== c) c.appendChild(this.el); this.resize(); };
-  Map2D.prototype.resize = function () {
-    var w = this.el.clientWidth, h = this.el.clientHeight; if (!w || !h) return;
-    var pr = Math.min(3, (window.devicePixelRatio || 1) * this.getScale());
-    var changed = w !== this.w || h !== this.h;
-    this.cv.width = Math.round(w * pr); this.cv.height = Math.round(h * pr); this.cv.style.width = w + "px"; this.cv.style.height = h + "px";
-    this.pr = pr; this.w = w; this.h = h;
-    if (changed && this.data && this.mode !== "free") this.cam(this.mode, true); else this.draw();
-  };
-  Map2D.prototype.toScreen = function (x, y) { return [this.w / 2 + (x - this.v.cx) * this.v.k, this.h / 2 - (y - this.v.cy) * this.v.k]; };
-  Map2D.prototype.toWorld = function (sx, sy) { return { x: this.v.cx + (sx - this.w / 2) / this.v.k, y: this.v.cy - (sy - this.h / 2) / this.v.k }; };
-
-  /* d = {dt, safe, targets:[{id,name,type,len,beam,track}], owns:[{key,label,color,len,beam,track,ghost,planned}], markers:[{x,y,text,until}], box} */
-  Map2D.prototype.setData = function (d) {
-    this.data = d;
-    var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
-    d.targets.map(function (t) { return t.track; }).concat(d.owns.map(function (o) { return o.track; })).forEach(function (tr) {
-      tr.forEach(function (p) { x0 = Math.min(x0, p.x); x1 = Math.max(x1, p.x); y0 = Math.min(y0, p.y); y1 = Math.max(y1, p.y); });
-    });
-    this.all = { x0: x0, y0: y0, x1: x1, y1: y1 };
-    this.box = d.box || this.all;
-    if (!this.keepCam) this.cam(this.mode === "free" ? "fit" : this.mode, true); else this.draw();
-  };
-  Map2D.prototype.setTime = function (t) { this.t = t; this.draw(); };
-  // 보기: fit(사건 구간에 맞춤) / all(전체 항적) / follow(자선 중심)
-  Map2D.prototype.cam = function (mode, instant) {
-    if (!this.data || !this.w) { this.mode = mode; return; }
-    this.mode = mode;
-    var b = mode === "all" ? this.all : this.box, padT = 24, padB = 74, padX = 28;
-    var k = Math.min((this.w - padX * 2) / Math.max(.5, b.x1 - b.x0), (this.h - padT - padB) / Math.max(.5, b.y1 - b.y0));
-    var tgt = { cx: (b.x0 + b.x1) / 2, cy: (b.y0 + b.y1) / 2 - (padB - padT) / 2 / k, k: k };
-    if (mode === "follow") { var p = this._own(); if (p) { tgt.cx = p.x; tgt.cy = p.y; tgt.k = Math.max(k, this.v.k); } }
-    if (instant) { this.v = tgt; this._anim = null; this.draw(); return; }
-    this._anim = { a: { cx: this.v.cx, cy: this.v.cy, k: this.v.k }, b: tgt, s: 0 };
-    var self = this;
-    (function step() {
-      var A = self._anim; if (!A) return; A.s = Math.min(1, A.s + .08); var e = A.s * A.s * (3 - 2 * A.s);
-      self.v = { cx: A.a.cx + (A.b.cx - A.a.cx) * e, cy: A.a.cy + (A.b.cy - A.a.cy) * e, k: A.a.k + (A.b.k - A.a.k) * e };
-      self.draw(); if (A.s < 1) frame(step); else self._anim = null;
-    })();
-  };
-  Map2D.prototype._at = function (tr, t) {
-    var dt = this.data.dt, f = clamp(t / dt, 0, tr.length - 1.001), i = Math.floor(f), u = f - i, p = tr[i], q = tr[i + 1];
-    return { x: p.x + (q.x - p.x) * u, y: p.y + (q.y - p.y) * u, h: p.h + n180(q.h - p.h) * u };
-  };
-  Map2D.prototype._own = function () {
-    if (!this.data) return null;
-    var o = this.data.owns.filter(function (x) { return x.key === this.chaseKey; }, this)[0] || this.data.owns.filter(function (x) { return !x.ghost; })[0] || this.data.owns[0];
-    return o ? this._at(o.track, this.t) : null;
-  };
-
-  Map2D.prototype._hull = function (c, L, B) {
-    c.beginPath(); c.moveTo(0, -L / 2);
-    c.bezierCurveTo(B * .42, -L * .36, B / 2, -L * .2, B / 2, -L * .05);
-    c.lineTo(B / 2, L * .42); c.quadraticCurveTo(B / 2, L / 2, B * .3, L / 2);
-    c.lineTo(-B * .3, L / 2); c.quadraticCurveTo(-B / 2, L / 2, -B / 2, L * .42);
-    c.lineTo(-B / 2, -L * .05); c.bezierCurveTo(-B / 2, -L * .2, -B * .42, -L * .36, 0, -L / 2); c.closePath();
-  };
-  Map2D.prototype._ship = function (p, len, beam, fill, alpha, kind) {
-    var c = this.ctx, k = this.v.k, s = this.toScreen(p.x, p.y);
-    var L = Math.max(16, len / 1852 * SHIP_SCALE * k), B = Math.max(6, (beam || len / 7) / 1852 * SHIP_SCALE * k * 1.15);
-    c.save(); c.translate(s[0], s[1]); c.rotate(p.h * DEG); c.globalAlpha = alpha == null ? 1 : alpha;
-    c.shadowColor = "rgba(25,31,40,.28)"; c.shadowBlur = 6; c.shadowOffsetY = 2;
-    this._hull(c, L, B); c.fillStyle = fill; c.fill(); c.shadowColor = "transparent";
-    c.lineWidth = 1.6; c.strokeStyle = "rgba(255,255,255,.9)"; c.stroke();
-    c.fillStyle = "rgba(255,255,255,.88)"; c.fillRect(-B * .36, L * .26, B * .72, Math.max(3, L * .12)); // 선교
-    if (kind === "container") { c.fillStyle = "rgba(255,255,255,.35)"; for (var i = 0; i < 4; i++) c.fillRect(-B * .3, -L * .3 + i * L * .13, B * .6, L * .09); }
-    c.restore();
-    return s;
-  };
-  Map2D.prototype._chip = function (text, x, y, st, align) {
-    var c = this.ctx; c.font = "700 13px " + FONT; var w = c.measureText(text).width + 16, h = 24;
-    var X = align === "left" ? x - w : align === "center" ? x - w / 2 : x, Y = y - h / 2;
-    c.save(); c.shadowColor = "rgba(25,31,40,.25)"; c.shadowBlur = 6; c.shadowOffsetY = 1;
-    c.beginPath(); if (c.roundRect) c.roundRect(X, Y, w, h, 8); else c.rect(X, Y, w, h);
-    c.fillStyle = st.bg; c.fill(); c.shadowColor = "transparent";
-    if (st.border) { c.lineWidth = 1.5; c.strokeStyle = st.border; c.stroke(); }
-    c.fillStyle = st.fg; c.textBaseline = "middle"; c.fillText(text, X + 8, Y + h / 2 + .5); c.restore();
-  };
-  Map2D.prototype._line = function (tr, upto, col, wd, dash, alpha) {
-    var c = this.ctx, n = Math.min(upto, tr.length - 1); if (n < 1) return;
-    c.save(); c.globalAlpha = alpha == null ? 1 : alpha; c.strokeStyle = col; c.lineWidth = wd; c.lineCap = "round"; c.lineJoin = "round"; c.setLineDash(dash || []);
-    c.beginPath();
-    for (var i = 0; i <= n; i += (i + 2 <= n ? 2 : 1)) { var s = this.toScreen(tr[i].x, tr[i].y); if (i) c.lineTo(s[0], s[1]); else c.moveTo(s[0], s[1]); }
-    c.stroke(); c.restore();
-  };
-
-  Map2D.prototype.draw = function () {
-    var d = this.data, c = this.ctx; if (!d || !this.w) return;
-    if (this.mode === "follow") { var po = this._own(); if (po) { this.v.cx = po.x; this.v.cy = po.y; } }
-    var w = this.w, h = this.h, k = this.v.k, t = this.t, self = this;
-    c.setTransform(this.pr, 0, 0, this.pr, 0, 0);
-    var g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, "#e9f2fb"); g.addColorStop(1, "#dbe9f7"); c.fillStyle = g; c.fillRect(0, 0, w, h);
-    // 격자
-    var step = k >= 20 ? 1 : k >= 8 ? 2 : 5, tl = this.toWorld(0, 0), br = this.toWorld(w, h);
-    c.strokeStyle = "rgba(160,192,226,.55)"; c.lineWidth = 1; c.beginPath();
-    for (var gx = Math.floor(tl.x / step) * step; gx <= br.x; gx += step) { var sx = this.toScreen(gx, 0)[0]; c.moveTo(sx, 0); c.lineTo(sx, h); }
-    for (var gy = Math.floor(br.y / step) * step; gy <= tl.y; gy += step) { var sy = this.toScreen(0, gy)[1]; c.moveTo(0, sy); c.lineTo(w, sy); }
-    c.stroke();
-    var n = Math.max(1, Math.min(d.targets[0].track.length - 1, Math.round(t / d.dt)));
-    // 타선 기록 항적
-    d.targets.forEach(function (T) { self._line(T.track, T.track.length, "#8d99a6", 2.2, [7, 7], .85); });
-    // 자선 계획 항적(옅게) + 지나온 항적
-    d.owns.forEach(function (O) {
-      if (O.planned !== false) self._line(O.track, O.track.length, O.color, 2.2, [7, 7], .45);
-      self._line(O.track, n, O.color, O.ghost ? 3 : 4.5, O.ghost ? [8, 6] : null, O.ghost ? .8 : 1);
-    });
-    // 표식
-    (d.markers || []).forEach(function (M) {
-      if (M.until != null && t >= M.until) return; var s = self.toScreen(M.x, M.y);
-      c.save(); c.strokeStyle = "#dc2626"; c.lineWidth = 2.4; c.setLineDash([5, 4]); c.beginPath(); c.arc(s[0], s[1], 13, 0, 7); c.stroke(); c.setLineDash([]);
-      c.lineWidth = 3; c.lineCap = "round"; c.beginPath(); c.moveTo(s[0] - 6, s[1] - 6); c.lineTo(s[0] + 6, s[1] + 6); c.moveTo(s[0] + 6, s[1] - 6); c.lineTo(s[0] - 6, s[1] + 6); c.stroke(); c.restore();
-      M._s = s;
-    });
-    // 위치·위험
-    var tp = d.targets.map(function (T) { return { T: T, p: self._at(T.track, t), hot: false }; });
-    var owns = d.owns.map(function (O) {
-      var p = self._at(O.track, t), worst = null;
-      if (!O.ghost) tp.forEach(function (g) { var dd = Math.hypot(g.p.x - p.x, g.p.y - p.y); if (dd < d.safe && (!worst || dd < worst.d)) worst = { g: g, d: dd }; });
-      if (worst) worst.g.hot = true;
-      return { O: O, p: p, worst: worst };
-    });
-    // 안전영역
-    owns.forEach(function (o) {
-      if (o.O.ghost) return; var s = self.toScreen(o.p.x, o.p.y), bad = !!o.worst, col = bad ? "#dc2626" : o.O.color;
-      c.save(); c.beginPath(); c.arc(s[0], s[1], d.safe * k, 0, 7); c.fillStyle = rgba(col, bad ? .14 : .07); c.fill();
-      c.setLineDash([6, 5]); c.lineWidth = 2; c.strokeStyle = rgba(col, bad ? 1 : .6); c.stroke(); c.restore();
-    });
-    // 근접 경고선
-    owns.forEach(function (o) {
-      if (!o.worst) return; var a = self.toScreen(o.p.x, o.p.y), b = self.toScreen(o.worst.g.p.x, o.worst.g.p.y);
-      c.save(); c.strokeStyle = "#dc2626"; c.lineWidth = 2.6; c.beginPath(); c.moveTo(a[0], a[1]); c.lineTo(b[0], b[1]); c.stroke(); c.restore();
-    });
-    // 선박
-    tp.forEach(function (g) { g.s = self._ship(g.p, g.T.len, g.T.beam, g.hot ? "#dc2626" : "#6b7684", 1, g.T.type); });
-    owns.forEach(function (o) { o.s = self._ship(o.p, o.O.len, o.O.beam, o.O.color, o.O.ghost ? .5 : 1, o.O.type); });
-    // 라벨
-    tp.forEach(function (g) { if (!g.hot) self._chip(g.T.name, g.s[0] + 16, g.s[1] - 16, { bg: "rgba(255,255,255,.95)", fg: "#4e5968" }); });
-    owns.forEach(function (o) {
-      var st = o.O.ghost ? { bg: "rgba(255,255,255,.96)", fg: o.O.color, border: o.O.color } : { bg: o.O.color, fg: "#fff" };
-      self._chip(o.O.label, o.s[0] - 16, o.s[1] - 16, st, "left");
-      if (o.worst) {
-        var b = self.toScreen(o.worst.g.p.x, o.worst.g.p.y), m = [(o.s[0] + b[0]) / 2, Math.max(o.s[1], b[1]) + 30];
-        self._chip(o.worst.g.T.name.replace(/^[A-Z] · /, "") + " " + o.worst.d.toFixed(2) + "해리", m[0], m[1], { bg: "#dc2626", fg: "#fff" }, "center");
-      }
-    });
-    (d.markers || []).forEach(function (M) { if (M._s && (M.until == null || t < M.until)) self._chip(M.text, M._s[0] + 22, M._s[1] - 2, { bg: "#fff", fg: "#dc2626", border: "#dc2626" }); M._s = null; });
-    // 방위 표시 (오른쪽 아래)
-    var nx = w - 30, ny = h - 96;
-    c.save(); c.fillStyle = "rgba(255,255,255,.9)"; c.beginPath(); c.arc(nx, ny, 17, 0, 7); c.fill();
-    c.fillStyle = "#4e5968"; c.beginPath(); c.moveTo(nx, ny - 12); c.lineTo(nx + 6, ny + 5); c.lineTo(nx, ny + 1); c.lineTo(nx - 6, ny + 5); c.closePath(); c.fill();
-    c.font = "800 10px " + FONT; c.textAlign = "center"; c.fillText("N", nx, ny + 14); c.restore();
-  };
-  return Map2D;
-})();
-window.SeaMap2D = SeaMap2D;
-
-</script>
-<script>
-/* =====================================================================
    씨나리오 데모 앱: 문제 선택 → 전략 설정·실행 → 결과 리포트 → 오답 재시험
    모든 결과는 Engine으로 이 페이지에서 계산한다 (하드코딩된 판정 없음)
    ===================================================================== */
@@ -1299,18 +815,61 @@ var ICON = {
   replay: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5"/></svg>'
 };
 
+/* ---------------- 2D 대체 뷰 (3D 라이브러리를 못 불러올 때) ---------------- */
+function FlatView() {
+  this.kind = "2d"; this.el = document.createElement("div"); this.el.className = "sea3d";
+  this.cv = document.createElement("canvas"); this.el.appendChild(this.cv); this.t = 0;
+  var self = this; if (window.ResizeObserver) new ResizeObserver(function () { self.resize(); }).observe(this.el);
+}
+FlatView.prototype.mount = function (c) { if (this.el.parentNode !== c) c.appendChild(this.el); this.resize(); };
+FlatView.prototype.resize = function () {
+  var w = this.el.clientWidth, h = this.el.clientHeight; if (!w || !h) return;
+  var pr = Math.min(2.5, (window.devicePixelRatio || 1) * SC); this.cv.width = w * pr; this.cv.height = h * pr;
+  this.cv.style.width = w + "px"; this.cv.style.height = h + "px"; this.pr = pr; this.w = w; this.h = h; this.draw();
+};
+FlatView.prototype.setData = function (d) {
+  this.data = d; var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  d.targets.map(function (t) { return t.track; }).concat(d.owns.map(function (o) { return o.track; })).forEach(function (tr) { tr.forEach(function (p) { x0 = Math.min(x0, p.x); x1 = Math.max(x1, p.x); y0 = Math.min(y0, p.y); y1 = Math.max(y1, p.y); }); });
+  this.b = [x0 - .6, y0 - .6, x1 + .6, y1 + .6]; this.draw();
+};
+FlatView.prototype.setTime = function (t) { this.t = t; this.draw(); };
+FlatView.prototype.cam = function () {};
+FlatView.prototype.draw = function () {
+  var d = this.data, c = this.cv.getContext("2d"); if (!d || !this.w) return;
+  var pr = this.pr, w = this.w, h = this.h, b = this.b, k = Math.min(w / (b[2] - b[0]), h / (b[3] - b[1]));
+  var ox = (w - (b[2] - b[0]) * k) / 2, oy = (h - (b[3] - b[1]) * k) / 2;
+  function X(x) { return ox + (x - b[0]) * k; } function Y(y) { return h - oy - (y - b[1]) * k; }
+  c.setTransform(pr, 0, 0, pr, 0, 0); c.fillStyle = "#e3eefa"; c.fillRect(0, 0, w, h);
+  c.strokeStyle = "#cbdcf0"; c.lineWidth = 1;
+  for (var gx = Math.floor(b[0]); gx <= b[2]; gx++) { c.beginPath(); c.moveTo(X(gx), 0); c.lineTo(X(gx), h); c.stroke(); }
+  for (var gy = Math.floor(b[1]); gy <= b[3]; gy++) { c.beginPath(); c.moveTo(0, Y(gy)); c.lineTo(w, Y(gy)); c.stroke(); }
+  var dt = d.dt, t = this.t, n = Math.max(1, Math.min(d.targets[0].track.length - 1, Math.round(t / dt)));
+  function line(tr, upto, col, wd, dash) { c.save(); c.strokeStyle = col; c.lineWidth = wd; c.setLineDash(dash || []); c.beginPath(); for (var i = 0; i <= upto && i < tr.length; i++) { var p = tr[i]; if (i) c.lineTo(X(p.x), Y(p.y)); else c.moveTo(X(p.x), Y(p.y)); } c.stroke(); c.restore(); }
+  function ship(p, col, txt) { c.save(); c.translate(X(p.x), Y(p.y)); c.rotate(p.h * Math.PI / 180); c.fillStyle = col; c.beginPath(); c.moveTo(0, -12); c.lineTo(7, 8); c.lineTo(-7, 8); c.closePath(); c.fill(); c.restore();
+    c.font = "700 13px Pretendard Variable, Malgun Gothic, sans-serif"; c.fillStyle = col; c.fillText(txt, X(p.x) + 12, Y(p.y) - 10); }
+  d.targets.forEach(function (T) { line(T.track, T.track.length, "#a7b1bc", 2, [6, 6]); });
+  d.owns.forEach(function (O) { if (O.planned !== false) line(O.track, O.track.length, O.color + "66", 2, [6, 6]); line(O.track, n, O.color, O.ghost ? 2.5 : 4, O.ghost ? [7, 6] : []); });
+  var tp = d.targets.map(function (T) { return T.track[n]; });
+  d.owns.forEach(function (O) {
+    var p = O.track[n], bad = false;
+    tp.forEach(function (q) { if (Math.hypot(p.x - q.x, p.y - q.y) < d.safe) bad = true; });
+    if (!O.ghost) { c.beginPath(); c.arc(X(p.x), Y(p.y), d.safe * k, 0, 7); c.strokeStyle = bad ? "#dc2626" : O.color; c.setLineDash([5, 4]); c.stroke(); c.setLineDash([]); }
+    ship(p, O.color, O.label);
+  });
+  d.targets.forEach(function (T, i) { ship(tp[i], "#6b7684", T.name); });
+  (d.markers || []).forEach(function (M) { if (M.until != null && t >= M.until) return; c.strokeStyle = "#dc2626"; c.lineWidth = 3; c.beginPath(); c.moveTo(X(M.x) - 7, Y(M.y) - 7); c.lineTo(X(M.x) + 7, Y(M.y) + 7); c.moveTo(X(M.x) + 7, Y(M.y) - 7); c.lineTo(X(M.x) - 7, Y(M.y) + 7); c.stroke(); });
+};
+
 /* ---------------- 재생기 ---------------- */
 var PL = { t: 0, dur: 1, playing: false, rate: 2, frame: null, end: null, raf: 0, last: 0, tb: null };
-// 화면 갱신(rAF)과 타이머를 함께 걸어, 창이 가려져 rAF가 멈춰도 재생이 이어지게 함
-PL.sched = function () { cancelAnimationFrame(PL.raf); clearTimeout(PL.to); PL.raf = requestAnimationFrame(PL.tick); PL.to = setTimeout(PL.tick, 40); };
-PL.tick = function () {
-  if (!PL.playing) return; var now = performance.now(), dt = Math.max(0, Math.min(.1, (now - PL.last) / 1000)); PL.last = now;
+PL.loop = function (now) {
+  if (!PL.playing) return; var dt = Math.min(.1, (now - PL.last) / 1000); PL.last = now;
   PL.t = Math.min(PL.dur, PL.t + dt * PL.rate); PL.render();
-  if (PL.t >= PL.dur) { PL.playing = false; cancelAnimationFrame(PL.raf); clearTimeout(PL.to); PL.ui(); if (PL.end) PL.end(); return; }
-  PL.sched();
+  if (PL.t >= PL.dur) { PL.playing = false; PL.ui(); if (PL.end) PL.end(); return; }
+  PL.raf = requestAnimationFrame(PL.loop);
 };
-PL.play = function () { if (PL.playing) return; if (PL.t >= PL.dur - 1e-6) PL.t = 0; PL.playing = true; PL.last = performance.now(); PL.sched(); PL.ui(); };
-PL.pause = function () { PL.playing = false; cancelAnimationFrame(PL.raf); clearTimeout(PL.to); PL.ui(); };
+PL.play = function () { if (PL.playing) return; if (PL.t >= PL.dur - 1e-6) PL.t = 0; PL.playing = true; PL.last = performance.now(); cancelAnimationFrame(PL.raf); PL.raf = requestAnimationFrame(PL.loop); PL.ui(); };
+PL.pause = function () { PL.playing = false; cancelAnimationFrame(PL.raf); PL.ui(); };
 PL.seek = function (t) { PL.t = Math.max(0, Math.min(PL.dur, t)); PL.render(); PL.ui(); };
 PL.render = function () { if (view) view.setTime(PL.t); if (PL.frame) PL.frame(PL.t); if (PL.tb) { PL.tb.range.value = Math.round(PL.t / PL.dur * 1000); PL.tb.clk.innerHTML = "<b>" + clk(PL.t) + "</b> · +" + f1(PL.t) + "분"; } };
 PL.ui = function () { if (PL.tb) PL.tb.pp.innerHTML = PL.playing ? ICON.pause : PL.t >= PL.dur - 1e-6 ? ICON.replay : ICON.play; if (PL.onUi) PL.onUi(); };
@@ -1327,9 +886,8 @@ PL.bind = function (slot, opt) {
 
 /* ---------------- 카메라 버튼 ---------------- */
 function camButtons(slot, chaseKey) {
-  var box = $("[data-cam]", slot); if (!view) return;
-  var modes = view.camModes || [["oblique", "비스듬히"], ["top", "위에서"], ["chase", "자선 따라가기"]];
-  box.innerHTML = modes.map(function (m) { return '<button data-m="' + m[0] + '">' + m[1] + "</button>"; }).join("");
+  var box = $("[data-cam]", slot); if (!view || view.kind !== "3d") { box.style.display = "none"; return; }
+  box.innerHTML = '<button data-m="oblique">비스듬히</button><button data-m="top">위에서</button><button data-m="chase">자선 따라가기</button>';
   $$("button", box).forEach(function (b) {
     b.onclick = function () { b.blur(); view.chaseKey = chaseKey; view.cam(b.dataset.m); mark(); };
   });
@@ -1346,8 +904,7 @@ function focusBox(d, wide) {
   if (wide) {
     var bb = [1e9, 1e9, -1e9, -1e9], tr = d.owns[0].track, m = tr.length;
     var ad = function (p) { bb[0] = Math.min(bb[0], p.x); bb[1] = Math.min(bb[1], p.y); bb[2] = Math.max(bb[2], p.x); bb[3] = Math.max(bb[3], p.y); };
-    var w0 = view && view.kind === "2d" ? .4 : .25, rr = view && view.kind === "2d" ? 2 : 3;
-    for (var w = Math.round(m * w0); w < m; w += 4) { ad(tr[w]); d.targets.forEach(function (t) { var q = t.track[w]; if (Math.hypot(q.x - tr[w].x, q.y - tr[w].y) < rr) ad(q); }); }
+    for (var w = Math.round(m * .25); w < m; w += 4) { ad(tr[w]); d.targets.forEach(function (t) { var q = t.track[w]; if (Math.hypot(q.x - tr[w].x, q.y - tr[w].y) < 3) ad(q); }); }
     return { x0: bb[0] - .4, y0: bb[1] - .4, x1: bb[2] + .4, y1: bb[3] + .4 };
   }
   var owns = d.owns.filter(function (o) { return !o.ghost; }); if (!owns.length) owns = d.owns;
@@ -1508,7 +1065,6 @@ function events(list) {
 function capUpdate(el, evs, t, idle) {
   var c = idle ? { txt: el._idle, t: -1 } : { txt: el._idle, t: -1 };
   if (!idle) evs.forEach(function (e) { if (t >= e.t) c = e; });
-  if (!idle && t >= PL.dur - 1e-6) { var fails = evs.filter(function (e) { return e.cls === "fail"; }); if (fails.length) c = fails[0]; }
   if (el._cur === c.txt + (c.chip || "")) return; el._cur = c.txt + (c.chip || "");
   $(".tm", el).textContent = c.t >= 0 ? clk(c.t).slice(0, 5) : ""; $(".tx", el).textContent = c.txt;
   var ch = $(".chip", el); if (c.chip) { ch.textContent = c.chip; ch.className = "chip " + (c.cls || ""); } else ch.className = "chip off";
@@ -1745,7 +1301,7 @@ function go(i) {
 }
 function updCta() {
   var b = $("#cta"), id = IDS[cur], label = "", busy = false;
-  if (id === "0") label = view ? "데모 시작" : "지도 불러오는 중…";
+  if (id === "0") label = view ? "데모 시작" : "3D 지도 불러오는 중…";
   else if (id === "1") label = "이 문제로 시험하기";
   else if (id === "2") { label = PL.playing ? "실행 중…" : S.done2 ? "결과 리포트 보기" : "두 전략 실행"; busy = PL.playing; }
   else if (id === "3") label = (S.runs && (S.runs.s1.ev.status !== "pass" || S.runs.s2.ev.status !== "pass")) ? "오답 재시험 하기" : "오답 재시험 화면 보기";
@@ -1782,124 +1338,293 @@ addEventListener("hashchange", function () { var i = fromHash(); if (i !== cur) 
 
 renderList(); renderShips();
 SCR[0].classList.add("on"); cur = 0; updCta(); ["#bar", "#back", "#steps"].forEach(function (q) { $(q).classList.add("hide"); });
-var WANT3D = QS.get("view") === "3d";
-function start(use3d) {
+function start() {
   if (view) return;
-  if (use3d && window.SeaView3D) { try { view = new window.SeaView3D({ getScale: function () { return SC; } }); view.kind = "3d"; } catch (err) { console.warn("3D 뷰를 만들지 못해 2D로 표시합니다", err); view = null; } }
-  if (!view) view = new SeaMap2D({ getScale: function () { return SC; } });
-  if (view.kind === "2d") $$(".ov.scale").forEach(function (e) { e.textContent = "격자 1칸 = 1해리 · 선박 크기 6배 확대 · 휠로 확대, 끌어서 이동"; });
+  try { view = window.SeaView3D ? new window.SeaView3D({ getScale: function () { return SC; } }) : new FlatView(); if (!view.kind) view.kind = "3d"; }
+  catch (err) { console.warn("3D 뷰를 만들지 못해 2D로 표시합니다", err); view = new FlatView(); }
   var i = fromHash(); cur = -1; go(i);
   if (QS.get("play") === "1") setTimeout(next, 300); // 확인용: 열자마자 실행
   window.__demo = { S: S, E: E, view: view, PL: PL, go: go };
 }
-if (WANT3D) {
-  // 3D는 선택 사항: three.js(CDN)를 불러와 실행, 실패하면 2D
-  addEventListener("seaview-ready", function () { start(true); }, { once: true });
-  var m3 = document.createElement("script"); m3.type = "module"; m3.textContent = document.getElementById("v3src").textContent; document.body.appendChild(m3);
-  setTimeout(function () { start(false); }, 8000);
-} else start(false);
+if (window.SeaView3D) start();
+else { addEventListener("seaview-ready", start, { once: true }); setTimeout(start, 8000); }
 })();
 
 </script>
-<script>
+<script type="module">
 /* =====================================================================
-   자동 점검 (?selftest=1): 실제 버튼·슬라이더를 눌러 두 문제의 전체 흐름을 끝까지 진행하고
-   결과를 <pre id="selftest">(JSON)와 문서 제목에 남김. 평소에는 실행되지 않음
+   3D 해역 뷰 (Three.js). 좌표: 1 단위 = 1해리, X 동쪽, -Z 북쪽, Y 위
+   window.SeaView3D = class, 준비되면 "seaview-ready" 이벤트
    ===================================================================== */
-(function () {
-  "use strict";
-  if (new URLSearchParams(location.search).get("selftest") !== "1") return;
-  var R = [], errs = [];
-  addEventListener("error", function (e) { errs.push(String(e.message)); });
-  function ok(name, cond, info) { R.push({ name: name, ok: !!cond, info: info === undefined ? "" : String(info) }); }
-  function W(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
-  async function until(fn, ms) { var t0 = Date.now(); while (!fn()) { if (Date.now() - t0 > ms) return false; await W(50); } return true; }
-  function $(s) { return document.querySelector(s); }
-  function $$(s) { return Array.prototype.slice.call(document.querySelectorAll(s)); }
-  function scr() { var e = document.querySelector(".scr.on"); return e && e.id; }
-  async function click(el) { if (!el) throw new Error("없는 요소"); el.click(); await W(150); }
-  function finish() {
-    var pre = document.createElement("pre"); pre.id = "selftest"; pre.style.display = "none";
-    var pass = R.length > 0 && R.every(function (r) { return r.ok; });
-    pre.textContent = JSON.stringify({ pass: pass, n: R.length, fails: R.filter(function (r) { return !r.ok; }), all: R });
-    document.body.appendChild(pre); document.title = "SELFTEST " + (pass ? "PASS" : "FAIL");
-  }
-  async function run() {
-    await until(function () { return window.__demo; }, 12000);
-    var D = window.__demo, cta = function () { return $("#cta"); };
-    ok("지도 렌더러", D.view.kind === "2d", D.view.kind);
-    await click(cta());
-    for (var pi = 0; pi < 2; pi++) {
-      var P = "문제" + (pi + 1) + " · ";
-      // 1 문제 선택
-      ok(P + "문제 선택 화면", scr() === "s1", scr());
-      ok(P + "문제 카드 2개", $$("#plist .pc").length === 2);
-      ok(P + "선박 표 5줄", $$("#ships1 .shr").length === 5);
-      ok(P + "선택된 문제", D.S.pi === pi, D.S.pi);
-      var cams = $$("#slot1 [data-cam] button");
-      ok(P + "보기 버튼 3개", cams.length === 3);
-      await click(cams[1]); ok(P + "전체 보기", D.view.mode === "all", D.view.mode);
-      await click(cams[0]); ok(P + "맞춤 보기", D.view.mode === "fit", D.view.mode);
-      D.view.cv.dispatchEvent(new WheelEvent("wheel", { deltaY: -240, clientX: 900, clientY: 420, bubbles: true, cancelable: true })); await W(60);
-      ok(P + "휠 확대 → 자유 보기", D.view.mode === "free", D.view.mode);
-      // 2 전략 설정·실행
-      await click(cta()); ok(P + "전략 화면", scr() === "s2", scr());
-      var st1 = D.S.runs.s1.ev.status, st2 = D.S.runs.s2.ev.status;
-      ok(P + "전략 1 실패", st1 === "fail", st1); ok(P + "전략 2 통과", st2 === "pass", st2);
-      var seg = function (k, v) { return $('#ed2 .row[data-k="' + k + '"] button[data-v="' + v + '"]'); };
-      var base = Object.assign({}, D.S.params.s1);
-      await click(seg("scope", "all")); await W(120);
-      ok(P + "옵션 변경 → 다시 계산", D.S.runs.s1.params.scope === "all", D.S.runs.s1.ev.status);
-      ok(P + "탭 부제 갱신", /모든 배/.test($("#ed2 .tab.on small").textContent), $("#ed2 .tab.on small").textContent);
-      await click(seg("scope", base.scope)); await W(120);
-      ok(P + "옵션 되돌리기", D.S.runs.s1.ev.status === st1, D.S.runs.s1.ev.status);
-      var rng = $('#ed2 .row[data-k="dcpa"] input'); rng.value = 1.2; rng.dispatchEvent(new Event("input")); await W(150);
-      ok(P + "슬라이더 → 다시 계산", D.S.runs.s1.params.dcpa === 1.2, D.S.runs.s1.ev.status);
-      rng.value = base.dcpa; rng.dispatchEvent(new Event("input")); await W(150);
-      ok(P + "슬라이더 되돌리기", D.S.runs.s1.ev.status === st1 && D.S.runs.s1.params.dcpa === base.dcpa);
-      await click($('#ed2 .tab[data-k="s2"]')); ok(P + "전략 2 탭", D.S.tab === "s2");
-      await click($('#ed2 .tab[data-k="s1"]'));
-      await click($("#actBtn")); ok(P + "실제 사고 항적 켜기", D.S.showAct === true); await click($("#actBtn"));
-      await click(cta()); ok(P + "실행 시작", D.PL.playing, cta().textContent);
-      var ended = await until(function () { return D.S.done2; }, 90000);
-      ok(P + "재생 끝까지", ended, "t=" + D.PL.t.toFixed(2) + "/" + D.PL.dur);
-      ok(P + "버튼 → 결과 리포트", /결과 리포트/.test(cta().textContent), cta().textContent);
-      ok(P + "실행 후 제목", /다가갔어요/.test($("#t2").textContent), $("#t2").textContent);
-      ok(P + "HUD 빨간 칸", $$("#hud2 b.bad").length > 0);
-      ok(P + "사건 자막", $("#cap2 .tx").textContent.length > 0, $("#cap2 .tx").textContent);
-      // 3 결과 리포트
-      await click(cta()); ok(P + "리포트 화면", scr() === "s3", scr());
-      ok(P + "판정 배지", !!$("#rep .pill.fail") && !!$("#rep .pill.pass"));
-      await click($("#logBtn")); ok(P + "판단 기록 창", $("#modal").classList.contains("show") && $$("#mb li").length >= 2, $$("#mb li").length); await click($("#mx"));
-      await click($("#jsonBtn")); var js = null; try { js = JSON.parse($("#mb pre").textContent); } catch (e) {}
-      ok(P + "성적표 JSON", js && js.length === 2 && js[0].result === "FAIL" && js[1].result === "PASS", js && js.map(function (x) { return x.result; }).join(","));
-      await click($("#mx")); ok(P + "창 닫기", !$("#modal").classList.contains("show"));
-      // 4 오답 재시험
-      await click(cta()); ok(P + "재시험 화면", scr() === "s4", scr());
-      var sug = $$("#why4 .sug button"); ok(P + "수정 제안", sug.length > 0, sug.map(function (b) { return b.textContent; }).join(" / "));
-      await click(sug[0]); await W(120);
-      ok(P + "수정됨 표시", $$("#ed4 .row.chg").length === 1);
-      await click(cta()); var e4 = await until(function () { return D.S.rt.done; }, 90000); ok(P + "재시험 끝까지", e4);
-      ok(P + "v2 통과", D.S.rt.r2.ev.status === "pass", D.S.rt.r2.ev.status);
-      R.push({ name: P + "첫 수정 회귀검증", ok: true, info: D.S.rt.reg.map(function (g) { return "문제" + g.no + ":" + g.st; }).join(" ") });
-      if (D.S.rt.reg.some(function (g) { return g.st !== "pass"; })) {
-        ok(P + "회귀 실패 제목", /다른 문제에서 실패/.test($("#t4").textContent), $("#t4").textContent);
-        var s2b = $$("#why4 .sug button").filter(function (b) { return !b.classList.contains("used") && /모든 선박/.test(b.textContent); })[0];
-        ok(P + "두 번째 제안", !!s2b);
-        await click(s2b); await click(cta()); await until(function () { return D.S.rt.done; }, 90000);
-      }
-      ok(P + "회귀검증 모두 통과", D.S.rt.reg.every(function (g) { return g.st === "pass"; }), D.S.rt.reg.map(function (g) { return "문제" + g.no + ":" + g.st; }).join(" "));
-      ok(P + "재시험 제목", /통과했어요/.test($("#t4").textContent), $("#t4").textContent);
-      await click($("#back")); ok(P + "뒤로 → 리포트", scr() === "s3"); await click(cta());
-      ok(P + "다시 재시험 화면", scr() === "s4" && /다음 문제로/.test(cta().textContent), cta().textContent);
-      await click(cta());
-      await until(function () { return scr() === "s1" && !$("#loopFx").classList.contains("show"); }, 6000);
-      ok(P + "다음 문제로 순환", D.S.pi === (pi + 1) % 2 && scr() === "s1", D.S.pi);
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { CSS2DRenderer, CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
+import { Line2 } from "three/addons/lines/Line2.js";
+import { LineMaterial } from "three/addons/lines/LineMaterial.js";
+import { LineGeometry } from "three/addons/lines/LineGeometry.js";
+
+const DEG = Math.PI / 180;
+const SHIP_SCALE = 6;          // 선박은 보기 쉽게 6배 확대
+const SEA = 0xcfe3f6, SKY = 0xeef5fc;
+
+function waterNormals(size) {
+  const data = new Uint8Array(size * size * 4);
+  const waves = [[3, 1, .9], [1, 4, .7], [5, -2, .5], [-2, 7, .35], [9, 3, .25]];
+  for (let j = 0; j < size; j++) for (let i = 0; i < size; i++) {
+    let dx = 0, dy = 0;
+    for (const [a, b, amp] of waves) {
+      const ph = 2 * Math.PI * (a * i + b * j) / size, c = Math.cos(ph) * amp;
+      dx += c * a; dy += c * b;
     }
-    ok("스크립트 오류 없음", errs.length === 0, errs.join(" | "));
+    const n = new THREE.Vector3(-dx * .05, -dy * .05, 1).normalize(), k = (j * size + i) * 4;
+    data[k] = (n.x * .5 + .5) * 255; data[k + 1] = (n.y * .5 + .5) * 255; data[k + 2] = (n.z * .5 + .5) * 255; data[k + 3] = 255;
   }
-  run().catch(function (e) { errs.push("run: " + e.message); ok("점검 중단", false, e.message); }).then(finish);
-})();
+  const tex = new THREE.DataTexture(data, size, size, THREE.RGBAFormat);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.needsUpdate = true;
+  return tex;
+}
+
+function hullShape(L, B) {
+  const s = new THREE.Shape();
+  s.moveTo(0, L / 2);
+  s.bezierCurveTo(B * .42, L * .36, B / 2, L * .2, B / 2, L * .05);
+  s.lineTo(B / 2, -L * .42); s.quadraticCurveTo(B / 2, -L / 2, B * .3, -L / 2);
+  s.lineTo(-B * .3, -L / 2); s.quadraticCurveTo(-B / 2, -L / 2, -B / 2, -L * .42);
+  s.lineTo(-B / 2, L * .05); s.bezierCurveTo(-B / 2, L * .2, -B * .42, L * .36, 0, L / 2);
+  return s;
+}
+function extrude(shape, h, mat) {
+  const g = new THREE.ExtrudeGeometry(shape, { depth: h, bevelEnabled: false, curveSegments: 10 });
+  g.rotateX(-Math.PI / 2);
+  const m = new THREE.Mesh(g, mat); m.castShadow = true; return m;
+}
+function box(w, h, l, mat, x, y, z) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, l), mat); m.position.set(x, y + h / 2, z); m.castShadow = true; return m;
+}
+const CONT = [0xd9534f, 0x3f7fbf, 0xe8a33d, 0x4c9f70, 0x8a6bbf, 0xc9ced6, 0x2f6f8f];
+
+// 선박 모델: bow → -Z
+function makeShip(type, lenM, beamM, color, opts = {}) {
+  const L = Math.max(.2, lenM / 1852 * SHIP_SCALE), B = Math.max(.045, (beamM || lenM / 7) / 1852 * SHIP_SCALE * 1.15);
+  const g = new THREE.Group();
+  const T = opts.ghost ? { transparent: true, opacity: .45, depthWrite: false } : {};
+  const hullMat = new THREE.MeshStandardMaterial(Object.assign({ color, roughness: .55, metalness: .05 }, T));
+  const deckMat = new THREE.MeshStandardMaterial(Object.assign({ color: 0xf4f6f8, roughness: .7 }, T));
+  const darkMat = new THREE.MeshStandardMaterial(Object.assign({ color: 0x46505c, roughness: .6 }, T));
+  const H = Math.max(.018, B * .38);
+  g.add(extrude(hullShape(L, B), H, hullMat));
+  const top = H;
+  if (type === "container") {
+    const rows = 7, len = L * .62, w = B * .78;
+    for (let r = 0; r < rows; r++) {
+      const z = -L * .32 + (r + .5) * len / rows + L * .02;
+      const h = H * (1.1 + ((r * 37) % 3) * .25);
+      const mat = new THREE.MeshStandardMaterial(Object.assign({ color: CONT[(r * 3 + (opts.seed || 0)) % CONT.length], roughness: .8 }, T));
+      g.add(box(w, h, len / rows * .9, mat, 0, top, z));
+    }
+    g.add(box(B * .82, H * 2.2, L * .07, deckMat, 0, top, L * .36));
+  } else if (type === "warship") {
+    g.add(box(B * .62, H * 1.4, L * .26, new THREE.MeshStandardMaterial(Object.assign({ color: 0x9aa6b2, roughness: .6 }, T)), 0, top, -L * .02));
+    g.add(box(B * .4, H * 1.2, L * .1, new THREE.MeshStandardMaterial(Object.assign({ color: 0xaab4bf, roughness: .6 }, T)), 0, top + H * 1.4, -L * .04));
+    g.add(box(B * .5, H * .9, L * .16, new THREE.MeshStandardMaterial(Object.assign({ color: 0x9aa6b2, roughness: .6 }, T)), 0, top, L * .2));
+    const mast = new THREE.Mesh(new THREE.CylinderGeometry(B * .03, B * .05, H * 3.2), darkMat); mast.position.set(0, top + H * 2.2, -L * .02); g.add(mast);
+  } else if (type === "tug") {
+    g.add(box(B * .7, H * 1.5, L * .3, deckMat, 0, top, -L * .12));
+    g.add(box(B * .5, H * 1, L * .18, deckMat, 0, top + H * 1.5, -L * .14));
+  } else if (type === "fishing") {
+    g.add(box(B * .7, H * 1.4, L * .26, deckMat, 0, top, L * .1));
+    const mast = new THREE.Mesh(new THREE.CylinderGeometry(B * .04, B * .05, H * 4), darkMat); mast.position.set(0, top + H * 2, -L * .18); g.add(mast);
+  } else if (type === "lpg" || type === "tanker") { // 일반 탱커 모양 (탱크 형식은 표현하지 않음)
+    g.add(box(B * .56, H * .5, L * .62, new THREE.MeshStandardMaterial(Object.assign({ color: 0xc9d1da, roughness: .7 }, T)), 0, top, -L * .06));
+    g.add(box(B * .1, H * .55, L * .6, darkMat, 0, top + H * .5, -L * .06));
+    g.add(box(B * .74, H * .8, L * .05, darkMat, 0, top, -L * .1));
+    g.add(box(B * .82, H * 2.2, L * .09, deckMat, 0, top, L * .37));
+  } else { // cargo / bulk / tanker / ferry
+    const n = 5;
+    for (let i = 0; i < n; i++) g.add(box(B * .66, H * .5, L * .1, darkMat, 0, top, -L * .33 + i * L * .13));
+    g.add(box(B * .82, H * 2.2, L * .08, deckMat, 0, top, L * .37));
+  }
+  g.userData.hullMat = hullMat; g.userData.baseColor = new THREE.Color(color); g.userData.L = L;
+  return g;
+}
+
+function lineMat(color, width, dashed, opacity = 1) {
+  const m = new LineMaterial({ color, linewidth: width, dashed: !!dashed, dashSize: .18, gapSize: .14, transparent: opacity < 1, opacity, worldUnits: false });
+  if (dashed) m.defines.USE_DASH = "";
+  return m;
+}
+function mkLine(pts, mat) {
+  const g = new LineGeometry(); g.setPositions(pts);
+  const l = new Line2(g, mat); l.computeLineDistances(); l.renderOrder = 2; return l;
+}
+function flat(track, y = .004) { const a = []; for (const p of track) a.push(p.x, y, -p.y); return a; }
+function label(text, cls) {
+  const d = document.createElement("div"); d.className = "lbl " + (cls || "");
+  const sp = document.createElement("span"); sp.textContent = text; d.appendChild(sp);
+  const o = new CSS2DObject(d); o.span = sp; return o;
+}
+
+class SeaView3D {
+  constructor(opts = {}) {
+    this.getScale = opts.getScale || (() => 1);
+    const el = this.el = document.createElement("div"); el.className = "sea3d";
+    const r = this.renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+    r.setClearColor(SKY); r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+    r.outputColorSpace = THREE.SRGBColorSpace;
+    el.appendChild(r.domElement);
+    const lr = this.labels = new CSS2DRenderer(); lr.domElement.className = "sea3d-labels"; el.appendChild(lr.domElement);
+    const sc = this.scene = new THREE.Scene(); sc.background = new THREE.Color(SKY); sc.fog = new THREE.Fog(SKY, 30, 80);
+    this.camera = new THREE.PerspectiveCamera(38, 1.6, .05, 400);
+    this.controls = new OrbitControls(this.camera, r.domElement);
+    Object.assign(this.controls, { enableDamping: true, dampingFactor: .08, maxPolarAngle: 1.45, minDistance: 1.2, maxDistance: 60, screenSpacePanning: false });
+    this.controls.addEventListener("start", () => { if (this.mode === "chase") this.mode = "free"; this.onUser && this.onUser(); });
+    sc.add(new THREE.HemisphereLight(0xffffff, 0xb9d3ec, 1.6));
+    const sun = this.sun = new THREE.DirectionalLight(0xffffff, 1.6); sun.position.set(-8, 14, 6); sun.castShadow = true;
+    sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -14, right: 14, top: 14, bottom: -14, near: 1, far: 60 });
+    sun.shadow.bias = -.0005; sc.add(sun); sc.add(sun.target);
+    this.normals = waterNormals(256); this.normals.repeat.set(40, 40);
+    const sea = this.sea = new THREE.Mesh(new THREE.PlaneGeometry(400, 400),
+      new THREE.MeshStandardMaterial({ color: SEA, roughness: .42, metalness: .05, normalMap: this.normals, normalScale: new THREE.Vector2(.35, .35) }));
+    sea.rotation.x = -Math.PI / 2; sea.receiveShadow = true; sc.add(sea);
+    this.world = new THREE.Group(); sc.add(this.world);
+    this.mode = "oblique"; this.t = 0; this.data = null; this.clock = new THREE.Clock();
+    this._loop = this._loop.bind(this); requestAnimationFrame(this._loop);
+    this._ro = new ResizeObserver(() => this.resize()); this._ro.observe(el);
+  }
+  mount(container) { if (this.el.parentNode !== container) container.appendChild(this.el); this.resize(); }
+  resize() {
+    const w = this.el.clientWidth, h = this.el.clientHeight; if (!w || !h) return;
+    const pr = Math.min(2.5, (window.devicePixelRatio || 1) * this.getScale());
+    this.renderer.setPixelRatio(pr); this.renderer.setSize(w, h, false);
+    this.renderer.domElement.style.width = w + "px"; this.renderer.domElement.style.height = h + "px";
+    this.labels.setSize(w, h); this.camera.aspect = w / h; this.camera.updateProjectionMatrix();
+    this.lineMats && this.lineMats.forEach(m => m.resolution.set(w * pr, h * pr));
+    this.size = [w, h];
+  }
+  _reg(m) { this.lineMats.push(m); const s = this.size || [800, 500], pr = this.renderer.getPixelRatio(); m.resolution.set(s[0] * pr, s[1] * pr); return m; }
+
+  /* d = {dt, safe, targets:[{id,name,kind,type,len,beam,track}], owns:[{key,label,color,type,len,beam,track,ghost,planned}], markers:[{x,y,text,until}], grid:true} */
+  setData(d) {
+    const W = this.world;
+    W.traverse(o => { if (o.element && o.element.parentNode) o.element.parentNode.removeChild(o.element); });
+    while (W.children.length) W.remove(W.children[0]);
+    this.lineMats = []; this.data = d;
+    // 범위
+    let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+    const all = d.targets.map(t => t.track).concat(d.owns.map(o => o.track));
+    all.forEach(tr => tr.forEach(p => { x0 = Math.min(x0, p.x); x1 = Math.max(x1, p.x); y0 = Math.min(y0, p.y); y1 = Math.max(y1, p.y); }));
+    // 화면 맞춤은 사건이 벌어지는 구간(focus)만 사용
+    let fx0 = x0, fy0 = y0, fx1 = x1, fy1 = y1;
+    if (d.box) ({ x0: fx0, y0: fy0, x1: fx1, y1: fy1 } = d.box);
+    this.bounds = { x0, y0, x1, y1, cx: (fx0 + fx1) / 2, cy: (fy0 + fy1) / 2, size: Math.max(fx1 - fx0, fy1 - fy0, 3), w: fx1 - fx0, h: fy1 - fy0 };
+    // 격자 (1해리)
+    const gp = [], gx0 = Math.floor(x0) - 2, gx1 = Math.ceil(x1) + 2, gy0 = Math.floor(y0) - 2, gy1 = Math.ceil(y1) + 2;
+    for (let x = gx0; x <= gx1; x++) gp.push(x, .001, -gy0, x, .001, -gy1);
+    for (let y = gy0; y <= gy1; y++) gp.push(gx0, .001, -y, gx1, .001, -y);
+    const gg = new THREE.BufferGeometry(); gg.setAttribute("position", new THREE.Float32BufferAttribute(gp, 3));
+    W.add(new THREE.LineSegments(gg, new THREE.LineBasicMaterial({ color: 0xa9c7e6, transparent: true, opacity: .55 })));
+    this.sun.position.set(this.bounds.cx - 8, 14, -this.bounds.cy + 6); this.sun.target.position.set(this.bounds.cx, 0, -this.bounds.cy);
+    // 타선
+    this.tg = d.targets.map((T, i) => {
+      const line = mkLine(flat(T.track), this._reg(lineMat(0x7d8b99, 2.6, true, .95))); W.add(line);
+      const ship = makeShip(T.type, T.len, T.beam, 0x6b7684, { seed: i * 2 }); W.add(ship);
+      const lb = label(T.name, "tg"); lb.position.set(0, .28, 0); ship.add(lb);
+      return { T, ship, lb };
+    });
+    // 자선(전략별)
+    this.ow = d.owns.map(O => {
+      const col = new THREE.Color(O.color);
+      if (O.planned !== false) W.add(mkLine(flat(O.track, .006), this._reg(lineMat(col, 2.6, true, .55))));
+      const trail = mkLine(flat(O.track, .008), this._reg(lineMat(col, O.ghost ? 3.4 : 5.5, !!O.ghost, O.ghost ? .85 : 1)));
+      W.add(trail);
+      const ship = makeShip(O.type || "cargo", O.len, O.beam, col, { ghost: O.ghost }); W.add(ship);
+      const ring = new THREE.Mesh(new THREE.RingGeometry(d.safe * .975, d.safe, 96), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: .75, depthWrite: false, side: THREE.DoubleSide }));
+      ring.rotation.x = -Math.PI / 2; ring.position.y = .01; ring.renderOrder = 3;
+      const disc = new THREE.Mesh(new THREE.CircleGeometry(d.safe, 96), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: .07, depthWrite: false }));
+      disc.rotation.x = -Math.PI / 2; disc.position.y = .009; disc.renderOrder = 3;
+      if (!O.ghost) { W.add(ring); W.add(disc); }
+      const lb = label(O.label, O.ghost ? "own ghost" : "own"); lb.element.style.setProperty("--c", O.color); lb.position.set(0, .34, 0); ship.add(lb);
+      const warnMat = this._reg(lineMat(0xdc2626, 3.2, false));
+      const warn = mkLine([0, .02, 0, 1, .02, 0], warnMat); warn.visible = false; W.add(warn);
+      const wl = label("", "warn"); wl.visible = false; W.add(wl);
+      return { O, ship, ring, disc, trail, warn, wl, col };
+    });
+    // 표식
+    this.mk = (d.markers || []).map(M => {
+      const g = new THREE.Group(); g.position.set(M.x, .012, -M.y);
+      const r = new THREE.Mesh(new THREE.RingGeometry(.2, .24, 48), new THREE.MeshBasicMaterial({ color: 0xdc2626, transparent: true, opacity: .9, depthWrite: false }));
+      r.rotation.x = -Math.PI / 2; g.add(r);
+      const xm = new THREE.MeshBasicMaterial({ color: 0xdc2626 });
+      const a = new THREE.Mesh(new THREE.BoxGeometry(.26, .01, .04), xm); a.rotation.y = Math.PI / 4; g.add(a);
+      const b = a.clone(); b.rotation.y = -Math.PI / 4; g.add(b);
+      const lb = label(M.text, "hit"); lb.position.set(0, .3, 0); g.add(lb);
+      W.add(g); return { M, g };
+    });
+    this.setTime(this.t || 0);
+    if (!this.keepCam) this.cam(this.mode === "chase" ? "chase" : this.mode === "top" ? "top" : "oblique", true);
+  }
+  setTime(t) {
+    const d = this.data; if (!d) return; this.t = t;
+    const dt = d.dt, n = d.targets[0].track.length;
+    const at = (tr, tt) => { const f = Math.max(0, Math.min(tr.length - 1.001, tt / dt)), i = Math.floor(f), u = f - i, p = tr[i], q = tr[i + 1];
+      let dh = ((q.h - p.h) % 360 + 540) % 360 - 180; return { x: p.x + (q.x - p.x) * u, y: p.y + (q.y - p.y) * u, h: p.h + dh * u }; };
+    const idx = Math.max(1, Math.min(n - 1, Math.round(t / dt)));
+    const tp = this.tg.map(o => { const p = at(o.T.track, t); o.ship.position.set(p.x, 0, -p.y); o.ship.rotation.y = -p.h * DEG; o.p = p; o.hot = false; return p; });
+    this.ow.forEach(o => {
+      const p = at(o.O.track, t); o.p = p;
+      o.ship.position.set(p.x, 0, -p.y); o.ship.rotation.y = -p.h * DEG;
+      o.trail.geometry.instanceCount = idx;
+      o.ring.position.set(p.x, .01, -p.y); o.disc.position.set(p.x, .009, -p.y);
+      let worst = null;
+      if (!o.O.ghost) this.tg.forEach(g => { const dd = Math.hypot(g.p.x - p.x, g.p.y - p.y); if (dd < d.safe && (!worst || dd < worst.d)) worst = { g, d: dd }; });
+      const bad = !!worst;
+      o.ring.material.color.set(bad ? 0xdc2626 : o.col); o.disc.material.color.set(bad ? 0xdc2626 : o.col); o.disc.material.opacity = bad ? .16 : .07;
+      o.warn.visible = bad; o.wl.visible = bad;
+      if (bad) {
+        o.warn.geometry.setPositions([p.x, .03, -p.y, worst.g.p.x, .03, -worst.g.p.y]); o.warn.computeLineDistances();
+        o.wl.position.set((p.x + worst.g.p.x) / 2, .2, -(p.y + worst.g.p.y) / 2); o.wl.span.textContent = worst.g.T.name.replace(/^[A-Z] · /, "") + " " + worst.d.toFixed(2) + "해리";
+        worst.g.hot = true;
+      }
+    });
+    this.tg.forEach(g => { g.ship.userData.hullMat.color.set(g.hot ? 0xdc2626 : 0x6b7684); g.lb.element.classList.toggle("hot", g.hot); g.lb.visible = !g.hot; });
+    this.mk.forEach(m => { m.g.visible = m.M.until == null || t < m.M.until; });
+  }
+  cam(mode, instant) {
+    this.mode = mode; const b = this.bounds; if (!b) return;
+    const fov = this.camera.fov * DEG, asp = this.camera.aspect;
+    const need = Math.max(b.h, b.w / asp, 2.5);
+    const dist = need / (2 * Math.tan(fov / 2)) * (mode === "top" ? 1.05 : 0.8);
+    const el0 = 50 * DEG, az0 = 200 * DEG;
+    // 아래쪽(카메라 쪽) 내용이 시간 막대에 가리지 않도록 시선 중심을 카메라 쪽으로 조금 당김
+    const tgt = mode === "oblique" ? new THREE.Vector3(b.cx + Math.sin(az0) * need * .1, 0, -b.cy - Math.cos(az0) * need * .1) : new THREE.Vector3(b.cx, 0, -b.cy);
+    let pos;
+    if (mode === "top") pos = new THREE.Vector3(b.cx, dist, -b.cy + .001);
+    else if (mode === "chase") { this.controls.target.copy(tgt); this._chase(true); return; }
+    else pos = new THREE.Vector3(tgt.x + Math.sin(az0) * Math.cos(el0) * dist, Math.sin(el0) * dist, tgt.z - Math.cos(az0) * Math.cos(el0) * dist);
+    if (instant) { this.camera.position.copy(pos); this.controls.target.copy(tgt); this.controls.update(); this._anim = null; }
+    else this._anim = { p0: this.camera.position.clone(), t0: this.controls.target.clone(), p1: pos, t1: tgt, k: 0 };
+  }
+  _chase(instant) {
+    const o = this.ow && (this.ow.find(x => x.O.key === this.chaseKey) || this.ow.find(x => !x.O.ghost)); if (!o) return;
+    const p = o.p || o.O.track[0], h = p.h * DEG, fx = Math.sin(h), fz = -Math.cos(h);
+    const pos = new THREE.Vector3(p.x - fx * 2.4, 1.15, -p.y - fz * 2.4), tgt = new THREE.Vector3(p.x + fx * 2.2, 0, -p.y + fz * 2.2);
+    if (instant) { this.camera.position.copy(pos); this.controls.target.copy(tgt); }
+    else { this.camera.position.lerp(pos, .12); this.controls.target.lerp(tgt, .12); }
+  }
+  _loop() {
+    requestAnimationFrame(this._loop);
+    if (!this.el.isConnected || !this.el.offsetParent) return;
+    const e = this.clock.getElapsedTime(); this.normals.offset.set(e * .004, e * .007);
+    if (this._anim) { const a = this._anim; a.k = Math.min(1, a.k + .06); const s = a.k * a.k * (3 - 2 * a.k);
+      this.camera.position.lerpVectors(a.p0, a.p1, s); this.controls.target.lerpVectors(a.t0, a.t1, s); if (a.k >= 1) this._anim = null; }
+    if (this.mode === "chase") this._chase(false);
+    this.controls.update();
+    this.renderer.render(this.scene, this.camera); this.labels.render(this.scene, this.camera);
+  }
+  snapshot() { this.renderer.render(this.scene, this.camera); this.labels.render(this.scene, this.camera); }
+}
+window.SeaView3D = SeaView3D;
+window.dispatchEvent(new Event("seaview-ready"));
 
 </script>
 </body>
