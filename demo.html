@@ -360,7 +360,7 @@ svg text{font-family:var(--font)}
 .rc .a{min-height:0;font-size:18px}
 .rc .mt{gap:10px}
 .rc .rb b{font-size:24px}
-.rv .who{width:auto;min-width:200px}
+.rv .who{width:auto;min-width:250px}
 
 .rc .mm{border-radius:12px;overflow:hidden;background:#e8f1fb}
 .rc .mm svg{display:block;width:100%;height:118px}
@@ -1144,7 +1144,7 @@ function endCap(pl,run){if(run.ev.fails.length||run.ev.verdict==="na"||run.iArr>
 function doneTitle(name,run,Pm){const ev=run.ev;
   return ev.verdict==="na"?J(name,"은/는")+" <span class=\"f\">응답 오류로 판정할 수 없어요</span>":ev.fails.length?failTitle(name,ev,Pm):ev.verdict==="pass"?J(name,"은/는")+" <em>안전하게 목적지에 도착했어요</em>":!ev.arrived?J(name,"은/는")+" 안전했지만 <span class=\"f\">"+TEND+"분 안에 도착하지 못했어요</span>":J(name,"은/는")+" 안전했지만 <span class=\"f\">도착이 "+f1(ev.delay)+"분 늦었어요</span>";}
 function buildSim(){
-  const sc=SC,pl=PL["3"],Pm=sc.primary,nm=sc.model.name,v1=Object.assign({name:nm,short:shortNm(nm,"v1"),col:COL,soft:SOFT},sc.v1);
+  const sc=SC,pl=PL["3"],Pm=sc.primary,nm=sc.model.name,v1=Object.assign({name:nm,short:shortNm(nm,"1차"),col:COL,soft:SOFT},sc.v1);
   pl.tEnd=animEnd(sc,[v1]);pl.dur=durOf(pl.tEnd);
   pl.render=simView($("#m3"),$("#hud3"),$("#lgd3"),sc,[v1],pl.tEnd);
   $("#rp3").textContent="기록 #"+recSeed+" 재생 · 다른 배 움직임은 실행 중에 드러나요";
@@ -1165,7 +1165,7 @@ function diagnose(run,Pm,own){const ev=run.ev,f=ev.fails[0],n=run.log.length,fir
 function fillReport(){
   const sc=SC,Pm=sc.primary,r=sc.v1,ev=r.ev,cell=(cls,m,d,mcls,tag)=>`<div class="cl ${cls}"><div class="m ${mcls||""}">${m}${tag?' <span class="tag">진단값</span>':""}</div><div class="d">${d}</div></div>`;
   const surprises=sc.others.filter(o=>sc.actual.beh[o.id].kind!=="keep");
-  let h=`<div class="hc"></div><div class="hc" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 9px">v1</span>${sc.model.name}<span class="unk">${surprises.length?"실행 중 드러난 움직임: "+surprises.map(o=>o.id+" "+behaviorShort(o,sc.actual.beh[o.id])+" (+"+fT(sc.actual.beh[o.id].t)+"분)").join(" · "):"다른 배는 모두 그대로 감"}</span>${pill(ev.verdict)}</div>`;
+  let h=`<div class="hc"></div><div class="hc" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 9px">1차 시도</span>${sc.model.name}<span class="unk">${surprises.length?"실행 중 드러난 움직임: "+surprises.map(o=>o.id+" "+behaviorShort(o,sc.actual.beh[o.id])+" (+"+fT(sc.actual.beh[o.id].t)+"분)").join(" · "):"다른 배는 모두 그대로 감"}</span>${pill(ev.verdict)}</div>`;
   const f=ev.fails[0];
   h+=`<div class="lay ${f?"l1":""} r2">① 안전성<small>위반이 확인되면 실패</small></div>`;
   if(ev.coll){const c=ev.coll,m=ev.per[c.id];h+=cell("c1 l1 r2",(c.id!==Pm?"2차 충돌":"충돌")+" · 대상 "+c.id,"+"+f1(c.t)+"분 충돌 · 최소 "+f1(m.min)+"해리"+(c.id!==Pm&&Pm?" · "+J(Pm,"을/를")+" 피한 뒤 발생":""),"ng");}
@@ -1206,8 +1206,8 @@ function recMap(svg,st){
 }
 function renderRecs(){
   const sc=SC,{base,cands}=REC,P=sc.primary,F=(sc.v1.ev.coll&&sc.v1.ev.coll.id)||sc.v1.ev.fails[0]||null;
-  $("#t5").innerHTML=REC.timeMode?"이런 전략이 <em>더 빨리 도착했어요</em>":"이런 전략이 <em>더 안전했어요</em>";
-  $("#s5sub").textContent="다른 배가 움직일 수 있는 30가지 경우로 시험했어요 · 지금 모델은 "+base.ok+"/"+base.n+" 안전"+(REC.timeMode?" · 도착 +"+f1(base.delay)+"분":"");
+  $("#t5").innerHTML="이 모델이 <em>참고할 만한 전략</em>이에요";
+  $("#s5sub").textContent="다른 배 움직임을 가정한 "+base.n+"가지 경우 · 지금 모델 "+base.ok+"/"+base.n+" 안전"+(REC.timeMode?" · 도착 +"+f1(base.delay)+"분":"")+" · 잠정 결과";
   $("#rcs").innerHTML=cands.map((c,i)=>{const tx=recText(c,P,F);return`<button class="rc${i===sel?" on":""}" data-i="${i}">
       <div class="top">${i===0?'<span class="best">추천</span>':""}</div>
       <div class="t">${tx.t}</div><div class="a">${tx.a}</div>
@@ -1217,7 +1217,7 @@ function renderRecs(){
   renderV2();
 }
 function renderV2(){
-  $("#v2up").innerHTML=`<span class="k">v2</span>`+(V2FILE?`<span class="v2n"><b>${V2FILE.name}</b> ${V2FILE.ok?'<span class="pill pass">준비 완료</span>':'<span class="pill fail">실행 불가</span>'}</span><button class="ghost" id="v2clear">추천 전략으로</button>`
+  $("#v2up").innerHTML=`<span class="k">2차 시도</span>`+(V2FILE?`<span class="v2n"><b>${V2FILE.name}</b> ${V2FILE.ok?'<span class="pill pass">준비 완료</span>':'<span class="pill fail">실행 불가</span>'}</span><button class="ghost" id="v2clear">추천 전략으로</button>`
     :`<span class="v2n">고른 추천 전략으로 재시험해요</span>`)+`<label class="upbtn">내 개선 모델 등록<input type="file" id="v2file" accept=".js,.mjs,.txt,.onnx,.zip"></label>`;}
 $("#rcs").addEventListener("click",e=>{const b=e.target.closest(".rc");if(!b)return;sel=+b.dataset.i;$$("#rcs .rc").forEach((x,i)=>x.classList.toggle("on",i===sel));renderV2();buildRetest();});
 $("#v2up").addEventListener("change",e=>{if(e.target.id!=="v2file")return;const f=e.target.files[0];if(!f)return;readModelFile(f,m=>{V2FILE=m;renderV2();if(m.ok)buildRetest();updCta();});});
@@ -1227,29 +1227,29 @@ $("#v2up").addEventListener("click",e=>{if(e.target.id!=="v2clear")return;V2FILE
 function buildRetest(){
   const sc=SC,c=REC.cands[sel],useFile=V2FILE&&V2FILE.ok,mk2=useFile?V2FILE.factory:paramModel(c.st);
   const name2=useFile?V2FILE.name:"추천 전략",r2=runOn(sc.own,sc.others,mk2,sc.actual);
-  const v1=Object.assign({name:sc.model.name+" (첫 시도)",short:shortNm(sc.model.name,"v1"),col:GHOST,ghost:true},sc.v1);
-  const v2=Object.assign({name:name2,short:shortNm(name2,"v2"),col:COL,soft:SOFT},r2);
+  const v1=Object.assign({name:sc.model.name+" (1차 시도)",short:shortNm(sc.model.name,"1차"),col:GHOST,ghost:true},sc.v1);
+  const v2=Object.assign({name:name2,short:shortNm(name2,"2차"),col:COL,soft:SOFT},r2);
   RT={c,useFile,name2,v1,v2,rob:useFile?robust(sc.own,sc.others,mk2,WORLDS):c.r};
   const pl=PL["6"];pl.tEnd=animEnd(sc,[v1,v2]);pl.dur=durOf(pl.tEnd);
   pl.render=simView($("#m6"),$("#hud6"),$("#lgd6"),sc,[v1,v2],pl.tEnd);
   $("#rp6").textContent="같은 기록 #"+recSeed+" 재생";
-  pl.caps=eventsFor(sc,r2,name2,"첫 시도 항적은 그대로 두고, "+J(name2,"을/를")+" 같은 기록에 다시 넣어요");endCap(pl,r2);
+  pl.caps=eventsFor(sc,r2,name2,"1차 시도 항적은 그대로 두고, "+J(name2,"을/를")+" 같은 기록에 다시 넣어요");endCap(pl,r2);
   const f=sc.v1.ev.fails[0]||sc.v1.ev.worst,m=f&&r2.ev.per[f];
   pl.tPre=(useFile?J(name2,"으로/로"):"추천 전략으로")+" 같은 문제를 다시 풀어요";
   const saved=sc.v1.ev.delay-r2.ev.delay;
-  pl.tDone=r2.ev.verdict==="na"||r2.ev.fails.length?doneTitle("v2",r2,sc.primary):REC.timeMode&&saved>.1?"v2는 안전을 지키면서 <em>"+f1(saved)+"분 일찍 도착했어요</em>":"v2는 "+J(f,"과/와")+" <em>"+f1(m.min)+"해리만큼의 거리</em>를 유지했어요";
+  pl.tDone=r2.ev.verdict==="na"||r2.ev.fails.length?doneTitle("2차 시도",r2,sc.primary):REC.timeMode&&saved>.1?"2차 시도는 안전을 지키면서 <em>"+f1(saved)+"분 일찍 도착했어요</em>":"2차 시도는 "+J(f,"과/와")+" <em>"+f1(m.min)+"해리만큼의 거리</em>를 유지했어요";
   pl.reset();
   fillCompare();
 }
 function fillCompare(){
   const sc=SC,{c,useFile,name2,v2,rob}=RT,e1=sc.v1.ev,e2=v2.ev,focus=e1.fails[0]||e1.worst,m1=focus&&e1.per[focus],m2=focus&&e2.per[focus],own=sc.own;
   const dd=e1.delay-e2.delay;
-  $("#t7").innerHTML="첫 시도와 비교하면, "+(e2.verdict==="fail"||e2.verdict==="na"?"아직 <span class=\"f\">고칠 게 남았어요</span>":e1.verdict==="fail"?(e1.coll?"<em>충돌 없이 목적지에 도착해요</em>":"<em>안전 문제는 풀렸어요</em>"):e1.verdict==="review"&&e2.verdict==="pass"?"<em>통과</em>로 바뀌고 <em>"+f1(dd)+"분 일찍 도착해요</em>":dd>.1?"<em>"+f1(dd)+"분 일찍 도착해요</em>":"큰 차이는 없어요");
+  $("#t7").innerHTML="1차 시도와 비교하면, "+(e2.verdict==="fail"||e2.verdict==="na"?"아직 <span class=\"f\">고칠 게 남았어요</span>":e1.verdict==="fail"?(e1.coll?"<em>충돌 없이 목적지에 도착해요</em>":"<em>안전 문제는 풀렸어요</em>"):e1.verdict==="review"&&e2.verdict==="pass"?"<em>통과</em>로 바뀌고 <em>"+f1(dd)+"분 일찍 도착해요</em>":dd>.1?"<em>"+f1(dd)+"분 일찍 도착해요</em>":"큰 차이는 없어요");
   $("#recNo7").textContent="#"+recSeed;
   const desc1=e1.coll?(e1.coll.id!==sc.primary?"2차 충돌":"충돌")+" · "+J(e1.coll.id,"과/와")+" 충돌 (+"+f1(e1.coll.t)+"분)":e1.fails.length?(e1.fails[0]!==sc.primary?"2차 충돌위험":"안전영역 침범")+" · "+J(e1.fails[0],"과/와")+" "+f1(e1.per[e1.fails[0]].min)+"해리":(e1.arrived?"도착 +"+f1(e1.delay)+"분 늦음":"목적지 미도착");
   const nm1=sc.model.name.length>14?sc.model.name.slice(0,14)+"…":sc.model.name,nm2=name2.length>14?name2.slice(0,14)+"…":name2;
-  $("#rv1").innerHTML=`<span class="who" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 8px">v1</span>${nm1}</span>${pill(e1.verdict)}<span class="d ${e1.fails.length?"ng":""}">${desc1}</span>`;
-  $("#rv2").innerHTML=`<span class="who" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 8px">v2</span>${nm2}</span>${pill(e2.verdict)}<span class="d">${useFile?"올린 파일":"참고 전략: "+c.title}</span>`;
+  $("#rv1").innerHTML=`<span class="who" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 8px">1차 시도</span>${nm1}</span>${pill(e1.verdict)}<span class="d ${e1.fails.length?"ng":""}">${desc1}</span>`;
+  $("#rv2").innerHTML=`<span class="who" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 8px">2차 시도</span>${nm2}</span>${pill(e2.verdict)}<span class="d">${useFile?"올린 파일":"참고 전략: "+c.title}</span>`;
   const ic={ok:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',wn:'<path d="M12 6v8M12 18.5v.3"/>',ng:'<path d="M7 7l10 10M17 7L7 17"/>'};
   const row=(cls,k,txt)=>`<div class="dr ${cls}"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">${ic[cls]}</svg></span><span class="k">${k}</span>${txt}</div>`;
   let h="";
@@ -1266,7 +1266,7 @@ function fillCompare(){
   if(!tm&&(e2.verdict==="pass"||e2.verdict==="review"))h+=e2.verdict==="review"?row("wn","남은 것",(e2.arrived?"도착 +"+f1(e2.delay)+"분 · 기준(+"+REVIEW+"분) 초과":"목적지 미도착")+" → 검토 사유"):row("ok","도착","곧장 갔을 때보다 +"+f1(e2.delay)+"분 · 추가 거리 "+f1(e2.extra)+"해리");
   $("#dl").innerHTML=h;
   if(tm)buildRouteMap();else buildCmpMap(focus);
-  $("#lg7").innerHTML=`<span><i></i>v1 첫 시도</span><span><i class="n"></i>v2</span>`;
+  $("#lg7").innerHTML=`<span><i></i>1차 시도</span><span><i class="n"></i>2차 시도</span>`;
 }
 /* 시간 비교용: 같은 시간 동안 v1·v2가 어디까지 갔는지 */
 function buildRouteMap(){
@@ -1278,11 +1278,11 @@ function buildRouteMap(){
   S("polyline",{points:P(a.track,stop),fill:"none",stroke:GHOST,"stroke-width":3.4*k,"stroke-dasharray":`${7*k} ${6*k}`,"stroke-linecap":"round"},svg);
   S("polyline",{points:P(b.track,stop),fill:"none",stroke:COL,"stroke-width":4*k,"stroke-linecap":"round","stroke-linejoin":"round"},svg);
   flag(svg,k,dest,false);dot(svg,k,o0,"A",COL,12);
-  const t=Math.min(ta,tb),pa=L(a.track,t),pb=L(b.track,t),first=tb<=ta?{p:pa,col:GHOST,lab:"v1"}:{p:pb,col:COL,lab:"v2"};
+  const t=Math.min(ta,tb),pa=L(a.track,t),pb=L(b.track,t),first=tb<=ta?{p:pa,col:GHOST,lab:"1차"}:{p:pb,col:COL,lab:"2차"};
   const g=ownShip(svg,k,first.col,.7);g.setAttribute("transform",`translate(${first.p.x} ${first.p.y}) rotate(${first.p.h})`);
   const rem=Math.hypot(dest.x-first.p.x,dest.y-first.p.y);
   const l=S("text",Object.assign({x:first.p.x,y:first.p.y+30*k,"text-anchor":"middle"},LBL(k,first.col===GHOST?"#dc2626":COL,15)),svg);l.textContent=first.lab+" · 아직 "+f1(rem)+"해리 남음";
-  const cap=S("text",Object.assign({x:vb[0]+12*k,y:vb[1]+22*k},LBL(k,"#4e5968",14)),svg);cap.textContent=(tb<=ta?"v2":"v1")+"가 도착한 +"+f1(t)+"분 · 점선 = 계획 항로";
+  const cap=S("text",Object.assign({x:vb[0]+12*k,y:vb[1]+22*k},LBL(k,"#4e5968",14)),svg);cap.textContent=(tb<=ta?"2차 시도":"1차 시도")+"가 도착한 +"+f1(t)+"분 · 점선 = 계획 항로";
 }
 function buildCmpMap(f){
   const svg=$("#m7"),[bw,bh]=size(svg,372,420),sc=SC,W=sc.actual.w,a=sc.v1,b=RT.v2;
@@ -1298,9 +1298,9 @@ function buildCmpMap(f){
   S("circle",{cx:p1.x,cy:p1.y,r:SAFE,fill:bad1?"rgba(220,38,38,.08)":"rgba(139,149,161,.06)",stroke:bad1?"#dc2626":"#8b95a1","stroke-width":2*k,"stroke-dasharray":`${5*k} ${4*k}`},svg);
   S("line",{x1:p1.x,y1:p1.y,x2:c1.x,y2:c1.y,stroke:bad1?"#dc2626":"#8b95a1","stroke-width":2.4*k},svg);
   const g1=ownShip(svg,k,GHOST,.7);g1.setAttribute("transform",`translate(${p1.x} ${p1.y}) rotate(${p1.h})`);
-  const l1=S("text",Object.assign({x:p1.x-SAFE-8*k,y:p1.y+6*k,"text-anchor":"end"},LBL(k,"#dc2626",18)),svg);l1.textContent="v1 · "+f+"와 "+f1(a.ev.per[f].min)+"해리";
+  const l1=S("text",Object.assign({x:p1.x-SAFE-8*k,y:p1.y+6*k,"text-anchor":"end"},LBL(k,"#dc2626",18)),svg);l1.textContent="1차 · "+f+"와 "+f1(a.ev.per[f].min)+"해리";
   const p2=L(b.track,t2),g2=ownShip(svg,k,COL,.7);g2.setAttribute("transform",`translate(${p2.x} ${p2.y}) rotate(${p2.h})`);
-  const l2=S("text",Object.assign({x:p2.x,y:p2.y-24*k,"text-anchor":"middle"},LBL(k,COL,18)),svg);l2.textContent="v2 · "+f+"와 "+f1(b.ev.per[f].min)+"해리";
+  const l2=S("text",Object.assign({x:p2.x,y:p2.y-24*k,"text-anchor":"middle"},LBL(k,COL,18)),svg);l2.textContent="2차 · "+f+"와 "+f1(b.ev.per[f].min)+"해리";
   const fo=sc.others.find(o=>o.id===f),cc=L(W[f],t1);
   S("path",{d:shapeOf(fo.type)(k*szOf(fo)),fill:"#6b7684",stroke:"#fff","stroke-width":2*k,transform:`translate(${cc.x} ${cc.y}) rotate(${cc.h})`},svg);
   const cl=S("text",Object.assign({x:cc.x+14*k,y:cc.y+34*k},LBL(k,"#4e5968",16)),svg);cl.textContent=f+" "+fo.type;
@@ -1316,7 +1316,7 @@ function refresh(){const key=JSON.stringify([ships,dest,model.uid,recSeed]);if(k
 /* ---------- 화면 목록 ---------- */
 const IDS=["0","1","2","3","4","5","6","7"];
 const SCR=IDS.map(id=>document.getElementById("s"+id));
-const CTA={"0":"데모 시작","1":"모델 등록하기","2":"이 모델로 시험하기","4":"개선 방향 보기","5":"v2로 재시험","7":"다시 처음으로 ↺"};
+const CTA={"0":"데모 시작","1":"모델 등록하기","2":"이 모델로 시험하기","4":"개선 방향 보기","5":"2차 시도하기","7":"다시 처음으로 ↺"};
 renderRows();renderStrat();renderPic();renderPreview();
 requestAnimationFrame(()=>{renderPic();renderPreview();});
 
@@ -1339,7 +1339,7 @@ function go(i){
 }
 function updCta(){
   const b=$("#cta"),id=IDS[cur],pl=PL[id];let label=CTA[id],busy=false;
-  if(pl){label=pl.playing?"실행 중…":pl.done?(id==="3"?"결과 리포트 보기":"첫 시도와 비교하기"):(id==="3"?"시험 실행":"재시험 실행");busy=pl.playing;}
+  if(pl){label=pl.playing?"실행 중…":pl.done?(id==="3"?"결과 리포트 보기":"1차 시도와 비교하기"):(id==="3"?"시험 실행":"재시험 실행");busy=pl.playing;}
   if(id==="2"&&!(model&&model.ok)){label="실행할 수 있는 모델을 등록해 주세요";busy=true;}
   b.textContent=label;b.classList.toggle("busy",busy);
 }
