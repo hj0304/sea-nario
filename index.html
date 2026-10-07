@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>씨나리오 기획안</title>
+<title>해답 기획안</title>
 <style>
 :root{--bg:#ffffff;--text:#1f2328;--muted:#59636e;--line:#d1d9e0;--soft:#f6f8fa;--accent:#1f6feb;--accent-tint:rgba(31,111,235,.12);--tint:#eef1f4}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0d1117;--text:#e6edf3;--muted:#9198a1;--line:#3d444d;--soft:#151b23;--accent:#4493f8;--accent-tint:rgba(68,147,248,.16);--tint:#1c2229}}
@@ -41,13 +41,13 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <body>
 <nav class="tabs"><div><a href="./summary.html">한 장 요약</a><a href="./" aria-current="page">전체 기획안</a><a href="./mockup.html">데모</a><a href="./deck.html">발표자료</a></div></nav>
 <main>
-<h1>씨나리오 (SEA-nario) 기획안 v9</h1>
+<h1>해답 기획안 v9</h1>
 <p>2026-10-07 · SSAFY 해양 X AI 아이디어 해커톤 · 주제 2 · 팀 통합 기획안 v1.0 기준</p>
 <blockquote>
 <p><strong>실제 다선박 위험 장면으로 AI의 판단을 시험하고, 실패 원인과 재시험 이력을 축적하는 검증 문제은행</strong></p>
 </blockquote>
 <p><strong>핵심 질문: 한 선박을 피하는 데 성공한 AI가, 다른 선박의 위험까지 함께 낮췄는가?</strong></p>
-<p>씨나리오는 실제 AIS 시계열에서 3척 이상이 상호 영향을 주는 조우 장면을 추출하고, 동일한 조건에서 여러 회피 전략을 비교하는 서비스입니다. 충돌 여부와 안전 여유를 먼저 평가하고, 판단 시점·반복 조정·운항 효율을 별도로 분석합니다. 결과는 실패 유형과 근거가 연결된 기록으로 남겨 모델 개선 후 다시 시험합니다.</p>
+<p>해답은 실제 AIS 시계열에서 3척 이상이 상호 영향을 주는 조우 장면을 추출하고, 동일한 조건에서 여러 회피 전략을 비교하는 서비스입니다. 충돌 여부와 안전 여유를 먼저 평가하고, 판단 시점·반복 조정·운항 효율을 별도로 분석합니다. 결과는 실패 유형과 근거가 연결된 기록으로 남겨 모델 개선 후 다시 시험합니다.</p>
 <table>
 <thead>
 <tr>
@@ -98,9 +98,9 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 </table>
 <p>문서의 상태: 실제 데이터 확보, 모델 성능, 기관 협력, 인증 인정은 아직 입증된 것으로 간주하지 않습니다. 수량·일정·사업 모델은 제안 목표이며 성과 수치가 아닙니다.</p>
 <h2>배경</h2>
-<p>정부는 2026년 5월 「자율운항선박 AI 데이터플랫폼 사업」을 출범했습니다. 2026~2029년, 346.06억 원으로 충돌 회피·항로 최적화·고장 예측 AI에 필요한 실운항 데이터를 모으는 사업입니다(<a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">산업부·해수부 보도자료</a>). 학습 데이터는 쌓이기 시작했지만, 그렇게 만든 AI가 복잡한 상황에서 안전하게 판단하는지 확인하는 방법도 함께 필요합니다. 씨나리오는 <strong>AI를 학습시키는 쪽이 아니라 시험하는 쪽</strong>을 맡습니다.</p>
+<p>정부는 2026년 5월 「자율운항선박 AI 데이터플랫폼 사업」을 출범했습니다. 2026~2029년, 346.06억 원으로 충돌 회피·항로 최적화·고장 예측 AI에 필요한 실운항 데이터를 모으는 사업입니다(<a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">산업부·해수부 보도자료</a>). 학습 데이터는 쌓이기 시작했지만, 그렇게 만든 AI가 복잡한 상황에서 안전하게 판단하는지 확인하는 방법도 함께 필요합니다. 해답은 <strong>AI를 학습시키는 쪽이 아니라 시험하는 쪽</strong>을 맡습니다.</p>
 <ul>
-<li><strong>IMO MASS Code</strong>: 2026년 비강제 코드로 채택됐고, 의무화 버전은 2032년 발효를 목표로 합니다. 2026년 12월 MSC 112에서 그 전 시범 운용 단계(경험축적단계)의 틀을 논의합니다(<a target="_blank" rel="noopener" href="https://www.imo.org/en/mediacentre/hottopics/pages/autonomous-shipping.aspx">IMO</a>). 자동 의사결정 과정을 포함한 운항 기록(9.10)과 상세 시뮬레이션 등을 통한 시험·검증(9.12)을 다룹니다(<a target="_blank" rel="noopener" href="https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/IndexofIMOResolutions/MSCResolutions/MSC.595(111).pdf">MASS Code 원문</a>). 이는 검증 자료를 체계화할 필요와 연결되지만, 씨나리오의 공식 인정 근거로 확대 해석하지 않습니다.</li>
+<li><strong>IMO MASS Code</strong>: 2026년 비강제 코드로 채택됐고, 의무화 버전은 2032년 발효를 목표로 합니다. 2026년 12월 MSC 112에서 그 전 시범 운용 단계(경험축적단계)의 틀을 논의합니다(<a target="_blank" rel="noopener" href="https://www.imo.org/en/mediacentre/hottopics/pages/autonomous-shipping.aspx">IMO</a>). 자동 의사결정 과정을 포함한 운항 기록(9.10)과 상세 시뮬레이션 등을 통한 시험·검증(9.12)을 다룹니다(<a target="_blank" rel="noopener" href="https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/IndexofIMOResolutions/MSCResolutions/MSC.595(111).pdf">MASS Code 원문</a>). 이는 검증 자료를 체계화할 필요와 연결되지만, 해답의 공식 인정 근거로 확대 해석하지 않습니다.</li>
 <li><strong>AI 완전자율운항 기술개발</strong>: 2026~2032년, 약 6,000억 원 규모의 정부 사업이 데이터플랫폼 사업과 연계됩니다(<a target="_blank" rel="noopener" href="https://edaily.co.kr/News/Read?mediaCodeNo=257&amp;newsId=06330406642363096">이데일리</a>).</li>
 </ul>
 <h2>자율운항선박의 숙제와 우리가 다선박을 고른 이유</h2>
@@ -160,7 +160,7 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <blockquote>
 <p>대표 장면: A의 B 회피 → C와의 안전 여유 감소 → 추가 조정 또는 인계 필요</p>
 </blockquote>
-<p>씨나리오가 찾는 문제는 단순한 선박 밀집이 아니라, <strong>한 행동이 여러 위험관계를 바꾸는 장면</strong>입니다.</p>
+<p>해답이 찾는 문제는 단순한 선박 밀집이 아니라, <strong>한 행동이 여러 위험관계를 바꾸는 장면</strong>입니다.</p>
 <table>
 <thead>
 <tr>
@@ -788,7 +788,7 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <tr>
 <td>검증 방법</td>
 <td><strong>LLM</strong></td>
-<td>글을 이해하고 생성하는 대규모 언어모델. 씨나리오에서는 근거 설명 초안에만 쓰고 판정에는 쓰지 않음</td>
+<td>글을 이해하고 생성하는 대규모 언어모델. 해답에서는 근거 설명 초안에만 쓰고 판정에는 쓰지 않음</td>
 </tr>
 </tbody>
 </table>
