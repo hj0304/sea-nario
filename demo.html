@@ -1043,9 +1043,9 @@ function eventsFor(sc,run,name,intro){
   if(Pm){const m=run.ev.per[Pm];if(m.min>=SAFE)ev.push({t:m.tMin+.3,txt:J(Pm,"과/와")+"는 안전하게 지나갔어요",chip:Pm+" 최소 "+f1(m.min)+"해리",cls:"pass"});}
   if(run.iArr>=0&&!run.ev.fails.length){const e=run.ev;ev.push({t:e.tArr,txt:name+" 목적지 도착 · 곧장 갔을 때보다 "+f1(e.delay)+"분 늦게",chip:"도착 +"+f1(e.delay)+"분",cls:e.delay>REVIEW?"warn":"pass"});}
   const f=run.ev.fails[0],cl=run.ev.coll;
-  if(cl)ev.push({t:cl.t,txt:J(cl.id,"과/와")+" 충돌했어요",chip:(cl.id!==Pm?"2차 충돌 · ":"충돌 · ")+cl.id,cls:"fail"});
+  if(cl)ev.push({t:cl.t,txt:J(cl.id,"과/와")+" 충돌했어요",chip:"충돌 · "+cl.id,cls:"fail"});
   if(f){const m=run.ev.per[f];if(f!==Pm)ev.push({t:Math.max(.5,m.tIn-1.5),txt:"그런데 "+J(f,"과/와")+" 점점 가까워져요",chip:f+"와 거리 감소",cls:"warn"});
-    if(!cl||cl.id!==f||cl.t-m.tIn>.3)ev.push({t:m.tIn,txt:J(f,"이/가")+" 안전영역 안으로 들어왔어요",chip:(f!==Pm?"2차 충돌위험 · ":"안전영역 침범 · ")+f,cls:"fail"});}
+    if(!cl||cl.id!==f||cl.t-m.tIn>.3)ev.push({t:m.tIn,txt:J(f,"이/가")+" 안전영역 안으로 들어왔어요",chip:(f!==Pm?"충돌위험 · ":"안전영역 침범 · ")+f,cls:"fail"});}
   return[ev[0]].concat(ev.slice(1).sort((a,b)=>a.t-b.t));
 }
 function animEnd(sc,runs){let te=8;runs.forEach(r=>{if(r.ghost)return;if(r.ev.coll){te=Math.max(te,r.ev.coll.t+.3);return;}te=Math.max(te,(r.iArr>=0?r.iArr*DT:TEND)+.8);sc.others.forEach(o=>{const m=r.ev.per[o.id];if(m.tIn>=0)te=Math.max(te,m.tIn+1.5);});});return Math.min(TEND,te);}
@@ -1168,8 +1168,8 @@ function fillReport(){
   let h=`<div class="hc"></div><div class="hc" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 9px">1차 시도</span>${sc.model.name}<span class="unk">${surprises.length?"실행 중 드러난 움직임: "+surprises.map(o=>o.id+" "+behaviorShort(o,sc.actual.beh[o.id])+" (+"+fT(sc.actual.beh[o.id].t)+"분)").join(" · "):"다른 배는 모두 그대로 감"}</span>${pill(ev.verdict)}</div>`;
   const f=ev.fails[0];
   h+=`<div class="lay ${f?"l1":""} r2">① 안전성<small>위반이 확인되면 실패</small></div>`;
-  if(ev.coll){const c=ev.coll,m=ev.per[c.id];h+=cell("c1 l1 r2",(c.id!==Pm?"2차 충돌":"충돌")+" · 대상 "+c.id,"+"+f1(c.t)+"분 충돌 · 최소 "+f1(m.min)+"해리"+(c.id!==Pm&&Pm?" · "+J(Pm,"을/를")+" 피한 뒤 발생":""),"ng");}
-  else if(f){const m=ev.per[f];h+=cell("c1 l1 r2",(f!==Pm?"2차 충돌위험":"안전영역 침범")+" · 대상 "+f,"+"+f1(m.tIn)+"분 안전영역 진입 · 최소 "+f1(m.min)+"해리 (+"+f1(m.tMin)+"분)","ng");}
+  if(ev.coll){const c=ev.coll,m=ev.per[c.id];h+=cell("c1 l1 r2","충돌 · 대상 "+c.id,"+"+f1(c.t)+"분 충돌 · 최소 "+f1(m.min)+"해리"+(c.id!==Pm&&Pm?" · "+J(Pm,"을/를")+" 피한 뒤 발생":""),"ng");}
+  else if(f){const m=ev.per[f];h+=cell("c1 l1 r2",(f!==Pm?"충돌위험":"안전영역 침범")+" · 대상 "+f,"+"+f1(m.tIn)+"분 안전영역 진입 · 최소 "+f1(m.min)+"해리 (+"+f1(m.tMin)+"분)","ng");}
   else{const w=ev.worst,m=w&&ev.per[w];h+=cell("r2",ev.verdict==="na"?"판정 불가":"필수 조건 충족",w?"가장 가까운 배 "+w+" "+f1(m.min)+"해리 (+"+f1(m.tMin)+"분)":"주변 배 없음",ev.verdict==="na"?"mu":"ok");}
   const dg=diagnose(r,Pm,sc.own);
   h+='<div class="lay r3">② 행동 진단<small>모델 명령 기록으로 판단</small></div>'+cell("r3",dg[0],dg[1],"",1);
@@ -1246,7 +1246,7 @@ function fillCompare(){
   const dd=e1.delay-e2.delay;
   $("#t7").innerHTML="1차 시도와 비교하면, "+(e2.verdict==="fail"||e2.verdict==="na"?"아직 <span class=\"f\">고칠 게 남았어요</span>":e1.verdict==="fail"?(e1.coll?"<em>충돌 없이 목적지에 도착해요</em>":"<em>안전 문제는 풀렸어요</em>"):e1.verdict==="review"&&e2.verdict==="pass"?"<em>통과</em>로 바뀌고 <em>"+f1(dd)+"분 일찍 도착해요</em>":dd>.1?"<em>"+f1(dd)+"분 일찍 도착해요</em>":"큰 차이는 없어요");
   $("#recNo7").textContent="#"+recSeed;
-  const desc1=e1.coll?(e1.coll.id!==sc.primary?"2차 충돌":"충돌")+" · "+J(e1.coll.id,"과/와")+" 충돌 (+"+f1(e1.coll.t)+"분)":e1.fails.length?(e1.fails[0]!==sc.primary?"2차 충돌위험":"안전영역 침범")+" · "+J(e1.fails[0],"과/와")+" "+f1(e1.per[e1.fails[0]].min)+"해리":(e1.arrived?"도착 +"+f1(e1.delay)+"분 늦음":"목적지 미도착");
+  const desc1=e1.coll?J(e1.coll.id,"과/와")+" 충돌 (+"+f1(e1.coll.t)+"분)":e1.fails.length?(e1.fails[0]!==sc.primary?"충돌위험":"안전영역 침범")+" · "+J(e1.fails[0],"과/와")+" "+f1(e1.per[e1.fails[0]].min)+"해리":(e1.arrived?"도착 +"+f1(e1.delay)+"분 늦음":"목적지 미도착");
   const nm1=sc.model.name.length>14?sc.model.name.slice(0,14)+"…":sc.model.name,nm2=name2.length>14?name2.slice(0,14)+"…":name2;
   $("#rv1").innerHTML=`<span class="who" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 8px">1차 시도</span>${nm1}</span>${pill(e1.verdict)}<span class="d ${e1.fails.length?"ng":""}">${desc1}</span>`;
   $("#rv2").innerHTML=`<span class="who" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 8px">2차 시도</span>${nm2}</span>${pill(e2.verdict)}<span class="d">${useFile?"올린 파일":"참고 전략: "+c.title}</span>`;
@@ -1256,7 +1256,7 @@ function fillCompare(){
   const tm=REC.timeMode&&!e1.fails.length&&!e2.fails.length&&e2.verdict!=="na";
   if(tm){h+=row(dd>.1?"ok":"wn","도착","+"+f1(e1.delay)+" → +"+f1(e2.delay)+"분 ("+(dd>0?"−":"+")+f1(Math.abs(dd))+"분)"+(e1.verdict==="review"&&e2.verdict==="pass"?" · 검토 사유 해소":"")+" · 추가 거리 "+f1(e1.extra)+" → "+f1(e2.extra)+"해리");
     const w2=e2.worst;h+=row(e2.per[w2].min>=SAFE?"ok":"ng","안전","모든 배와 안전영역 유지 · 가장 가까운 배 "+w2+" "+f1(e2.per[w2].min)+"해리 (안전영역 "+SAFE+"해리)");}
-  if(!tm&&m1&&m2)h+=row(m2.min>=SAFE?"ok":"ng",m2.min>m1.min?"개선":"변화",focus+" 최소 거리 "+f1(m1.min)+" → "+f1(m2.min)+"해리"+(m1.min<SAFE&&m2.min>=SAFE?(e1.coll?" · 충돌 해소":e1.fails[0]!==sc.primary?" · 2차 충돌위험 해소":" · 안전영역 침범 해소"):""));
+  if(!tm&&m1&&m2)h+=row(m2.min>=SAFE?"ok":"ng",m2.min>m1.min?"개선":"변화",focus+" 최소 거리 "+f1(m1.min)+" → "+f1(m2.min)+"해리"+(m1.min<SAFE&&m2.min>=SAFE?(e1.coll?" · 충돌 해소":e1.fails[0]!==sc.primary?" · 충돌위험 해소":" · 안전영역 침범 해소"):""));
   const others=sc.others.filter(o=>o.id!==focus),worse=others.filter(o=>e2.per[o.id].min<SAFE||e2.per[o.id].min<e1.per[o.id].min-.15);
   if(!tm&&others.length)h+=worse.length?row(worse.some(o=>e2.per[o.id].min<SAFE)?"ng":"wn","회귀",worse.map(o=>o.id+" "+f1(e1.per[o.id].min)+" → "+f1(e2.per[o.id].min)).join(" · ")+"해리 · 다른 배와 거리 감소")
     :row("ok","회귀",others.map(o=>o.id).join("·")+" 안전 거리 유지 ("+others.map(o=>o.id+" "+f1(e2.per[o.id].min)).join(" · ")+"해리)");
