@@ -367,7 +367,7 @@ svg text{font-family:var(--font)}
 <div id="stage">
   <div id="bar"><i id="barFill"></i></div>
   <button id="back" aria-label="뒤로"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4e5968" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
-  <div id="steps"><span>상황 설정</span><i></i><span>AI 등록</span><i></i><span>시뮬레이션</span><i></i><span>결과</span><i></i><span>전략 추천</span><i></i><span>재시험</span><i></i><span>비교</span></div>
+  <div id="steps"><span>상황 설정</span><i></i><span>모델 등록</span><i></i><span>시뮬레이션</span><i></i><span>결과</span><i></i><span>전략 추천</span><i></i><span>재시험</span><i></i><span>비교</span></div>
   <div id="note">예시 데이터 · 실제 수치 아님</div>
   <div id="toast">↺ 이번 기록이 다음 문제 세트와 회귀검증 이력에 들어갔어요</div>
 
@@ -402,15 +402,15 @@ svg text{font-family:var(--font)}
 
   <!-- 3 AI 등록 -->
   <section class="scr" id="s2">
-    <h2 class="h1">시험할 <em>AI</em>를 등록해요</h2>
-    <div class="sub">AI는 지금 보이는 정보만 받고, 침로·속력을 정해요</div>
+    <h2 class="h1">시험할 <em>판단 모델</em>을 등록해요</h2>
+    <div class="sub">학습된 AI든 규칙 기반이든, 같은 방식으로 시험해요</div>
     <div class="vis">
       <div class="mdw">
         <div class="card up">
           <label class="drop" id="drop"><input type="file" id="mfile" accept=".js,.mjs,.txt,.onnx,.zip,.tar">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0b6bcb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
-            <b>AI 파일 끌어다 놓기</b><span>.js · decide(obs)</span></label>
-          <div><div class="smh">샘플로 해보기<button id="tpl">템플릿 받기</button></div><div id="samples"></div></div>
+            <b>모델 파일 끌어다 놓기</b><span>데모: .js · decide(obs) &nbsp;|&nbsp; 실제 서비스: ONNX·API 연결</span></label>
+          <div><div class="smh">샘플 모델 (규칙 기반)<button id="tpl">템플릿 받기</button></div><div id="samples"></div></div>
         </div>
         <div class="card mc" id="mcard"></div>
       </div>
@@ -906,7 +906,7 @@ function decide(obs) {
 }
 `}];
 const TEMPLATE=`// 해답 시험용 자율운항 전략 템플릿
-// 이 파일의 decide(obs)를 내 AI의 판단으로 바꿔서 올려요.
+// 이 파일의 decide(obs)를 내 모델의 판단으로 바꿔서 올려요. 학습된 AI 모델이라면 decide 안에서 모델을 호출해요.
 ${API_DOC}${CPA_SRC}
 function decide(obs) {
   // 예: 1해리 안으로 들어올 배가 있으면 목적지 방향에서 우현으로 20°, 아니면 목적지로 곧장
@@ -1019,8 +1019,8 @@ function setCap(el,c,state){
 function eventsFor(sc,run,name,intro){
   const Pm=sc.primary,own=sc.own,ev=[{t:-1,txt:intro}];
   if(!run.log.length)ev.push({t:0,txt:name+": 침로·속력을 그대로 유지해요"});
-  run.log.forEach((l,i)=>{if(i===0)ev.push({t:l.t,txt:name+" 판단: "+cmdTxt(l,own),chip:"AI 명령",cls:""});
-    else if(i<6)ev.push({t:l.t+.01,txt:J(name,"이/가")+" 다시 판단: "+cmdTxt(l,own),chip:"AI 명령",cls:""});});
+  run.log.forEach((l,i)=>{if(i===0)ev.push({t:l.t,txt:name+" 판단: "+cmdTxt(l,own),chip:"모델 명령",cls:""});
+    else if(i<6)ev.push({t:l.t+.01,txt:J(name,"이/가")+" 다시 판단: "+cmdTxt(l,own),chip:"모델 명령",cls:""});});
   sc.others.forEach(o=>{const b=sc.actual.beh[o.id];if(b.kind!=="keep"&&b.t<TEND)ev.push({t:b.t,txt:J(o.id,"이/가")+" "+behaviorText(o,b),chip:"미리 몰랐던 움직임",cls:"warn"});});
   if(Pm){const m=run.ev.per[Pm];if(m.min>=SAFE)ev.push({t:m.tMin+.3,txt:J(Pm,"과/와")+"는 안전하게 지나갔어요",chip:Pm+" 최소 "+f1(m.min)+"해리",cls:"pass"});}
   if(run.iArr>=0&&!run.ev.fails.length){const e=run.ev;ev.push({t:e.tArr,txt:name+" 목적지 도착 · 곧장 갔을 때보다 "+f1(e.delay)+"분 늦게",chip:"도착 +"+f1(e.delay)+"분",cls:e.delay>REVIEW?"warn":"pass"});}
@@ -1128,14 +1128,14 @@ function buildSim(){
   pl.tEnd=animEnd(sc,[v1]);pl.dur=durOf(pl.tEnd);
   pl.render=simView($("#m3"),$("#hud3"),$("#lgd3"),sc,[v1],pl.tEnd);
   $("#rp3").textContent="기록 #"+recSeed+" 재생 · 다른 배 움직임은 실행 중에 드러나요";
-  pl.caps=eventsFor(sc,sc.v1,nm,"AI는 다른 배가 어떻게 움직일지 모르는 채로 출발해요");endCap(pl,sc.v1);
+  pl.caps=eventsFor(sc,sc.v1,nm,"모델은 다른 배가 어떻게 움직일지 모르는 채로 출발해요");endCap(pl,sc.v1);
   pl.tPre=Pm?J(Pm,"을/를")+" 피한 뒤, 다른 배와는 어떻게 될까요?":"주변 배와 얼마나 떨어질까요?";
   pl.tDone=doneTitle(nm,sc.v1,Pm);
   pl.reset();
 }
 /* 행동 진단: AI 내부는 모르므로 명령 기록만 본다 */
 function diagnose(run,Pm,own){const ev=run.ev,f=ev.fails[0],n=run.log.length,first=run.log[0];
-  if(ev.verdict==="na")return["판정 불가","AI 응답 오류 "+run.errs+"번 · 형식 오류 "+run.bad+"번"];
+  if(ev.verdict==="na")return["판정 불가","모델 응답 오류 "+run.errs+"번 · 형식 오류 "+run.bad+"번"];
   if(!n)return["회피 행동 없음","끝까지 침로·속력 유지"];
   if(f&&f!==Pm&&n===1)return["처음 판단 뒤 변경 없음",J(Pm,"을/를")+" 피한 뒤 "+J(f,"과/와")+" 가까워지는 동안 명령을 바꾸지 않음"];
   if(f)return["명령 변경 "+n+"번","바꿨지만 "+J(f,"과/와")+"의 거리를 지키기엔 늦음"];
@@ -1152,7 +1152,7 @@ function fillReport(){
   else if(f){const m=ev.per[f];h+=cell("c1 l1 r2",(f!==Pm?"2차 충돌위험":"안전영역 침범")+" · 대상 "+f,"+"+f1(m.tIn)+"분 안전영역 진입 · 최소 "+f1(m.min)+"해리 (+"+f1(m.tMin)+"분)","ng");}
   else{const w=ev.worst,m=w&&ev.per[w];h+=cell("r2",ev.verdict==="na"?"판정 불가":"필수 조건 충족",w?"가장 가까운 배 "+w+" "+f1(m.min)+"해리 (+"+f1(m.tMin)+"분)":"주변 배 없음",ev.verdict==="na"?"mu":"ok");}
   const dg=diagnose(r,Pm,sc.own);
-  h+='<div class="lay r3">② 행동 진단<small>AI 명령 기록으로 판단</small></div>'+cell("r3",dg[0],dg[1],"",1);
+  h+='<div class="lay r3">② 행동 진단<small>모델 명령 기록으로 판단</small></div>'+cell("r3",dg[0],dg[1],"",1);
   h+='<div class="lay r4">③ 운항 효율<small>목적지 도착 기준</small></div>';
   h+=f||ev.verdict==="na"?cell("r4","비교 제외","안전을 점수로 상쇄하지 않아요","mu")
     :!ev.arrived?cell("r4","목적지 미도착",TEND+"분 안에 도착하지 못함 → 검토 사유")
@@ -1274,7 +1274,7 @@ function refresh(){const key=JSON.stringify([ships,dest,model.uid,recSeed]);if(k
 /* ---------- 화면 목록 ---------- */
 const IDS=["0","1","2","3","4","5","6","7"];
 const SCR=IDS.map(id=>document.getElementById("s"+id));
-const CTA={"0":"데모 시작","1":"AI 등록하기","2":"이 AI로 시험하기","4":"개선 방향 보기","5":"v2로 재시험","7":"다시 처음으로 ↺"};
+const CTA={"0":"데모 시작","1":"모델 등록하기","2":"이 모델로 시험하기","4":"개선 방향 보기","5":"v2로 재시험","7":"다시 처음으로 ↺"};
 renderRows();renderStrat();renderPic();renderPreview();
 requestAnimationFrame(()=>{renderPic();renderPreview();});
 
@@ -1298,7 +1298,7 @@ function go(i){
 function updCta(){
   const b=$("#cta"),id=IDS[cur],pl=PL[id];let label=CTA[id],busy=false;
   if(pl){label=pl.playing?"실행 중…":pl.done?(id==="3"?"결과 리포트 보기":"첫 시도와 비교하기"):(id==="3"?"시험 실행":"재시험 실행");busy=pl.playing;}
-  if(id==="2"&&!(model&&model.ok)){label="실행할 수 있는 AI를 등록해 주세요";busy=true;}
+  if(id==="2"&&!(model&&model.ok)){label="실행할 수 있는 모델을 등록해 주세요";busy=true;}
   b.textContent=label;b.classList.toggle("busy",busy);
 }
 function next(){
