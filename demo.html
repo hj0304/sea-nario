@@ -389,6 +389,9 @@ svg text{font-family:var(--font)}
 .spdb button{border:0;background:transparent;border-radius:8px;height:30px;padding:0 10px;font-size:15px;font-weight:800;color:var(--ink2)}
 .spdb button.on{background:var(--blue);color:#fff}
 .conds{flex-wrap:wrap;justify-content:center;max-width:1300px}
+.smp.real .sb{background:#b45309}.smp.real.on .sb{background:var(--blue)}
+#samples .smp{height:52px;margin-bottom:6px}#samples .smp small{font-size:13px}
+.hud .hr .hn{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -544,6 +547,8 @@ const dir=h=>[Math.sin(h*DEG),-Math.cos(h*DEG)];
 const nrm=a=>((a%360)+360)%360;
 const d180=a=>nrm(a+180)-180;
 const f1=v=>v.toFixed(1);
+/* 안전영역(0.5해리) 근처는 둘째 자리까지: 0.49가 0.5로 보이지 않게 */
+const fd=v=>Math.abs(v-SAFE)<.06?v.toFixed(2):v.toFixed(1);
 const pad3=h=>String(Math.round(nrm(h))%360).padStart(3,"0");
 const fT=t=>(Math.round(t*2)/2).toString();
 const TYPES=["화물선","컨테이너선","유조선","여객선","어선","예인선","레저선박","함정"];
@@ -769,14 +774,27 @@ $("#addShip").onclick=()=>{if(ships.length>=MAXS)return;const id=[...LET].find(l
 const along=(p,h,d)=>{const [u,v]=dir(h);return{x:+(p.x+u*d).toFixed(2),y:+(p.y+v*d).toFixed(2)};};
 const CASES=[
   {v:"demo",t:"예시 장면",s:"4척 · 시연용",src:"예시 데이터",load:()=>({ships:defaultShips(),dest:defaultDest(),rec:DEFAULT_REC})},
-  {v:"fitz",t:"2017 사가미만 · USS Fitzgerald",s:"남하 중 우현의 동북동 선박 3척 · NTSB MAR-20/02",src:"NTSB MAR-20/02 재구성 · 위치 근사",
+  {v:"fitz",actual:{id:"R",name:"당시 실제 조종",file:"actual_fitzgerald.js",who:"NTSB 보고서의 실제 조종 재현",code:`// 당시 실제 조종 재현 — USS Fitzgerald (NTSB MAR-20/02)
+// 침로 190°·20노트로 가다가 충돌 약 8분 전 우현 10°(침로 200°)로 바꿨어요.
+// NTSB는 이 변침의 이유를 밝히지 못했어요.
+function decide(obs) {
+  return { heading: obs.t < 2 ? 190 : 200, speed: 20 };
+}
+`},t:"2017 사가미만 · USS Fitzgerald",s:"남하 중 우현의 동북동 선박 3척 · NTSB MAR-20/02",src:"NTSB MAR-20/02 재구성 · 위치 근사",
    load:()=>{const own={id:"A",own:true,name:"USS Fitzgerald",type:"함정",len:154,spd:20,hdg:190,x:0,y:0};
-     const P=along(own,190,20/60*10),cr=along(along(P,69,-18.5/60*10),339,.3);
+     const P=along(own,190,20/60*10),cr=along(along(along(P,69,-18.5/60*10),339,.3),69,-.3);
      const wh=along(along(cr,339,2),69,2.2),ev=along(along(cr,159,4),69,-2);
      return{ships:[own,Object.assign({id:"B",name:"ACX Crystal",type:"컨테이너선",len:222,spd:18.5,hdg:69},cr),
        Object.assign({id:"C",name:"Wan Hai 266",type:"컨테이너선",len:200,spd:18,hdg:69},wh),
        Object.assign({id:"D",name:"Maersk Evora",type:"컨테이너선",len:250,spd:18,hdg:69},ev)],dest:along(own,190,7),rec:0};}},
-  {v:"mccain",t:"2017 싱가포르 해협 · USS John S. McCain",s:"서행 차로에서 여러 척 추월 · NTSB MAR-19/01",src:"NTSB MAR-19/01 재구성 · 위치 근사",
+  {v:"mccain",actual:{id:"R",name:"당시 실제 조종",file:"actual_mccain.js",who:"NTSB 보고서의 실제 조종 재현 (근사)",code:`// 당시 실제 조종 재현 — USS John S. McCain (NTSB MAR-19/01, 시점·각도 근사)
+// 침로 227°·18노트로 추월하던 중 조타 이상으로 인식해 10노트, 5노트로 감속했고,
+// 그사이 의도치 않게 좌현으로 돌아 Alnic MC 앞으로 들어갔어요.
+function decide(obs) {
+  if (obs.t < 5) return { heading: 227, speed: 18 };
+  return { heading: 205, speed: obs.t < 6 ? 10 : 5 };
+}
+`},t:"2017 싱가포르 해협 · USS John S. McCain",s:"서행 차로에서 여러 척 추월 · NTSB MAR-19/01",src:"NTSB MAR-19/01 재구성 · 위치 근사",
    load:()=>{const own={id:"A",own:true,name:"USS John S. McCain",type:"함정",len:154,spd:18,hdg:227,x:0,y:0};
      const al=along(along(own,227,.9),137,.25),gz=along(along(own,227,1.7),317,.08),hg=along(along(own,227,-.6),137,.65);
      return{ships:[own,Object.assign({id:"B",name:"Alnic MC",type:"유조선",len:183,spd:10,hdg:227},al),
@@ -784,7 +802,10 @@ const CASES=[
        Object.assign({id:"D",name:"Hyundai Global",type:"컨테이너선",len:300,spd:16,hdg:227},hg)],dest:along(own,227,6),rec:0};}}];
 let caseId="demo";
 function loadCase(id){const c=CASES.find(x=>x.v===id);const d=c.load();caseId=id;ships=d.ships;dest=d.dest;recSeed=d.rec;picVB=null;
-  $("#srcChip").textContent=c.src;$("#srcChip").classList.toggle("real",id!=="demo");renderRows();shipChanged();}
+  $("#srcChip").textContent=c.src;$("#srcChip").classList.toggle("real",id!=="demo");renderRows();shipChanged();
+  if(!model||model.src==="sample"){const sm=c.actual||SAMPLES[0];setModel(sampleModel(sm));}}
+const allSamples=()=>{const c=CASES.find(x=>x.v===caseId);return SAMPLES.concat(c&&c.actual?[c.actual]:[]);};
+const findSample=id=>allSamples().find(s=>s.id===id)||SAMPLES[0];
 $("#cases").addEventListener("click",e=>{e.stopPropagation();if(ddOpen&&ddOpen.dataset.for==="cases"){closeDD();return;}
   openDD($("#cases"),CASES.map(c=>({v:c.v,t:c.t,s:c.s})),caseId,loadCase);ddOpen.dataset.for="cases";ddOpen.classList.add("wide");});
 const recLabel=()=>recSeed===0?"실제 항적":"#"+recSeed;
@@ -1016,7 +1037,7 @@ function compileModel(code,name,file,size,src){
 const sampleModel=sm=>Object.assign(compileModel(sm.code,sm.name,sm.file,new Blob([sm.code]).size,"sample"),{sampleId:sm.id});
 let model=null;
 function renderSamples(){
-  $("#samples").innerHTML=SAMPLES.map(sm=>`<button class="smp${model&&model.sampleId===sm.id?" on":""}" data-s="${sm.id}"><span class="sb">${sm.id}</span><span><b>${sm.name}</b><small>${sm.who}</small></span></button>`).join("");}
+  $("#samples").innerHTML=allSamples().map(sm=>`<button class="smp${sm.id==="R"?" real":""}${model&&model.sampleId===sm.id?" on":""}" data-s="${sm.id}"><span class="sb">${sm.id==="R"?"실":sm.id}</span><span><b>${sm.name}</b><small>${sm.who}</small></span></button>`).join("");}
 function renderModel(){
   const m=model;
   const ic=ok=>`<span class="ck ${ok?"ok":"ng"}">${ok?'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>':'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg>'}</span>`;
@@ -1028,9 +1049,9 @@ function renderModel(){
 }
 function setModel(m){model=m;renderSamples();renderModel();updCtaSafe();}
 function updCtaSafe(){try{if(cur>=0)updCta();}catch(_){}}
-function renderStrat(){if(!model||model.src==="sample")setModel(sampleModel(SAMPLES.find(s=>s.id===((model&&model.sampleId)||"A"))));else{const f=model;setModel(compileModel(f.code,f.name,f.file,f.size,"file"));}}
+function renderStrat(){if(!model||model.src==="sample")setModel(sampleModel(findSample((model&&model.sampleId)||"A")));else{const f=model;setModel(compileModel(f.code,f.name,f.file,f.size,"file"));}}
 function renderPreview(){}
-$("#samples").addEventListener("click",e=>{const b=e.target.closest(".smp");if(!b)return;setModel(sampleModel(SAMPLES.find(s=>s.id===b.dataset.s)));});
+$("#samples").addEventListener("click",e=>{const b=e.target.closest(".smp");if(!b)return;setModel(sampleModel(findSample(b.dataset.s)));});
 function readModelFile(file,cb){const rd=new FileReader();rd.onload=()=>cb(compileModel(String(rd.result),file.name.replace(/\.[^.]+$/,""),file.name,file.size,"file"));
   if(/\.(m?js|txt)$/i.test(file.name))rd.readAsText(file);else cb(compileModel("",file.name.replace(/\.[^.]+$/,""),file.name,file.size,"file"));}
 $("#mfile").addEventListener("change",e=>{const f=e.target.files[0];if(f)readModelFile(f,setModel);e.target.value="";});
@@ -1055,7 +1076,9 @@ const REFST=[{start:.5,turn:30,dv:0,re:true,period:.5,margin:.8},{start:.5,turn:
 function scenario(){const ob=observed(),actual=world(ob.others,recSeed,"rec");
   REFD=0;const ds=REFST.map(st=>runOn(ob.own,ob.others,paramModel(st),actual).ev).filter(e=>!e.fails.length&&e.arrived).map(e=>e.delay);REFD=ds.length?Math.min(...ds):0;
   const v1=runOn(ob.own,ob.others,model.factory,actual);
-  return Object.assign(ob,{primary:ob.eo.worst,actual,v1,model,refd:REFD});}
+  return Object.assign(ob,{primary:firstThreat(ob.eo),actual,v1,model,refd:REFD});}
+/* 주 대상 = 지금처럼 곧장 가면 가장 먼저 안전영역에 들어오는 배 (없으면 가장 가까워지는 배) */
+function firstThreat(ev){const r=Object.entries(ev.per).filter(([,v])=>v.tIn>=0).sort((a,b)=>a[1].tIn-b[1].tIn);return r.length?r[0][0]:ev.worst;}
 
 /* 개선 방향 추천: 올린 AI는 블랙박스라 직접 고치지 않는다.
    같은 입력만 쓰는 참고 전략을 가능한 움직임 NWORLD가지로 시험해, 더 안전했던 행동 방식을 보여준다 (실제 기록 미사용) */
@@ -1136,7 +1159,7 @@ function simView(svg,hudEl,lgdEl,sc,runs,tEnd){
   const live=runs.filter(r=>!r.ghost);
   const OS=sc.others.map(o=>{const trail=S("polyline",{fill:"none",stroke:"#a7b1bc","stroke-width":2.6*k,"stroke-dasharray":`${6*k} ${5*k}`,"stroke-linecap":"round"},svg);
     const g=S("g",{},svg),hull=S("path",{d:shapeOf(o.type)(k*szOf(o)),fill:"#6b7684",stroke:"#fff","stroke-width":2*k,"stroke-linejoin":"round"},g);
-    const lab=S("text",LBL(k,"#4e5968"),svg);lab.textContent=o.id+" "+o.type;return{o,trail,g,hull,lab,b:sc.actual.beh[o.id]};});
+    const lab=S("text",LBL(k,"#4e5968"),svg);lab.textContent=o.id+" "+(o.name||o.type);return{o,trail,g,hull,lab,b:sc.actual.beh[o.id]};});
   live.forEach(r=>{r.trk=S("polyline",{fill:"none",stroke:r.col,"stroke-width":4.5*k,"stroke-linecap":"round","stroke-linejoin":"round",opacity:.92},svg);
     r.zoneEl=S("circle",{r:SAFE,"stroke-width":2.2*k,"stroke-dasharray":`${6*k} ${5*k}`},svg);
     r.cl=S("line",{stroke:"#dc2626","stroke-width":2.6*k,"stroke-linecap":"round"},svg);r.clT=S("text",LBL(k,"#dc2626",21),svg);
@@ -1147,7 +1170,7 @@ function simView(svg,hudEl,lgdEl,sc,runs,tEnd){
       const bt=S("text",Object.assign({x:0,y:-62*k,"text-anchor":"middle"},LBL(k,"#dc2626",26)),r.boom);bt.textContent="충돌";}});
   hudEl.innerHTML=`<div class="hh">최소 거리 (해리)<span>${runs.map(r=>`<span class="stb" style="--sc:${r.col}">${r.short}</span>`).join("")}</span></div>`;
   const cells={};sc.others.forEach(o=>{const d=document.createElement("div");d.className="hr";
-    d.innerHTML=`<span class="sb">${o.id}</span>${o.id} ${o.type}<span class="vv">${runs.map(()=>"<b></b>").join("")}</span>`;hudEl.appendChild(d);cells[o.id]=Array.from(d.querySelectorAll("b"));});
+    d.innerHTML=`<span class="sb">${o.id}</span><span class="hn">${o.id} ${o.name||o.type}</span><span class="vv">${runs.map(()=>"<b></b>").join("")}</span>`;hudEl.appendChild(d);cells[o.id]=Array.from(d.querySelectorAll("b"));});
   const ft=document.createElement("div");ft.className="ft";ft.textContent="빨간 칸 = 안전영역 침범";hudEl.appendChild(ft);
   lgdEl.innerHTML=runs.map(r=>`<span><i style="border-top:${r.ghost?"3px dashed":"4px solid"} ${r.col}"></i>${r.name}</span>`).join("")+`<span><i></i>다른 배 (지나온 길)</span><span><i class="z"></i>안전영역 ${SAFE}해리</span>`;
   return function render(t){
@@ -1234,7 +1257,7 @@ function fillReport(){
   const f=ev.fails[0];
   h+=`<div class="lay ${f?"l1":""} r2">① 안전성<small>위반이 확인되면 실패</small></div>`;
   if(ev.coll){const c=ev.coll,m=ev.per[c.id];h+=cell("c1 l1 r2","충돌 · 대상 "+c.id,"+"+f1(c.t)+"분 충돌 · 최소 "+f1(m.min)+"해리"+(avoidedFirst(ev,Pm)?" · "+J(Pm,"을/를")+" 피한 뒤 발생":""),"ng");}
-  else if(f){const m=ev.per[f];h+=cell("c1 l1 r2",(f!==Pm?"충돌위험":"안전영역 침범")+" · 대상 "+f,"+"+f1(m.tIn)+"분 안전영역 진입 · 최소 "+f1(m.min)+"해리 (+"+f1(m.tMin)+"분)","ng");}
+  else if(f){const m=ev.per[f];h+=cell("c1 l1 r2",(f!==Pm?"충돌위험":"안전영역 침범")+" · 대상 "+f,"+"+f1(m.tIn)+"분 안전영역 진입 · 최소 "+fd(m.min)+"해리 (+"+f1(m.tMin)+"분)","ng");}
   else{const w=ev.worst,m=w&&ev.per[w];h+=cell("r2",ev.verdict==="na"?"판정 불가":"필수 조건 충족",w?"가장 가까운 배 "+w+" "+f1(m.min)+"해리 (+"+f1(m.tMin)+"분)":"주변 배 없음",ev.verdict==="na"?"mu":"ok");}
   const dg=diagnose(r,Pm,sc.own);
   h+='<div class="lay r3">② 행동 진단<small>모델 명령 기록으로 판단</small></div>'+cell("r3",dg[0],dg[1],"",1);
@@ -1368,7 +1391,7 @@ function buildCmpMap(f){
   const l2=S("text",Object.assign({x:p2.x,y:p2.y-24*k,"text-anchor":"middle"},LBL(k,COL,18)),svg);l2.textContent="2차 · "+f+"와 "+f1(b.ev.per[f].min)+"해리";
   const fo=sc.others.find(o=>o.id===f),cc=L(W[f],t1);
   S("path",{d:shapeOf(fo.type)(k*szOf(fo)),fill:"#6b7684",stroke:"#fff","stroke-width":2*k,transform:`translate(${cc.x} ${cc.y}) rotate(${cc.h})`},svg);
-  const cl=S("text",Object.assign({x:cc.x+14*k,y:cc.y+34*k},LBL(k,"#4e5968",16)),svg);cl.textContent=f+" "+fo.type;
+  const cl=S("text",Object.assign({x:cc.x+14*k,y:cc.y+34*k},LBL(k,"#4e5968",16)),svg);cl.textContent=f+" "+(fo.name||fo.type);
 }
 
 /* 상황·모델이 바뀌었으면 4~8번 화면을 다시 계산 */
