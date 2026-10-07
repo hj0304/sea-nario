@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>헤답 데모</title>
+<title>해답 데모</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
 <style>
 @font-face{font-family:"Pretendard Local";src:url("../../assets/PretendardVariable.ttf") format("truetype");font-weight:45 920;font-display:swap}
@@ -374,7 +374,7 @@ svg text{font-family:var(--font)}
   <!-- 1 메인 -->
   <section class="scr" id="s0">
     <div class="logo"><svg width="60" height="60" viewBox="0 0 40 40"><path d="M6 24c4.7-3.5 9.3-3.5 14 0s9.3 3.5 14 0" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M6 15c4.7-3.5 9.3-3.5 14 0s9.3 3.5 14 0" stroke="#9fcbf5" stroke-width="3.4" fill="none" stroke-linecap="round"/></svg></div>
-    <h1 class="cover-t">헤답</h1>
+    <h1 class="cover-t">해답</h1>
     <div class="cover-s"><b>바다의 답</b>을 찾다</div>
   </section>
 
@@ -807,7 +807,7 @@ const stratTxt=(st,own)=>"+"+st.start+"분 "+actTxt(st,own)+(st.re?" · 재평�
 const cmdTxt=(l,own)=>{const sp=Math.round(l.ts*2)/2,turn=turnTxt(d180(l.th-l.prev));
   return (Math.abs(d180(l.th-l.prev))>.5?turn+"(침로 "+pad3(l.th)+"°)":"침로 유지")+(Math.abs(l.ts-l.pts)>.25?" · "+sp+"노트로 "+(l.ts<l.pts?"감속":"가속"):"");};
 
-const API_DOC=`// ── 헤답 시험장 입력·출력 ──────────────────────────
+const API_DOC=`// ── 해답 시험장 입력·출력 ──────────────────────────
 // 시험장은 30초(0.5분)마다 decide(obs)를 불러요.
 // obs = {
 //   t: 경과 시간(분),
@@ -905,7 +905,7 @@ function decide(obs) {
   return goal;
 }
 `}];
-const TEMPLATE=`// 헤답 시험용 자율운항 전략 템플릿
+const TEMPLATE=`// 해답 시험용 자율운항 전략 템플릿
 // 이 파일의 decide(obs)를 내 AI의 판단으로 바꿔서 올려요.
 ${API_DOC}${CPA_SRC}
 function decide(obs) {
