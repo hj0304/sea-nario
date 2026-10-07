@@ -223,7 +223,7 @@ svg text{font-family:var(--font)}
 #loopFx{position:absolute;inset:0;z-index:30;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;opacity:0;visibility:hidden;transition:opacity .35s,visibility 0s .35s}
 #loopFx.show{opacity:1;visibility:visible;transition:opacity .35s,visibility 0s}
 #loopFx svg{width:150px;height:150px}
-#loopFx .arc{stroke-dasharray:480;stroke-dashoffset:480}
+#loopFx .arc{stroke-dasharray:415;stroke-dashoffset:415}
 #loopFx.show .arc{animation:arc 1s .1s cubic-bezier(.5,0,.3,1) forwards}
 @keyframes arc{to{stroke-dashoffset:0}}
 #loopFx .lt{font-size:44px;font-weight:700;letter-spacing:-.03em}
@@ -418,15 +418,14 @@ svg text{font-family:var(--font)}
         <div class="card tbl">
           <div class="tr hd"><span>선박</span><span>선종</span><span>크기 (길이)</span><span class="r">속력</span><span class="r">방향</span><span></span></div>
           <div id="rows"></div>
-          <div class="tadd"><button id="addShip">+ 선박 추가</button><button class="ghost" id="cases" aria-haspopup="listbox">과거 기록 불러오기 ▾</button><span class="hint">그림에서 배·깃발을 끌면 위치, 화살표 끝 ●을 끌면 방향·속력</span></div>
+          <div class="tadd"><button id="addShip">+ 선박 추가</button><button class="ghost" id="cases" aria-haspopup="listbox">과거 기록 불러오기 ▾</button></div>
         </div>
-        <div class="card pic"><svg id="m1" preserveAspectRatio="xMidYMid meet"></svg><div class="mlg"><span>화살표 = 6분 동안 갈 거리</span><span><i style="background:#dc2626"></i>충돌 위험</span><span><i style="background:#f08a3c"></i>근접</span><span><i style="background:#6b7684"></i>그 외</span></div></div>
+        <div class="card pic"><svg id="m1" preserveAspectRatio="xMidYMid meet"></svg><div class="mlg"><span><i style="background:#dc2626"></i>충돌 위험</span><span><i style="background:#f08a3c"></i>근접</span><span><i style="background:#6b7684"></i>그 외</span></div></div>
       </div>
       <div class="conds">
         <span class="cond"><b>관계</b><span id="rel"></span></span>
         <span class="cond"><b>목적지</b><span id="dstInfo"></span></span>
-        <span class="cond rp">다른 배 움직임은 실행 전 비공개 · 기록 <span id="recNo"></span><button id="reRec">다른 기록</button></span>
-        <span class="cond ex" id="srcChip">예시 데이터</span>
+        <span class="cond ex real" id="srcChip" style="display:none"></span>
       </div>
     </div>
   </section>
@@ -519,7 +518,7 @@ svg text{font-family:var(--font)}
   <button id="cta">데모 시작</button>
 
   <div id="loopFx">
-    <svg viewBox="0 0 160 160"><circle cx="80" cy="80" r="66" fill="none" stroke="#e8f3ff" stroke-width="12"/><path class="arc" d="M80 14a66 66 0 1 1-66 66" fill="none" stroke="#0b6bcb" stroke-width="12" stroke-linecap="round"/></svg>
+    <svg viewBox="0 0 160 160"><circle cx="80" cy="80" r="66" fill="none" stroke="#e8f3ff" stroke-width="12"/><circle class="arc" cx="80" cy="80" r="66" fill="none" stroke="#0b6bcb" stroke-width="12" stroke-linecap="round" transform="rotate(-90 80 80)"/></svg>
     <div class="lt">이번 결과를 기록에 남겼어요</div>
   </div>
 </div>
@@ -549,7 +548,7 @@ const d180=a=>nrm(a+180)-180;
 const f1=v=>v.toFixed(1);
 /* 안전영역(0.5해리) 근처는 둘째 자리까지: 0.49가 0.5로 보이지 않게 */
 const fd=v=>Math.abs(v-SAFE)<.06?v.toFixed(2):v.toFixed(1);
-const pad3=h=>String(Math.round(nrm(h))%360).padStart(3,"0");
+const pad3=h=>String(Math.round(nrm(h))%360);
 const fT=t=>(Math.round(t*2)/2).toString();
 const TYPES=["화물선","컨테이너선","유조선","여객선","어선","예인선","레저선박","함정"];
 const LET="ABCDEFGHIJ",MAXS=6;
@@ -773,7 +772,7 @@ $("#addShip").onclick=()=>{if(ships.length>=MAXS)return;const id=[...LET].find(l
 /* 실제 사고 장면: 침로·속력·상대 위치는 공개 보고서, 정확한 좌표·일부 길이는 근사 */
 const along=(p,h,d)=>{const [u,v]=dir(h);return{x:+(p.x+u*d).toFixed(2),y:+(p.y+v*d).toFixed(2)};};
 const CASES=[
-  {v:"demo",t:"예시 장면",s:"4척 · 시연용",src:"예시 데이터",load:()=>({ships:defaultShips(),dest:defaultDest(),rec:DEFAULT_REC})},
+  {v:"demo",t:"예시 장면",s:"4척이 서로 얽힌 장면 · 목적지 5해리",src:"예시 데이터",load:()=>({ships:defaultShips(),dest:defaultDest(),rec:DEFAULT_REC})},
   {v:"fitz",actual:{id:"R",name:"당시 실제 조종",file:"actual_fitzgerald.js",who:"NTSB 보고서의 실제 조종 재현",code:`// 당시 실제 조종 재현 — USS Fitzgerald (NTSB MAR-20/02)
 // 침로 190°·20노트로 가다가 충돌 약 8분 전 우현 10°(침로 200°)로 바꿨어요.
 // NTSB는 이 변침의 이유를 밝히지 못했어요.
@@ -802,14 +801,14 @@ function decide(obs) {
        Object.assign({id:"D",name:"Hyundai Global",type:"컨테이너선",len:300,spd:16,hdg:227},hg)],dest:along(own,227,6),rec:0};}}];
 let caseId="demo";
 function loadCase(id){const c=CASES.find(x=>x.v===id);const d=c.load();caseId=id;ships=d.ships;dest=d.dest;recSeed=d.rec;picVB=null;
-  $("#srcChip").textContent=c.src;$("#srcChip").classList.toggle("real",id!=="demo");renderRows();shipChanged();
+  $("#srcChip").textContent=c.src;$("#srcChip").style.display=id==="demo"?"none":"";renderRows();shipChanged();
   if(!model||model.src==="sample"){const sm=c.actual||SAMPLES[0];setModel(sampleModel(sm));}}
 const allSamples=()=>{const c=CASES.find(x=>x.v===caseId);return SAMPLES.concat(c&&c.actual?[c.actual]:[]);};
 const findSample=id=>allSamples().find(s=>s.id===id)||SAMPLES[0];
 $("#cases").addEventListener("click",e=>{e.stopPropagation();if(ddOpen&&ddOpen.dataset.for==="cases"){closeDD();return;}
   openDD($("#cases"),CASES.map(c=>({v:c.v,t:c.t,s:c.s})),caseId,loadCase);ddOpen.dataset.for="cases";ddOpen.classList.add("wide");});
-const recLabel=()=>recSeed===0?"실제 항적":"#"+recSeed;
-$("#reRec").onclick=()=>{recSeed++;$("#recNo").textContent=recLabel();};
+const recLabel=()=>recSeed===0?"실제 항적":"예시";
+
 
 /* 화살표 = 지금 속력·방향으로 6분 동안 갈 거리. 끝(●)을 끌면 방향·속력이 바뀐다 */
 const VMIN=6;
@@ -817,7 +816,6 @@ let drag=null,picVB=null;
 function tipOf(s,k){const [u,v]=dir(s.hdg),L=Math.max(s.spd/60*VMIN,(k||0)*36);return{x:s.x+u*L,y:s.y+v*L};}
 function renderPic(){
   const svg=$("#m1"),[bw,bh]=size(svg,344,330),st=observed();
-  $("#recNo").textContent=recLabel();
   svg.textContent="";
   if(!drag||!picVB){const boxes=[[dest,-30,-46,80,20]];ships.forEach(s=>{boxes.push([s,-34,-34,34,34]);boxes.push([tipOf(s),-40,-24,40,24]);});
     picVB=fitVB(boxes,bw,bh,[10,40,10,14]);}
@@ -932,7 +930,7 @@ function cpa(a, b) {
 }
 `;
 const SAMPLES=[
-  {id:"A",name:"기본 로직 1",file:"sample_basic_1.js",who:"sample_basic_1.js",code:`// 샘플 모델 A — 기본 로직 1
+  {id:"A",name:"해답_기본 로직 1",file:"sample_basic_1.js",who:"sample_basic_1.js",code:`// 샘플 모델 A — 기본 로직 1
 // 가장 가까워질 배 하나만 골라 우현으로 30° 돌고, 그 배를 지나치면 목적지로 돌아가요.
 // 다른 배는 보지 않아요.
 ${API_DOC}${CPA_SRC}
@@ -956,7 +954,7 @@ function decide(obs) {
   return passed ? goal : { heading: avoid, speed };
 }
 `},
-  {id:"B",name:"기본 로직 2",file:"sample_basic_2.js",who:"sample_basic_2.js",code:`// 샘플 모델 B — 기본 로직 2
+  {id:"B",name:"해답_기본 로직 2",file:"sample_basic_2.js",who:"sample_basic_2.js",code:`// 샘플 모델 B — 기본 로직 2
 // 30초마다 모든 배를 다시 보고, 1해리 안으로 들어올 배가 있으면 목적지 방향에서 가장 덜 벗어나는 회피를 골라요.
 // 위험이 없으면 목적지로 곧장 가요.
 ${API_DOC}${CPA_SRC}
@@ -984,7 +982,7 @@ function decide(obs) {
   return cmd;
 }
 `},
-  {id:"C",name:"기본 로직 3",file:"sample_basic_3.js",who:"sample_basic_3.js",code:`// 샘플 모델 C — 기본 로직 3
+  {id:"C",name:"해답_기본 로직 3",file:"sample_basic_3.js",who:"sample_basic_3.js",code:`// 샘플 모델 C — 기본 로직 3
 // 목적지로 가다가 1해리 안으로 들어올 배가 보이면, 우현으로 60° 크게 돌아 14분 동안 유지한 뒤
 // 다시 목적지로 향해요. 안전하지만 멀리 돌아가요.
 ${API_DOC}${CPA_SRC}
@@ -1166,7 +1164,6 @@ function simView(svg,hudEl,lgdEl,sc,runs,tEnd){
     r.ship=ownShip(svg,k,r.col);r.lab=S("text",Object.assign({"text-anchor":"middle"},LBL(k,r.col,19)),svg);r.lab.textContent=r.name;
     if(r.ev.coll){const p=L(r.track,r.ev.coll.t);r.boom=S("g",{transform:`translate(${p.x} ${p.y})`,opacity:0},svg);
       S("circle",{r:34*k,fill:"rgba(220,38,38,.16)",stroke:"#dc2626","stroke-width":3*k},r.boom);
-      S("path",{d:[0,45,90,135,180,225,270,315].map(a=>{const c=Math.cos(a*DEG),s2=Math.sin(a*DEG);return`M${c*40*k} ${s2*40*k}L${c*52*k} ${s2*52*k}`;}).join(""),stroke:"#dc2626","stroke-width":4*k,"stroke-linecap":"round"},r.boom);
       const bt=S("text",Object.assign({x:0,y:-62*k,"text-anchor":"middle"},LBL(k,"#dc2626",26)),r.boom);bt.textContent="충돌";}});
   hudEl.innerHTML=`<div class="hh">최소 거리 (해리)<span>${runs.map(r=>`<span class="stb" style="--sc:${r.col}">${r.short}</span>`).join("")}</span></div>`;
   const cells={};sc.others.forEach(o=>{const d=document.createElement("div");d.className="hr";
@@ -1221,7 +1218,7 @@ function Player(id){
 const PL={"3":Player("3"),"6":Player("6")};window.__PL=PL;
 
 /* ---------- 4 시뮬레이션 · 5 결과 ---------- */
-const shortNm=(n,fb)=>n.length<=5?n:/^기본 로직 \d$/.test(n)?"로직 "+n.slice(-1):fb;
+const shortNm=(n,fb)=>n.length<=5?n:/기본 로직 \d$/.test(n)?"로직 "+n.slice(-1):fb;
 function avoidedFirst(ev,Pm){const f=ev.coll?ev.coll.id:ev.fails[0];if(!Pm||!f||f===Pm)return false;
   const t=ev.coll?ev.coll.t:ev.per[f].tIn,p=ev.per[Pm];return p.min>=SAFE&&p.tMin<t;}
 function failTitle(name,ev,Pm){const f=ev.fails[0],seq=avoidedFirst(ev,Pm);
@@ -1235,7 +1232,7 @@ function buildSim(){
   const sc=SC,pl=PL["3"],Pm=sc.primary,nm=sc.model.name,v1=Object.assign({name:nm,short:shortNm(nm,"1차"),col:COL,soft:SOFT},sc.v1);
   pl.tEnd=animEnd(sc,[v1]);pl.dur=durOf(pl.tEnd);
   pl.render=simView($("#m3"),$("#hud3"),$("#lgd3"),sc,[v1],pl.tEnd);
-  $("#rp3").textContent="기록 "+recLabel()+" 재생 · 다른 배 움직임은 실행 중에 드러나요";
+  $("#rp3").textContent=(recSeed===0?"실제 항적 재생 · ":"")+"다른 배 움직임은 실행 중에 드러나요";
   pl.caps=eventsFor(sc,sc.v1,nm,"모델은 다른 배가 어떻게 움직일지 모르는 채로 출발해요");endCap(pl,sc.v1);
   pl.tPre="등록한 모델로 시험을 시작해요";
   pl.tDone=doneTitle(nm,sc.v1,Pm);
@@ -1320,7 +1317,7 @@ function buildRetest(){
   RT={c,useFile,name2,v1,v2,rob:useFile?robust(sc.own,sc.others,mk2,WORLDS):c.r};
   const pl=PL["6"];pl.tEnd=animEnd(sc,[v1,v2]);pl.dur=durOf(pl.tEnd);
   pl.render=simView($("#m6"),$("#hud6"),$("#lgd6"),sc,[v1,v2],pl.tEnd);
-  $("#rp6").textContent="같은 기록 "+recLabel()+" 재생";
+  $("#rp6").textContent="같은 장면 · 같은 다른 배 움직임으로 재생";
   pl.caps=eventsFor(sc,r2,name2,"1차 시도 항적은 그대로 두고, "+J(name2,"을/를")+" 같은 기록에 다시 넣어요");endCap(pl,r2);
   const f=sc.v1.ev.fails[0]||sc.v1.ev.worst,m=f&&r2.ev.per[f];
   pl.tPre=(useFile?J(name2,"으로/로"):"추천 전략으로")+" 같은 문제를 다시 풀어요";
