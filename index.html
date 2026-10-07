@@ -41,9 +41,9 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <body>
 <nav class="tabs"><div><a href="./summary.html">한 장 요약</a><a href="./" aria-current="page">전체 기획안</a><a href="./mockup.html">데모</a><a href="./deck.html">발표자료</a></div></nav>
 <main>
-<h1>씨나리오 (SEA-nario) 기획안</h1>
-<p>2026-10-06 · SSAFY 해양 X AI 아이디어 해커톤 · 주제 2</p>
-<p>씨나리오는 실제 바다의 위험한 순간을 자율운항 AI의 시험 문제로 출제하는 공공 문제은행입니다. 주제 2의 산업 이슈 세 가지(충돌 회피, 항로 최적화, 고장 예측)를 시험 3과목으로 다루고, 「자율운항선박 AI 데이터플랫폼 사업」의 데이터를 출제 재료로 씁니다. 실제 운항에서 AI가 내린 판단은 IMO MASS Code가 요구하는 판단 기록으로 남기고, 그중 AI가 <strong>망설인 순간</strong>(COLREG 8조 기준으로 정의)을 찾아 평가한 뒤 다시 시험 문제로 쌓습니다.</p>
+<h1>씨나리오 (SEA-nario) 기획안 v6</h1>
+<p>2026-10-07 · SSAFY 해양 X AI 아이디어 해커톤 · 주제 2</p>
+<p>씨나리오는 <strong>여러 척이 얽힌 위험한 순간</strong>을 자율운항 AI의 시험 문제로 출제하는 공공 문제은행입니다. 국제해상충돌예방규칙(COLREG)은 두 척 사이의 조우를 기준으로 쓰여 있어, 여러 척이 동시에 다가오면 한 배가 어떤 배에는 피해야 하고 다른 배에는 침로를 지켜야 하는 상황이 생깁니다. 규칙이 답을 정해 주지 않는 이 순간이 자율운항 AI가 가장 망설이기 쉬운 순간인데, 이를 시험할 문제은행은 없습니다. 씨나리오는 「자율운항선박 AI 데이터플랫폼 사업」과 공개 항적 데이터로 다선박 문제를 출제하고, AI가 <strong>망설인 순간</strong>(COLREG 8조 기준으로 정의)을 찾아 평가한 뒤 다시 시험 문제로 쌓습니다.</p>
 <h2>한눈에 보기</h2>
 <figure><svg class="loop" viewBox="0 0 760 316" role="img" aria-label="위험한 순간은 시험 문제가 되고, AI의 실수는 다시 문제가 된다" font-size="13">
 <defs><marker id="loop-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="arrowhead"/></marker></defs>
@@ -60,7 +60,7 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <text x="130" y="112" text-anchor="middle" font-size="11.5" class="ink">+ 공개 AIS·융합 항적</text>
 <rect x="25" y="160" width="210" height="72" rx="8" fill="none" class="edge" stroke-width="1.25"/>
 <text x="130" y="184" text-anchor="middle" font-weight="600" class="ink">① 출제</text>
-<text x="130" y="200" text-anchor="middle" font-size="11.5" class="ink">충돌·기상·고장 순간 발굴</text>
+<text x="130" y="200" text-anchor="middle" font-size="11.5" class="ink">여러 척이 얽힌 위험 순간 발굴</text>
 <text x="130" y="216" text-anchor="middle" font-size="11.5" class="ink">생성형 AI로 문제 변형</text>
 <rect x="275" y="160" width="210" height="72" rx="8" fill="none" class="edge" stroke-width="1.25"/>
 <text x="380" y="184" text-anchor="middle" font-weight="600" class="ink">② 채점</text>
@@ -78,29 +78,30 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <table>
 <thead>
 <tr>
-<th>시험 과목</th>
-<th>주제 2 산업 이슈</th>
-<th>다루는 상황</th>
+<th>다선박 조우 유형 (출제 범위)</th>
+<th>왜 어려운가</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>① 충돌 회피</td>
-<td>충돌 회피</td>
-<td>복잡한 해상 교통, AIS 없는 소형 어선</td>
+<td>추월 + 횡단 동시</td>
+<td>추월당하는 배는 침로·속력을 지켜야 하고(13·17조), 오른쪽에서 가로질러 오는 배에는 피해야 함(15조). 두 의무가 부딪힘</td>
 </tr>
 <tr>
-<td>② 항로·기상</td>
-<td>항로 최적화</td>
-<td>기상 변화 속에서 안전하고 효율적인 운항</td>
+<td>어선군 통과</td>
+<td>한 척을 피하면 다른 배에 가까워짐. AIS 없는 소형 어선이 섞임</td>
 </tr>
 <tr>
-<td>③ 고장 대응</td>
-<td>고장 예측</td>
-<td>기관·센서 고장 상황에서의 대처</td>
+<td>좁은 수로 마주침 + 추월</td>
+<td>피할 공간이 좁고, 비킬 자리를 다른 배가 차지함</td>
+</tr>
+<tr>
+<td>통항분리수역 합류·횡단</td>
+<td>여러 척이 같은 지점으로 모여듦</td>
 </tr>
 </tbody>
 </table>
+<p>왜 다선박인지는 아래 "자율운항선박의 숙제와 우리가 다선박을 고른 이유"에 정리했습니다. 주제 2의 다른 산업 이슈(항로 최적화, 고장 예측)는 같은 문제은행 구조로 넓힐 수 있게 로드맵의 확장 단계에 둡니다.</p>
 <h2>배경</h2>
 <p>정부는 자율운항선박 경쟁력이 데이터에서 결정된다고 보고 2026년 5월 AI 데이터플랫폼 사업을 출범했습니다. 2029년까지 실운항 데이터를 모아 충돌 회피·항로 최적화·고장 예측 AI의 학습 기반을 만드는 사업입니다(<a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">보도자료 원문</a>). 씨나리오는 이 데이터로 AI를 <strong>학습시키는 쪽이 아니라 시험하는 쪽</strong>을 맡습니다.</p>
 <h3>해커톤</h3>
@@ -120,7 +121,7 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <tr>
 <td>1등 Best Solution</td>
 <td>문제 해결 관점이 뛰어난 아이디어</td>
-<td>실데이터에 드문 위험 상황을 시험 문제로 만들어 해결, 산업 이슈 3가지를 모두 시험 과목으로, 망설임을 COLREG 8조와 사람 항해사 기준선으로 측정 가능하게 정의</td>
+<td>규칙이 답을 주지 않는 다선박 상황을 시험 문제로 만들고, 정답 하나 대신 "합격 범위"(필수 조건·사람 기준선·모든 배에 안전한 영역)로 채점. 망설임을 COLREG 8조와 사람 항해사 기준선으로 측정 가능하게 정의</td>
 </tr>
 <tr>
 <td>2등 Best Innovation</td>
@@ -130,7 +131,7 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <tr>
 <td>3등 Best Impact</td>
 <td>산업적 파급력이 기대되는 아이디어</td>
-<td>중소조선사·선급·보험사까지 쓰는 공공 문제은행</td>
+<td>중소조선사·선급·보험사까지 쓰는 공공 문제은행. 혼잡 해역에서 AI가 언제 사람에게 넘겨야 하는지 판단하는 근거</td>
 </tr>
 </tbody>
 </table>
@@ -177,19 +178,71 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <p>함께 알아둘 흐름:</p>
 <ul>
 <li><strong>AI 완전자율운항 기술개발</strong>: 2026~2032년, 약 6,000억 원(산업부 2,500억, 해수부 2,000억, 참여 기업·기관 1,500억). IMO 레벨4 완전자율운항 기술 목표. 데이터플랫폼 사업과 연계(<a target="_blank" rel="noopener" href="https://edaily.co.kr/News/Read?mediaCodeNo=257&amp;newsId=06330406642363096">이데일리</a>, <a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">보도자료</a>)</li>
-<li><strong>IMO MASS Code</strong>: 2026년 5월 MSC 111에서 비강제 코드로 채택, 2026년 7월 1일 발효. 의무화 버전은 빠르면 2032년 1월 1일 목표. SOLAS 1장 적용 화물선 대상이며, 원격운항센터(ROC)는 기국의 인증 대상(<a target="_blank" rel="noopener" href="https://www.dnv.com/news/2026/imo-mcs-111-new-mass-code-adopted/">DNV</a>, <a target="_blank" rel="noopener" href="https://gcaptain.com/imo-adopts-mass-code-the-autonomous-ship-moves-from-drawing-board-to-regulated-reality/">gCaptain</a>)</li>
-<li><strong>시장 전망</strong>: 2032년 전 세계 약 1,800억 달러 규모의 관련 시장(<a target="_blank" rel="noopener" href="https://edaily.co.kr/News/Read?mediaCodeNo=257&amp;newsId=06330406642363096">이데일리</a>)</li>
+<li><strong>IMO MASS Code</strong>: 자율운항 시스템이 작동할 수 있는 한계(운항 한계)에 교통 조건을 넣도록 하고, 예로 "반경 6해리 안에 X척 이하" 같은 허용 교통밀도를 듭니다(Annex 2 §4.2). 한계를 벗어나면 미리 정한 대비 상태로 넘어가고(II/8.4.1), 승선원·원격운항자가 필요하면 개입하거나 시스템을 무시하고 조작할 수 있어야 합니다(II/8.7.1)(<a target="_blank" rel="noopener" href="https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/IndexofIMOResolutions/MSCResolutions/MSC.595(111).pdf">MASS Code 원문</a>). 2026년 5월 MSC 111에서 비강제 코드로 채택, 2026년 7월 1일 발효. 의무화 버전은 2032년 1월 1일 발효 목표이고, 2026년 12월 MSC 112에서 그 전 시범 운용 단계(경험축적단계, EBP)의 틀을 논의합니다(<a target="_blank" rel="noopener" href="https://www.imo.org/en/mediacentre/hottopics/pages/autonomous-shipping.aspx">IMO</a>). SOLAS 1장 적용 화물선 대상이며, 원격운항센터(ROC)는 기국의 인증 대상(<a target="_blank" rel="noopener" href="https://www.dnv.com/news/2026/imo-mcs-111-new-mass-code-adopted/">DNV</a>, <a target="_blank" rel="noopener" href="https://gcaptain.com/imo-adopts-mass-code-the-autonomous-ship-moves-from-drawing-board-to-regulated-reality/">gCaptain</a>)</li>
+<li><strong>시장 전망</strong>: 자율운항선박 시장은 2026년 약 98억 달러에서 2035년 약 210억 달러로 커질 전망입니다(<a target="_blank" rel="noopener" href="https://www.gminsights.com/industry-analysis/autonomous-ships-market">GMI, 2026.6</a>)</li>
 <li><strong>산업부 박동일 산업정책실장</strong>: "K-조선이 앞으로 만들어낼 자율운항선박의 경쟁력은 결국 양질의 데이터에서 결정된다"(<a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">보도자료</a>)</li>
 </ul>
-<h2>문제 정의</h2>
-<p>데이터는 쌓이지만, 자율운항 AI가 꼭 시험받아야 할 위험한 순간은 드물고, 한국 연안은 AIS로 보이지 않는 표적이 많으며, AI 판단 기록은 요구만 있고 형식이 없습니다.</p>
+<h2>자율운항선박의 숙제와 우리가 다선박을 고른 이유</h2>
+<p>자율운항선박이 상용화되려면 풀어야 할 숙제가 여럿입니다. 주제 2의 산업 이슈(충돌 회피, 항로 최적화, 고장 예측)와 상용화 과제를 함께 놓고 보면 다음과 같습니다(공개 자료 기준).</p>
+<table>
+<thead>
+<tr>
+<th>숙제</th>
+<th>무엇이 어려운가</th>
+<th>지금 상황</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>다선박 충돌회피</strong></td>
+<td>여러 척이 동시에 다가오면 규칙상 의무가 부딪혀 답이 정해지지 않음</td>
+<td>연구 단계. 시험 시나리오 국제표준 초록은 두 척 조우 예시만 듦. 실증에서는 혼잡할 때 사람이 개입하도록 설계</td>
+</tr>
+<tr>
+<td>두 척 충돌회피</td>
+<td>상대가 하나면 COLREG가 누가 피할지 정해 줌</td>
+<td>상용 시스템이 형식승인을 받고 적용 중(<a target="_blank" rel="noopener" href="https://www.newspim.com/news/view/20260407000585">아비커스 HiNAS</a>)</td>
+</tr>
+<tr>
+<td>항로·기상</td>
+<td>기상 변화 속 안전하고 효율적인 항로</td>
+<td>사람이 운항하는 배를 위한 기상 항로 최적화 서비스가 있음(<a target="_blank" rel="noopener" href="https://www.napa.fi/software-and-services/ship-operations/napa-fleet-intelligence/voyage-optimization/">NAPA</a>)</td>
+</tr>
+<tr>
+<td>고장 대응</td>
+<td>기관·센서 고장 시 안전한 대처</td>
+<td>고장 예측 서비스가 있음(<a target="_blank" rel="noopener" href="https://www.wartsila.com/marine/services/lifecycle-agreements/expert-insight-service">Wärtsilä</a>). 대응을 시험하려면 실운항 고장 데이터가 필요해 정부 플랫폼 데이터 개방 뒤가 적합</td>
+</tr>
+<tr>
+<td>원격운항·통신</td>
+<td>육상 원격운항센터의 감독·인계, 통신 두절</td>
+<td>MASS Code가 원격운항센터를 기국 인증 대상으로 다룸(<a target="_blank" rel="noopener" href="https://www.dnv.com/news/2026/imo-mcs-111-new-mass-code-adopted/">DNV</a>)</td>
+</tr>
+<tr>
+<td>책임·제도</td>
+<td>AI 판단 착오 사고 시 제조사·관제사·선주의 책임 경계</td>
+<td>아직 불분명한 제도 과제(<a target="_blank" rel="noopener" href="https://www.sentv.co.kr/article/view/sentv202601270198">서울경제TV</a>)</td>
+</tr>
+</tbody>
+</table>
+<p>우리는 이 가운데 <strong>다선박 충돌회피</strong>에 집중합니다. 아이디어 해커톤에서 한 가지 문제를 깊게 푸는 편이 설득력이 크다고 보았고, 다음 네 가지 기준을 모두 만족하는 것이 다선박이었습니다.</p>
 <ol>
-<li><strong>위험한 순간은 데이터에 드물다.</strong> 북해 AIS 1년치 분석에서 위험 후보 조우는 전체 조우의 0.93~1.71%였습니다(<a target="_blank" rel="noopener" href="https://www.marin.nl/en/publications/detection-of-hazardous-encounters-at-the-north-sea-from-ais-data">MARIN</a>). 실제 사고 직전 상황은 이보다 훨씬 드뭅니다. 자율주행 분야에서는 실주행만으로 안전을 입증하려면 수억 마일 이상이 필요하다는 연구가 있어, 시뮬레이션 시나리오 시험이 대안으로 제시됩니다(<a target="_blank" rel="noopener" href="https://www.automotive-fleet.com/134757/new-testing-methods-urged-for-self-driving-cars">RAND 연구 요약</a>). 자율운항 상용화의 가장 큰 난관으로도 기상 악화나 소형 어선 돌발 출현 같은 "데이터화되지 않은 비정형 상황"이 꼽힙니다(<a target="_blank" rel="noopener" href="https://www.sentv.co.kr/article/view/sentv202601270198">서울경제TV</a>).</li>
-<li><strong>한국 연안은 AIS로 보이지 않는 표적이 많다.</strong> 등록 어선 63,731척 중 79.2%가 5톤 미만입니다(<a target="_blank" rel="noopener" href="https://www.newsseoul.co.kr/news/view/1065606019568031">해수부 통계 보도</a>). 어선의 AIS 의무 대상은 10톤 이상이라(<a target="_blank" rel="noopener" href="https://www.badatime.com/v-pass">바다타임</a>), 대부분의 어선은 AIS 신호가 없습니다. 섬은 3,390개이고 그중 59.5%가 전남에 몰려 있습니다(<a target="_blank" rel="noopener" href="https://biz.sbs.co.kr/amp/article/20000251997">SBS Biz</a>). 2025년 해양사고 3,513건 중 10톤 미만 어선 사고가 53.0%, 사고 종류로는 기관손상이 1,049건(29.9%)으로 가장 많습니다(<a target="_blank" rel="noopener" href="https://www.etoday.co.kr/news/view/2567005">중앙해양안전심판원 통계, 이투데이</a>).</li>
-<li><strong>AI 판단 기록은 요구되지만 형식이 없다.</strong> IMO MASS Code는 기록 데이터가 "자동 의사결정 과정(automated decision-making processes)"까지 운항 전체를 재구성할 수 있어야 하고(9.10.4), 모든 의사결정 과정이 설명 가능해야 한다고 정했습니다(10.4)(<a target="_blank" rel="noopener" href="https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/IndexofIMOResolutions/MSCResolutions/MSC.595(111).pdf">MASS Code 원문</a>). 국내 자율운항선박법도 운항기록 보고를 의무화했습니다(제20조③)(<a target="_blank" rel="noopener" href="https://casenote.kr/법령/자율운항선박_개발_및_상용화_촉진에_관한_법률">조문</a>). 그러나 Code는 "적절한 수준의 상세함(appropriate detail)", "적절한 형식(appropriate format)"이라고만 할 뿐, 판단 과정의 어떤 항목을 어떤 형식으로 남길지는 정하지 않았습니다. 각주에서 참조하는 기존 항해기록장치(VDR) 성능 기준이 다루는 것도 위치·레이더·ECDIS·음성 같은 장비 데이터입니다(<a target="_blank" rel="noopener" href="https://www.marineinsight.com/marine-navigation/voyage-data-recorder-on-a-ship-explained/">Marine Insight</a>). 선급 지침 중에는 의사결정 지원 시스템의 입출력 로깅을 요구하는 경우가 있지만(<a target="_blank" rel="noopener" href="https://www.smashroadmap.com/files/dnvgl-cg-.pdf">DNVGL-CG-0264</a>), 판단 이유나 검토한 후보 경로까지 정한 공통 형식은 IMO 규범 수준에서 확인되지 않습니다. AI 판단 착오로 사고가 나면 제조사·관제사·선주 사이의 책임 경계가 불분명하고, 보험사는 위험 통계가 부족합니다(<a target="_blank" rel="noopener" href="https://www.sentv.co.kr/article/view/sentv202601270198">서울경제TV</a>).</li>
+<li><strong>AI에게 가장 어려운 곳</strong>: 규칙이 답을 정해 주지 않아 사람도 "선원의 상무"(경험)로 판단하는 영역입니다. 규칙을 따르도록 만든 AI가 가장 망설이기 쉽습니다(문제 1).</li>
+<li><strong>현장에서 흔하고 지금도 사람 몫</strong>: 혼잡 해역에서 다선박 조우는 일상이고, 상업 운항에 들어간 자율운항선도 이때는 사람이 개입하도록 설계했습니다(문제 2).</li>
+<li><strong>한국 연안에서 더 어려움</strong>: AIS 없는 소형 어선이 밀집한 다도해 협수로가 많습니다(문제 3). 주제 2의 배경인 "복잡한 해상 교통"과 바로 맞닿습니다.</li>
+<li><strong>비어 있어서 기여할 수 있음</strong>: 시험 문제도, 공통 정답지도, 판단 기록 형식도 없어 문제은행이 채울 빈칸이 분명합니다(문제 4). 공개 AIS 항적만으로 지금 시작할 수도 있습니다.</li>
+</ol>
+<p>항로·기상과 고장 대응은 같은 "출제 → 채점 → 오답노트" 구조로 넓힐 수 있어 로드맵의 확장 단계에 둡니다.</p>
+<h2>문제 정의</h2>
+<p>여러 척이 얽힌 순간은 규칙이 답을 정해 주지 않아 AI가 가장 망설이기 쉬운 순간입니다. 이런 순간은 흔하고 한국 연안에서는 더 복잡하지만, 이를 시험할 문제와 판단을 남길 기록 형식은 없습니다.</p>
+<ol>
+<li><strong>규칙은 두 척 기준이다.</strong> COLREG의 항법 규칙은 두 척 사이의 의무로 쓰여 있습니다. 15조는 "When two power-driven vessels are crossing"으로, 17조는 "Where one of two vessels is to keep out of the way"로 시작합니다(<a target="_blank" rel="noopener" href="https://www.navcen.uscg.gov/navigation-rules-amalgamated">USCG COLREG 원문</a>). 그래서 여러 척이 동시에 다가오면 "두 척 조우에서의 피항선이 동시에 다른 조우에서는 유지선이 될 수 있다"(<a target="_blank" rel="noopener" href="https://www.mdpi.com/2077-1312/12/8/1289">Lyu 외, JMSE 2024</a>). 예를 들어 뒤에서 추월해 오는 배에 대해서는 침로·속력을 지켜야 하고(13·17조), 오른쪽에서 가로질러 오는 배에 대해서는 피해야 합니다(15조). 연구자들은 COLREG가 "특히 다선박 조우에 대해서는 구체적 지침을 주지 않는다"고 지적합니다(<a target="_blank" rel="noopener" href="https://doi.org/10.1016/j.oceaneng.2015.06.054">Zhang 외, Ocean Engineering 2015</a>; <a target="_blank" rel="noopener" href="https://marifuture.org/Publications/Papers/ACTS_Plus_IMLA25_Paper.pdf">Mohovic 외, IMLA</a>). 실제 사고도 있습니다. 2017년 미 해군 구축함 USS Fitzgerald는 우현의 화물선 3척 모두에 대해 피항선이었지만 피하지 않고 한 척 앞을 가로지른 뒤 다른 한 척과 충돌했습니다(7명 사망)(<a target="_blank" rel="noopener" href="https://www.ntsb.gov/investigations/AccidentReports/Reports/MAR2002.pdf">NTSB MAR-20/02</a>).</li>
+<li><strong>다선박은 흔하고, 그때는 결국 사람에게 넘긴다.</strong> 일본 MEGURI2040 실증선은 하루 약 500척이 다니는 도쿄만에서 한 번 항해하는 동안 충돌회피를 107번 했고, 자율운항 가동률은 97.4%·99.7%로 "일시적으로 수동 전환한 때가 있었다"고 밝혔습니다(<a target="_blank" rel="noopener" href="https://en.nippon-foundation.or.jp/news/articles/2022/20220602-74388.html">닛폰재단</a>, <a target="_blank" rel="noopener" href="https://www.monohakobi.com/en/wp-content/uploads/2026/01/20251201-05_seminar_DFFASplus_v.pdf">NYK·MTI 자료</a>). 이 프로그램의 실증선 4척은 2026년 3월 일본 국토교통성 인증을 받고 상업 운항을 시작했고(<a target="_blank" rel="noopener" href="https://www.mol.co.jp/en/pr/2026/26032.html">MOL, 2026.3.30</a>), 개발사는 "교통 혼잡이 높고 충돌 위험이 크게 높아진 상황에서는 사람이 개입하도록 설계했다"고 말합니다(<a target="_blank" rel="noopener" href="https://www.nyk.com/english/stories/04/02/20260428.html">NYK, 2026.4</a>). 자율운항이 상업 운항에 들어간 지금도 혼잡한 다선박 상황은 사람 몫으로 남아 있다는 뜻입니다. IMO MASS Code도 허용 교통밀도("반경 6해리 안에 X척 이하")를 작동 한계로 적게 하고, 그 밖에서는 사람이 개입할 수 있어야 한다고 정합니다(<a target="_blank" rel="noopener" href="https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/IndexofIMOResolutions/MSCResolutions/MSC.595(111).pdf">MASS Code 원문</a>). 그런데 사람에게 넘기는 것도 쉽지 않습니다. 원격운항자 실험(32명)에서 동시에 3척을 감독하고 판단 시간이 짧을 때 인계 성능이 떨어졌습니다(<a target="_blank" rel="noopener" href="https://trid.trb.org/View/2350291">Veitch 외, Ocean Engineering 2024</a>). <strong>AI가 어떤 다선박 상황에서 흔들리는지 미리 알아야</strong> 언제 사람에게 넘길지도 정할 수 있습니다.</li>
+<li><strong>한국 연안은 더 복잡하다.</strong> 등록 어선 63,141척 중 79.2%(49,988척)가 5톤 미만입니다(2025년 말, 해수부)(<a target="_blank" rel="noopener" href="http://www.knongnews.com/news/articleView.html?idxno=24850">농어업경제귀농신문</a>). 어선의 AIS 의무 대상은 10톤 이상이라(<a target="_blank" rel="noopener" href="https://www.badatime.com/v-pass">바다타임</a>), 대부분의 어선은 AIS 신호가 없습니다. 섬은 3,390개이고 그중 59.5%가 전남에 몰려 있습니다(2024년 말 기준)(<a target="_blank" rel="noopener" href="https://biz.sbs.co.kr/amp/article/20000251997">SBS Biz</a>). 2021년부터 2026년 7월까지 국내 해양사고 17,257건 중 충돌은 1,365건입니다(<a target="_blank" rel="noopener" href="https://www.dtoday.co.kr/news/articleView.html?idxno=795321">해수부 자료, 일간투데이 2026.10.5</a>). 국내 상선 충돌(2010~2016년 109건)을 분석한 연구에서 유지선 쪽 주요 과실은 "적절한 피항협력동작 미이행"(63.3%)이었습니다(<a target="_blank" rel="noopener" href="https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002305685">김대식, 2017</a>). 두 배가 서로의 의무를 맞추지 못해 사고가 난다는 뜻이고, 배가 셋 이상이면 더 어렵습니다.</li>
+<li><strong>시험할 문제도, 판단 기록 형식도 없다.</strong> MASS 충돌회피 시험 시나리오 생성 국제표준 ISO/AWI 25927은 아직 신규 등록 단계이고, 초록에서 예로 든 조우는 정면·횡단·추월입니다(<a target="_blank" rel="noopener" href="https://www.iso.org/standard/92071.html">ISO</a>). 사람이 설계한 기존 시험 시나리오는 "보통 100개 이하"이고 실제 교통을 묘사하기에 "too simplistic"하다는 연구가 있습니다(<a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/pii/S0968090X25002505">Xin 외, TR-C 2025</a>). 다선박 시나리오를 체계적으로 만드는 방법도 아직 연구 단계입니다(<a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/abs/pii/S0029801823028202">Wang 외, Ocean Engineering 2024</a>; <a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/abs/pii/S0965856425000552">Yu 외, TR-A 2025</a>). 또 IMO MASS Code는 기록 데이터가 "자동 의사결정 과정"까지 운항을 재구성할 수 있어야 한다고 정했지만(9.10.4), "적절한 형식"이라고만 할 뿐 판단 과정의 어떤 항목을 어떤 형식으로 남길지는 정하지 않았습니다(<a target="_blank" rel="noopener" href="https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/IndexofIMOResolutions/MSCResolutions/MSC.595(111).pdf">MASS Code 원문</a>). 여러 배에 대해 각각 어떤 의무로 판단했는지 남지 않으면, 다선박 사고 뒤에 AI가 왜 그렇게 움직였는지 알 수 없습니다.</li>
 </ol>
 <h2>기존 서비스와 한계</h2>
-<p>부품은 이미 시장과 연구에 있지만 서로 끊겨 있습니다. 실운항 데이터로 시나리오를 만드는 연구와 표준화는 진행 중이지만, 이를 공유형 서비스로 제공하는 곳은 확인되지 않았습니다. 아래는 공개 자료 기준입니다.</p>
+<p>부품은 이미 시장과 연구에 있지만 서로 끊겨 있습니다. 공개 자료 기준입니다.</p>
 <table>
 <thead>
 <tr>
@@ -202,104 +255,87 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <tbody>
 <tr>
 <td>위험 순간 분석</td>
-<td><a target="_blank" rel="noopener" href="https://thedigitalship.com/news/electronics-navigation/48-fewer-close-encounters-as-eastern-pacific-shipping-expands-ai-navigation/">Orca AI</a> (SeaPod·FleetView)</td>
-<td>선박 카메라 AI로 근접 조우 기록, COLREG 준수 데이터, 아차사고 조사 지원. 5척 시범 운항에서 1,000해리당 근접 조우 48% 감소. P&amp;I 클럽과 데이터 공동 분석(<a target="_blank" rel="noopener" href="https://cyprusshippingnews.com/2026/04/21/joint-orca-ai-northstandard-study-highlights-strong-impact-of-ai-on-navigational-safety/">기사</a>)</td>
-<td>감사·선원 교육·안전 분석용. AI를 시험할 문제로 바꿔 공유하지는 않음</td>
+<td><a target="_blank" rel="noopener" href="https://thedigitalship.com/news/electronics-navigation/48-fewer-close-encounters-as-eastern-pacific-shipping-expands-ai-navigation/">Orca AI</a></td>
+<td>선박 카메라 AI로 근접 조우 기록·분석. P&amp;I 클럽과 데이터 공동 분석(<a target="_blank" rel="noopener" href="https://cyprusshippingnews.com/2026/04/21/joint-orca-ai-northstandard-study-highlights-strong-impact-of-ai-on-navigational-safety/">기사</a>)</td>
+<td>사람 당직을 돕는 용도. AI를 시험할 문제로 바꿔 공유하지는 않음</td>
 </tr>
 <tr>
 <td>위험 순간 분석</td>
 <td><a target="_blank" rel="noopener" href="https://www.klnews.co.kr/news/articleView.html?idxno=322879">KOMSA</a></td>
-<td>AI로 72시간 해상교통 혼잡도 예측, 2026.9 오픈API 개방</td>
+<td>AI로 72시간 해상교통 혼잡도 예측, 오픈API</td>
 <td>혼잡 정보 제공용</td>
 </tr>
 <tr>
 <td>시나리오 연구·표준</td>
-<td><a target="_blank" rel="noopener" href="https://www.cambridge.org/core/services/aop-cambridge-core/content/view/42DBC5CFDB6C67EC8743586350B49ACF/S0373463321000357a.pdf/div-class-title-ais-based-near-collision-database-generation-and-analysis-of-real-collision-avoidance-manoeuvres-div.pdf">DNV 공저 AIS 근접충돌 DB 연구</a>, <a target="_blank" rel="noopener" href="https://arxiv.org/abs/2603.28067">arXiv 2603.28067</a>, <a target="_blank" rel="noopener" href="https://isme.me/en/project/show/iso:proj:92071">ISO/AWI 25927</a></td>
-<td>AIS로 근접충돌 DB 생성, 생성형 AI로 조우 시나리오 생성, MASS 충돌회피 시험 시나리오 생성 절차 표준화(2026.5 등록, 개발 중)</td>
-<td>연구·표준 단계. 충돌 중심이며 공유형 서비스는 확인되지 않음</td>
+<td><a target="_blank" rel="noopener" href="https://www.cambridge.org/core/services/aop-cambridge-core/content/view/42DBC5CFDB6C67EC8743586350B49ACF/S0373463321000357a.pdf/div-class-title-ais-based-near-collision-database-generation-and-analysis-of-real-collision-avoidance-manoeuvres-div.pdf">AIS 근접충돌 DB 연구</a>, <a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/abs/pii/S0965856425000552">다선박 조우 분석</a>, <a target="_blank" rel="noopener" href="https://www.iso.org/standard/92071.html">ISO/AWI 25927</a></td>
+<td>AIS로 근접충돌·다선박 조우 추출, 시험 시나리오 생성 절차 표준화(신규 등록 단계)</td>
+<td>연구·표준 단계. 공유형 문제은행은 확인되지 않음</td>
 </tr>
 <tr>
 <td>시험장</td>
 <td><a target="_blank" rel="noopener" href="https://www.kriso.re.kr/menu.es?mid=a10208040000">KRISO 자율운항선박실증연구센터</a></td>
 <td>가상환경·시나리오 기반 시험평가 체계(S-TAS), 시험선 해양누리호</td>
-<td>시험장. 실운항 데이터 기반 자동 출제·공유는 공개 자료에서 확인되지 않음</td>
+<td>시험장. 실운항 데이터 기반 다선박 문제 자동 출제·공유는 공개 자료에서 확인되지 않음</td>
 </tr>
 <tr>
 <td>시험장</td>
 <td><a target="_blank" rel="noopener" href="https://www.wartsila.com/insights/article/simulating-the-future-of-maritime">Wärtsilä</a> · <a target="_blank" rel="noopener" href="https://www.kongsberg.com/maritime/products/simulation/k-sim-navigation/">Kongsberg K-Sim</a></td>
-<td>항해 시뮬레이터. Wärtsilä의 무인선 제어 시뮬레이션은 DNV 인증</td>
+<td>항해 시뮬레이터</td>
 <td>시험 환경 제공. 실운항 데이터에서 문제를 뽑아주지 않음</td>
-</tr>
-<tr>
-<td>시험장</td>
-<td><a target="_blank" rel="noopener" href="https://www.appliedintuition.com/press-releases/applied-intuition-uk-teams-with-kraken-technology-group">Applied Intuition</a> (Axion Sim)</td>
-<td>무인수상정 자율성 시험·인증용 시뮬레이션</td>
-<td>주로 국방용</td>
-</tr>
-<tr>
-<td>항로·기상</td>
-<td><a target="_blank" rel="noopener" href="https://www.napa.fi/software-and-services/ship-operations/napa-fleet-intelligence/voyage-optimization/">NAPA Voyage Optimization</a> 등</td>
-<td>기상 기반 항로·속력 최적화</td>
-<td>사람이 운항하는 배의 항로 추천. 자율운항 AI의 기상 판단을 시험하지는 않음</td>
-</tr>
-<tr>
-<td>고장 예측</td>
-<td><a target="_blank" rel="noopener" href="https://www.wartsila.com/marine/services/lifecycle-agreements/expert-insight-service">Wärtsilä Expert Insight</a>, <a target="_blank" rel="noopener" href="https://kongsbergmaritime.com/services/kongsberg-remote-services/health-management/">Kongsberg Health Management</a></td>
-<td>AI로 기관 이상 징후를 찾아 고장 예방</td>
-<td>고장을 미리 찾는 서비스. 고장이 났을 때 자율운항 AI가 어떻게 대처하는지는 시험하지 않음</td>
 </tr>
 <tr>
 <td>기록</td>
 <td>기존 <a target="_blank" rel="noopener" href="https://www.marineinsight.com/marine-navigation/voyage-data-recorder-on-a-ship-explained/">VDR</a></td>
 <td>위치·레이더·ECDIS·음성 등 장비 데이터 기록</td>
-<td>AI 판단 과정 기록 형식은 정해지지 않음. 판단 기록 상용 제품은 공개 자료에서 확인되지 않음</td>
+<td>AI 판단 과정 기록 형식은 정해지지 않음</td>
 </tr>
 <tr>
 <td>자율운항 시스템</td>
-<td><a target="_blank" rel="noopener" href="https://www.newspim.com/news/view/20260407000585">HD현대 아비커스 HiNAS Control</a>, 삼성 SAS, 한화오션 HS4</td>
-<td>인지·판단·제어. HiNAS는 DNV 형식승인, 2023년부터 HD현대 건조 선박에 적용, 누적 500척 이상 수주</td>
+<td><a target="_blank" rel="noopener" href="https://www.newspim.com/news/view/20260407000585">HD현대 아비커스 HiNAS</a>, 삼성 SAS, 한화오션 HS4</td>
+<td>인지·판단·제어</td>
 <td>데이터·시나리오는 각 회사 내부 자산</td>
 </tr>
 </tbody>
 </table>
-<p>그래서 "시나리오 기반 검증을 처음 한다"는 주장은 하지 않습니다. 대신 "없던 연결"과 "공공 문제은행"으로 차별화하고, ISO 25927 같은 표준이 나오면 그 형식을 따르는 문제은행이 되는 것을 목표로 합니다. 기업 내부에 비슷한 도구가 있을 가능성은 남아 있어, 발표에서는 "공개 자료 기준"이라고 표현합니다.</p>
+<p>그래서 "시나리오 기반 검증을 처음 한다"는 주장은 하지 않습니다. 대신 "다선박 문제은행"과 "없던 연결"로 차별화하고, ISO 25927 같은 표준이 나오면 그 형식을 따르는 것을 목표로 합니다.</p>
 <h2>솔루션: 출제 · 채점 · 오답노트</h2>
-<p>씨나리오는 시험장이 아니라 문제은행입니다. 실운항 데이터로 3과목 문제를 자동 출제해 어느 시험장에든 공급하고, 실제 운항에서 AI가 망설인 순간을 다시 문제로 돌립니다. 기업의 원본 데이터는 넘겨받지 않고, 익명화한 시나리오와 성적표만 오갑니다. 전체를 움직이는 기준은 바로 아래 "핵심 설계"의 <strong>망설인 순간의 정의·기록·평가</strong>입니다.</p>
-<h3>시험 3과목</h3>
-<p>정부 플랫폼 8개 데이터 분야 중 5개(해상교통, 항해·조종, 기상, 엔진·기관, 통신·데이터)를 출제 재료로 씁니다(<a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">보도자료</a>).</p>
+<p>씨나리오는 시험장이 아니라 문제은행입니다. 실운항 데이터에서 여러 척이 얽힌 위험 순간을 찾아 문제로 출제해 어느 시험장에든 공급하고, 실제 운항에서 AI가 망설인 순간을 다시 문제로 돌립니다. 기업의 원본 데이터는 넘겨받지 않고, 익명화한 시나리오와 성적표만 오갑니다.</p>
+<h3>출제 범위: 다선박 조우 유형</h3>
 <table>
 <thead>
 <tr>
-<th>과목</th>
-<th>출제 (위험 순간)</th>
-<th>결과 평가 항목</th>
+<th>유형</th>
+<th>출제 예시</th>
 <th>쓰는 데이터</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>① 충돌 회피</td>
-<td>근접 조우, AIS 없는 어선 돌출, 어선군 밀집</td>
-<td>안전(최근접 거리), 규칙(COLREG 준수)</td>
-<td>해상교통, 항해·조종, 공개 AIS·융합 항적</td>
+<td>추월 + 횡단 동시</td>
+<td>좁은 수로에서 뒤 추월선과 오른쪽 횡단 어선이 동시에 접근</td>
+<td>공개 AIS·융합 항적, 해상교통</td>
 </tr>
 <tr>
-<td>② 항로·기상</td>
-<td>돌풍·태풍 접근, 시정 급변, 고파고 구간</td>
-<td>안전, 규칙 + 효율(시간·연료)</td>
-<td>기상, 항해·조종, 기상청 해양기상</td>
+<td>어선군 통과</td>
+<td>조업 중인 어선 여러 척 사이를 통과, AIS 없는 소형선 포함</td>
+<td>AIS·V-Pass 융합 항적</td>
 </tr>
 <tr>
-<td>③ 고장 대응</td>
-<td>엔진 출력 저하, 조타 이상, 센서·통신 고장 상태로 운항</td>
-<td>안전, 규칙 + 대처(안전 정지 전환, 원격관제 인계 시점)</td>
-<td>엔진·기관, 통신·데이터</td>
+<td>좁은 수로 마주침 + 추월</td>
+<td>마주 오는 배와 추월선이 같은 시점에 좁은 수로에서 만남</td>
+<td>공개 AIS, 해역 정보</td>
+</tr>
+<tr>
+<td>통항분리수역 합류·횡단</td>
+<td>여러 척이 합류 지점으로 동시에 접근</td>
+<td>공개 AIS, KOMSA 혼잡도</td>
 </tr>
 </tbody>
 </table>
+<p>정부 플랫폼의 8개 데이터 분야 중 해상교통, 항해·조종, 기상(시정)을 출제 재료로 씁니다(<a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">보도자료</a>).</p>
 <h3>핵심 설계 1: 망설인 순간의 정의</h3>
-<p><strong>정의</strong>: 자율운항 AI의 회피 판단이 국제해상충돌예방규칙(COLREG) 8조가 요구하는 "분명하고, 충분히 일찍, 알아볼 수 있을 만큼 크게"를 충족하지 못한 순간</p>
-<p>COLREG 8조는 회피 동작을 "positive, in ample time"으로 하고(8(a)), 상대가 알아볼 만큼 크게 하며 <strong>작은 변침·변속을 연달아 하는 것은 피하라</strong>(8(b))고 정합니다(<a target="_blank" rel="noopener" href="https://www.navcen.uscg.gov/navigation-rules-amalgamated">USCG COLREG 원문</a>). 사람 항해사에게 이미 금지된 행동을 자율운항 AI에도 같은 기준으로 적용합니다. 자율주행 분야의 안전표준 ISO 21448(SOTIF)에도 비슷한 개념이 있지만 공식 적용 범위가 도로 차량이라(<a target="_blank" rel="noopener" href="https://www.iso.org/standard/77490.html">ISO</a>), 해양 고유의 기준인 COLREG를 근거로 삼았습니다.</p>
+<p><strong>정의</strong>: 자율운항 AI의 회피 판단이 COLREG 8조가 요구하는 "분명하고, 충분히 일찍, 알아볼 수 있을 만큼 크게"를 충족하지 못한 순간</p>
+<p>COLREG 8조는 회피 동작을 "positive, made in ample time"으로 하고(8(a)), 상대가 알아볼 만큼 크게 하며 작은 변침·변속을 연달아 하는 것은 피하라고(8(b)) 정합니다. 필요하면 속력을 줄이거나 멈춰 판단할 시간을 벌라고도 합니다(8(e))(<a target="_blank" rel="noopener" href="https://www.navcen.uscg.gov/navigation-rules-amalgamated">USCG COLREG 원문</a>). 8조는 상대 배의 수와 관계없이 적용되므로, 13·15·17조가 서로 부딪히는 다선박 상황에서도 쓸 수 있는 기준입니다.</p>
 <table>
 <thead>
 <tr>
@@ -322,7 +358,7 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <tr>
 <td>B4 결정 여유 부족</td>
 <td>씨나리오 제안</td>
-<td>후보 행동 간 점수 차(기록이 있을 때), 또는 <strong>흔들어 보기 시험</strong>: 시뮬레이터에서 같은 문제를 아주 조금씩 바꿔 반복했을 때 선택이 얼마나 일관된가</td>
+<td>후보 행동 간 점수 차(기록이 있을 때), 또는 <strong>흔들어 보기 시험</strong>: 같은 문제를 아주 조금씩 바꿔 반복했을 때 선택이 얼마나 일관된가</td>
 </tr>
 <tr>
 <td>B5 사람 개입</td>
@@ -332,12 +368,13 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 </tbody>
 </table>
 <ul>
-<li><strong>기준값은 사람 항해사로 정합니다.</strong> COLREG는 상황마다 적절한 값이 달라 일부러 숫자를 정하지 않았고(<a target="_blank" rel="noopener" href="https://www.cultofsea.com/colregs/part-b-steering-and-sailing-rules-4-19/rule-8-action-to-avoid-collision/">Cult of Sea 해설</a>), 연구마다 쓰는 기준도 다릅니다(예: <a target="_blank" rel="noopener" href="https://academic.oup.com/jcde/article/8/3/894/6275214">Ha et al. 2021</a>은 DCPA 10해리·TCPA 20분을 자체 기준으로 사용). 그래서 공개 AIS에서 같은 유형 조우의 사람 항해사 행동 분포를 구하고, AI가 사람 대부분보다 늦거나·작게 틀거나·자주 번복하면 망설임으로 판정합니다. 경계선(예: 하위 10%)은 조정 가능한 변수입니다</li>
-<li>B1·B2는 <strong>항적만으로</strong> 잴 수 있어, AI 기록이 없는 지금도 공개 AIS에서 "사람도 망설였던 위험 순간"을 찾아 출제할 수 있습니다</li>
-<li><strong>원인 태그</strong>: 망설임 판정과 별도로 "왜 어려웠나"를 붙입니다. 시계 제한(COLREG 19조), 좁은 수로(9조), 통항분리수역(10조), 다수 선박·특수 상황(2조(b)), AIS 없는 소형선, 기상 급변, 기관 고장, 작동 범위(ODD, MASS Code 10.1) 경계. 태그 없이 망설였다면 기본기 결함입니다</li>
+<li><strong>기준값은 사람 항해사로 정합니다.</strong> COLREG는 일부러 숫자를 정하지 않았습니다(<a target="_blank" rel="noopener" href="https://www.cultofsea.com/colregs/part-b-steering-and-sailing-rules-4-19/rule-8-action-to-avoid-collision/">Cult of Sea 해설</a>). 그래서 공개 AIS에서 같은 유형 다선박 조우의 사람 항해사 행동 분포를 구하고, AI가 사람 대부분보다 늦거나·작게 틀거나·자주 번복하면 망설임으로 판정합니다. 경계선(예: 하위 10%)은 조정 가능한 변수입니다</li>
+<li>B1·B2는 <strong>항적만으로</strong> 잴 수 있어, AI 기록이 없는 지금도 공개 AIS에서 "사람도 망설였던 다선박 순간"을 찾아 출제할 수 있습니다</li>
+<li>2023년 독일만 충돌(5명 사망)에서도 오토파일럿으로 작게 조금씩 회피해 상대 선박과 관제가 의도를 읽기 어려웠고 결정적 조치가 늦었습니다(<a target="_blank" rel="noopener" href="https://www.gov.uk/maib-reports/collision-between-the-bulk-carrier-polesie-and-the-general-cargo-ship-verity-resulting-in-the-sinking-of-verity-and-loss-of-five-lives">MAIB</a>). B1이 실제 사고와 연결되는 신호라는 뜻입니다</li>
+<li><strong>원인 태그</strong>(다선박용): 선박 수(3척, 4척 이상), 의무 충돌(피항+유지 동시), 조우 조합(추월+횡단, 마주침+횡단 등), 좁은 수로(9조)·통항분리수역(10조), AIS 없는 소형선, 시계 제한(19조), 작동 범위(ODD) 경계. 태그 없이 망설였다면 기본기 결함입니다</li>
 </ul>
 <h3>핵심 설계 2: 판단 기록 표준</h3>
-<p>MASS Code는 자동 의사결정 과정까지 운항을 복원할 수 있게 기록하고(9.10.4), 모든 의사결정 과정을 설명 가능하게 하라고(10.4) 요구합니다. 하지만 "적절한 수준의 상세함", "적절한 형식"이라고만 할 뿐 판단 과정의 기록 항목과 형식은 정하지 않았습니다(<a target="_blank" rel="noopener" href="https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/IndexofIMOResolutions/MSCResolutions/MSC.595(111).pdf">MASS Code 원문</a>). 씨나리오는 위 신호와 태그를 계산하는 데 필요한 항목만 공통 형식으로 남기는 기록 표준을 제안합니다. AI 내부 구조는 묻지 않고 입력·출력 중심으로 남겨, 어느 회사 AI든 같은 형식으로 비교할 수 있게 합니다.</p>
+<p>MASS Code는 자동 의사결정 과정까지 운항을 복원할 수 있게 기록하라고(9.10.4) 요구하지만 기록 항목과 형식은 정하지 않았습니다. 씨나리오는 위 신호와 태그를 계산하는 데 필요한 항목만 공통 형식으로 남기는 기록 표준을 제안합니다. AI 내부 구조는 묻지 않고 입력·출력 중심으로 남겨, 어느 회사 AI든 같은 형식으로 비교할 수 있게 합니다. 다선박에서 특히 중요한 것은 <strong>배마다 어떤 의무로 판단했는지</strong>입니다.</p>
 <table>
 <thead>
 <tr>
@@ -354,8 +391,8 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 </tr>
 <tr>
 <td>레벨 2: 판단 결과</td>
-<td>+ 인지한 물체, 조우 유형 판정, 선택한 행동, 시스템 상태, 개입</td>
-<td>+ B5, 원인 태그 대부분</td>
+<td>+ 인지한 물체, <strong>배마다 판정한 조우 유형과 의무(피항/유지)</strong>, 선택한 행동, 시스템 상태, 개입</td>
+<td>+ B5, 원인 태그 대부분, 의무 충돌을 어떻게 풀었는지</td>
 </tr>
 <tr>
 <td>레벨 3: 판단 과정</td>
@@ -380,22 +417,22 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 </tr>
 <tr>
 <td>② 주변 표적</td>
-<td>위치·침로·속력, 센서 출처(AIS·레이더·카메라), 신뢰도, AIS 유무, DCPA·TCPA</td>
+<td>배마다 위치·침로·속력, 센서 출처(AIS·레이더·카메라), 신뢰도, AIS 유무, DCPA·TCPA</td>
 <td>일정 간격</td>
 </tr>
 <tr>
 <td>③ 환경</td>
-<td>시정, 바람, 파고, 조류, 해역 종류(좁은 수로·통항분리수역 여부)</td>
+<td>시정, 바람, 파고, 조류, 해역 종류(좁은 수로·통항분리수역 여부), 주변 교통밀도</td>
 <td>일정 간격</td>
 </tr>
 <tr>
 <td>④ 판단</td>
-<td>조우 유형, 적용한 COLREG 조항, 선택한 행동 (레벨 3: 후보와 점수)</td>
+<td>배마다 조우 유형·적용 COLREG 조항·의무, 의무가 부딪힐 때 우선한 쪽, 선택한 행동 (레벨 3: 후보와 점수)</td>
 <td>판단이 바뀔 때마다</td>
 </tr>
 <tr>
 <td>⑤ 시스템 상태</td>
-<td>작동 범위(ODD) 안/밖, 기관·센서 고장 표시, 안전 정지 전환</td>
+<td>작동 범위(ODD) 안/밖(교통밀도 한계 포함), 안전 정지 전환</td>
 <td>바뀔 때마다</td>
 </tr>
 <tr>
@@ -407,16 +444,46 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 </table>
 <ul>
 <li>기존 항해기록장치(VDR)를 대체하지 않고, 같은 시각 기준으로 ②~⑥을 덧붙입니다</li>
-<li>규정 대응: MASS Code 9.10.4(④⑥), 9.10.2(공통 형식·30일 이상 보관), 10.4(④의 적용 조항·후보 점수). 선급 지침의 의사결정 시스템 입출력 로깅 요구(<a target="_blank" rel="noopener" href="https://www.smashroadmap.com/files/dnvgl-cg-.pdf">DNVGL-CG-0264</a>)와도 맞물립니다</li>
+<li>규정 대응: MASS Code 9.10.4(④⑥), 9.10.2(공통 형식·보관), 10.4(④의 적용 조항·후보 점수), II/8.4(⑤ 작동 한계 이탈과 대비 상태 전환). 선급 지침의 의사결정 시스템 입출력 로깅 요구(<a target="_blank" rel="noopener" href="https://www.smashroadmap.com/files/dnvgl-cg-.pdf">DNVGL-CG-0264, 2018판</a>. 현행 DNV-CG-0264는 이후 개정됨)와도 맞물립니다</li>
 </ul>
-<h3>핵심 설계 3: 평가</h3>
-<p>평가는 장면 단위(문제은행 출제용)와 AI 단위(성적표용)로 나눕니다.</p>
-<p><strong>장면 평가</strong>: 한 장면을 난이도·망설임·결과로 따로 잽니다.</p>
+<h3>핵심 설계 3: 평가와 정답지</h3>
+<p>충돌 회피에는 정답 경로가 하나가 아닙니다. 그래서 씨나리오는 정답 하나 대신 <strong>합격 범위</strong>를 정답지로 씁니다.</p>
+<table>
+<thead>
+<tr>
+<th>정답지 단계</th>
+<th>묻는 것</th>
+<th>정답지 내용</th>
+<th>어디서 오나</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>① 필수 조건</td>
+<td>사고 없이, 규칙대로 지나갔나</td>
+<td>모든 배와 충돌 없음, 모든 배와 최소 거리 이상, 금지 행동 없음(예: 피해야 할 배의 선수 앞 가로지르기, 15조)</td>
+<td>COLREG 조항 + 기준 거리(조정 가능한 변수)</td>
+</tr>
+<tr>
+<td>② 사람 기준선</td>
+<td>사람만큼 일찍, 크게, 한 번에 피했나</td>
+<td>같은 유형 다선박 장면에서 실제 항해사 대부분이 보인 범위(회피 시작 시점, 변침 폭, 감속 여부, 조정 횟수)</td>
+<td>공개 AIS 항적의 사람 행동 분포</td>
+</tr>
+<tr>
+<td>③ 다선박 안전 영역</td>
+<td>그 순간 <strong>모든 배에 동시에 안전한</strong> 선택이었나</td>
+<td>각 시점에 주변 모든 배와 부딪히지 않는 침로·속력 범위를 계산해 두고, AI의 선택이 그 안에 있었는지 봄</td>
+<td>시뮬레이터에서 계산 (충돌회피 연구에서 쓰는 속도 장애물 방식)</td>
+</tr>
+</tbody>
+</table>
 <ul>
-<li>난이도: 원인 태그 개수(0개 하, 1개 중, 2개 이상 상)</li>
-<li>망설임: 뜬 신호(B1·B2·B4·B5)와 사람 기준선 대비 벗어난 정도</li>
-<li>결과: 안전(실제 최근접 거리 vs 사람 기준선), 규칙(COLREG 준수), 과목별 효율·대처</li>
+<li>의무가 부딪혀 규칙이 답을 주지 않는 상황에서도, "모든 배에 동시에 안전한 선택"은 계산할 수 있습니다. 이것이 다선박 채점의 핵심입니다</li>
+<li><strong>해설지</strong>: 해양안전심판원 재결서는 웹에서 누구나 열람할 수 있고(2021년 이후 852건 중 충돌 304건), 제목에 "3척 충돌"이 들어간 재결도 여럿 있습니다(<a target="_blank" rel="noopener" href="https://www.kmst.go.kr/web/verdictList.do?menuIdx=121">KMST</a>). 전문가가 "무엇이 잘못됐나"를 판정한 문서라서 오답 해설의 근거로 씁니다. 재결서는 공공누리 제4유형(출처표시·상업적 이용금지·변경금지)으로 표시돼 있어, 출처를 밝히고 원문을 인용하는 방식으로 씁니다</li>
+<li><strong>사람 검수</strong>: 문제은행에 정식으로 올리는 문제는 해기사가 정답 범위를 검토합니다. 기준값은 지어내지 않고 조정 가능한 변수로 둡니다</li>
 </ul>
+<p><strong>장면 평가</strong>: 난이도(원인 태그 개수: 0개 하, 1개 중, 2개 이상 상), 망설임(뜬 신호와 사람 기준선 대비 벗어난 정도), 결과(정답지 ①)를 따로 잽니다.</p>
 <table>
 <thead>
 <tr>
@@ -428,17 +495,17 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <tbody>
 <tr>
 <td>통과</td>
-<td>결과 OK, 망설임 없음</td>
+<td>정답지 ①②③ 모두 충족</td>
 <td>정상</td>
 </tr>
 <tr>
 <td><strong>조건부 통과</strong></td>
-<td>결과 OK, <strong>망설임 있음</strong></td>
+<td>①은 충족, <strong>②나 ③을 벗어난 순간 있음</strong>(망설임)</td>
 <td>운 좋게 무사했을 수 있는 장면. 결과만 보는 시험에서는 성공으로 처리돼 놓치는 약점</td>
 </tr>
 <tr>
 <td>실패</td>
-<td>결과 NG</td>
+<td>① 미충족</td>
 <td>망설임 여부와 함께 기록</td>
 </tr>
 </tbody>
@@ -468,31 +535,29 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 </tr>
 </tbody>
 </table>
-<p><strong>AI 성적표</strong>: 과목별 통과·조건부 통과·실패 비율, <strong>약점 지도</strong>(태그별 망설임 비율), 판단 일관성(흔들어 보기 시험), 사람 항해사 기준선 대비 위치</p>
+<p><strong>AI 성적표</strong>: 조우 유형별 통과·조건부 통과·실패 비율, <strong>약점 지도</strong>(조우 조합·태그별 망설임 비율), 판단 일관성(흔들어 보기 시험), 사람 항해사 기준선 대비 위치. 약점 지도는 운항사가 "이 AI는 이런 다선박 상황에서는 사람에게 넘긴다"는 작동 한계를 정하는 근거가 됩니다(MASS Code II/8.3·8.4)</p>
 <h3>① 출제: 위험 순간 1건을 시험 문제 수천 개로</h3>
 <ul>
-<li>입력 1단계(바로 시작 가능한 공개 데이터): 해수부 <a target="_blank" rel="noopener" href="https://www.data.go.kr/data/15129186/fileData.do">선박 AIS 동적정보</a>, AIS·V-Pass 기반 <a target="_blank" rel="noopener" href="https://www.data.go.kr/data/15126803/fileData.do">융합 선박 항적도</a>(비식별), <a target="_blank" rel="noopener" href="https://www.data.go.kr/data/15161594/openapi.do">KOMSA 혼잡도 오픈API</a>, <a target="_blank" rel="noopener" href="https://data.go.kr/catalog/15139440/openapi.json">기상청 해양기상 오픈API</a>. 항적에서 B1·B2 신호와 위험 결과를 찾아 1차 문제를 만듭니다</li>
+<li>입력 1단계(바로 시작 가능한 공개 데이터): 해수부 <a target="_blank" rel="noopener" href="https://www.data.go.kr/data/15129186/fileData.do">선박 AIS 동적정보</a>, AIS·V-Pass 기반 <a target="_blank" rel="noopener" href="https://www.data.go.kr/data/15126803/fileData.do">융합 선박 항적도</a>(비식별), <a target="_blank" rel="noopener" href="https://www.data.go.kr/data/15161594/openapi.do">KOMSA 혼잡도 오픈API</a>, <a target="_blank" rel="noopener" href="https://data.go.kr/catalog/15139440/openapi.json">기상청 해양기상 오픈API</a>. 항적에서 여러 척이 동시에 가까워진 순간과 B1·B2 신호를 찾아 1차 문제를 만듭니다. AIS에서 두 척 조우를 이어 붙여 다선박 장면을 찾는 방법은 연구로 나와 있습니다(<a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/abs/pii/S0965856425000552">Yu 외, TR-A 2025</a>)</li>
 <li>입력 2단계: 정부 데이터플랫폼 실운항 데이터와 판단 기록이 쌓이면 결합</li>
-<li><strong>케이스 정리</strong>: 모든 문제에 과목 × 조우 유형 × 원인 태그 × 해역을 붙여 분류합니다. ISO 25927 같은 표준 분류가 나오면 그에 맞춥니다</li>
-<li><strong>혼합으로 난이도 조절</strong>: 우선 출제 장면에 원인 태그를 더해 변형합니다. 예: "야간 + AIS 없는 어선"에 "좁은 수로"를 더하면 한 단계 어려운 문제. 변형은 생성형 AI로 만들며, AIS 기반 생성 모델이 실제 데이터와 통계적으로 일치하는 시나리오를 만든 연구가 있습니다(<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2603.28067">arXiv 2603.28067</a>)</li>
-<li><strong>출제 요청변수</strong>: 사용자가 과목, 원인 태그 조합, 난이도를 골라 문제 세트를 요청합니다</li>
+<li><strong>케이스 정리</strong>: 모든 문제에 조우 유형 × 선박 수 × 원인 태그 × 해역을 붙여 분류합니다. ISO 25927 같은 표준 분류가 나오면 그에 맞춥니다</li>
+<li><strong>혼합으로 난이도 조절</strong>: 우선 출제 장면에 배나 조건을 더해 변형합니다. 예: "추월+횡단"에 어선 1척을 더하거나 맞은편 선박을 넣으면 한 단계 어려운 문제. 변형은 생성형 AI로 만들며, AIS 기반 생성 모델이 실제 데이터와 통계적으로 일치하는 시나리오를 만든 연구가 있습니다(<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2603.28067">arXiv 2603.28067</a>)</li>
+<li><strong>출제 요청변수</strong>: 사용자가 조우 유형, 선박 수, 원인 태그 조합, 난이도를 골라 문제 세트를 요청합니다</li>
 <li>현실성 보고: 생성한 문제마다 실제 분포와의 통계 일치도와 COLREG 조건 충족률을 함께 제공</li>
-<li>한국 특화 문제 예시: "다도해 협수로 + 조업 중인 어선군", "야간 + AIS 없는 소형선 돌출", "태풍 접근 중 연안 항로 재설정", "협수로 통과 중 엔진 출력 저하"</li>
+<li>한국 특화 문제 예시: "다도해 협수로 + 조업 어선군 + 추월선", "야간 + AIS 없는 소형선 2척 + 맞은편 선박", "항만 입구 통항분리수역 합류"</li>
 </ul>
-<h3>② 채점: 어느 시험장에서든 공정한 성적표</h3>
+<h3>② 채점: 어느 시험장에서든 같은 정답지로</h3>
 <ul>
-<li>표준 문제 세트를 KRISO 테스트베드(S-TAS)나 각 회사 자체 시뮬레이터에서 풀고, 장면마다 통과·조건부 통과·실패로 판정합니다. 특정 시험장에 묶이지 않습니다</li>
+<li>표준 문제 세트를 KRISO 테스트베드(S-TAS)나 각 회사 자체 시뮬레이터에서 풀고, 장면마다 정답지(핵심 설계 3)로 통과·조건부 통과·실패를 판정합니다. 특정 시험장에 묶이지 않습니다</li>
 <li>B4 결정 여유는 같은 문제의 미세 변형을 반복하는 흔들어 보기 시험으로 잽니다</li>
-<li>결과는 위 핵심 설계 3의 AI 성적표로 나옵니다</li>
-<li>활용: MASS Code 9.12.1은 시스템이 "상세한 시뮬레이션"을 포함한 구조화된 절차로 종합 시험·검증을 거치도록 요구합니다(<a target="_blank" rel="noopener" href="https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/IndexofIMOResolutions/MSCResolutions/MSC.595(111).pdf">MASS Code 원문</a>). 씨나리오 성적표는 이 시뮬레이션 시험, 자율운항선박법의 자율항해시스템 안전성 평가(제19조②)(<a target="_blank" rel="noopener" href="https://casenote.kr/법령/자율운항선박_개발_및_상용화_촉진에_관한_법률">조문</a>), 선급 인증의 근거 자료로 쓰입니다</li>
+<li>활용: MASS Code 9.12.1은 시스템이 "상세한 시뮬레이션"을 포함한 구조화된 절차로 종합 시험·검증을 거치도록 요구합니다(<a target="_blank" rel="noopener" href="https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/IndexofIMOResolutions/MSCResolutions/MSC.595(111).pdf">MASS Code 원문</a>). 자율운항선박법은 자율항해시스템 안전성 평가에 "자율운항선박과 일반선박 간의 사고 방지 등 상호 운항 안정성"을 포함합니다(제19조②)(<a target="_blank" rel="noopener" href="https://www.law.go.kr/lsInfoP.do?lsiSeq=257803">국가법령정보센터</a>). 씨나리오 성적표는 이 시뮬레이션 시험, 안전성 평가, 선급 인증, 작동 한계(교통밀도) 설정의 근거 자료로 쓰입니다</li>
 </ul>
 <h3>③ 오답노트: 실제 운항에서 망설인 순간을 다시 문제로 (핵심 혁신 포인트)</h3>
 <ul>
 <li>실제 운항 중 판단 기록 표준(핵심 설계 2)으로 남긴 기록에서 망설인 순간(핵심 설계 1)을 자동으로 찾고, 장면 평가(핵심 설계 3)로 우선순위를 매겨 ① 출제로 돌려보냅니다</li>
-<li>사고 시: 기록으로 디지털트윈에서 재현하고, LLM이 책임 분석 리포트 작성. 자율주행차에서도 미국 NTSB가 시스템의 인지·분류·예측 경로 로그로 Uber 사망사고 과정을 재구성했습니다(<a target="_blank" rel="noopener" href="https://www.ntsb.gov/investigations/accidentreports/reports/har1903.pdf">NTSB 보고서</a>)</li>
-<li>평소: 망설임과 결과 기록을 모아 보험사용 위험 점수 산출. 국제 P&amp;I 그룹(IG P&amp;I)은 자율운항선박 인수 심사 항목에 시험 검증 데이터와 데이터 로깅 체계를 넣었습니다(<a target="_blank" rel="noopener" href="https://www.stephensonharwood.com/insights/de-risking-mass-ig-pi-extends-pooled-pi-cover-to-autonomous-operations/">Stephenson Harwood</a>)</li>
-<li>고장 전조 데이터: ⑤ 시스템 상태 기록이 쌓여 고장 예측 모델의 학습 데이터로 공급됨. 고장 예측 서비스(Wärtsilä, Kongsberg)와 경쟁하지 않고 데이터를 공급하는 관계</li>
-<li>AI 판단 기록 상용 제품은 공개 자료에서 확인되지 않았습니다. 학계에서는 자율운항선박의 설명 가능한 판단과 규칙 추적성을 연구하는 단계입니다(<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2509.15959">arXiv 2509.15959</a>)</li>
+<li>사람 개입(B5)이 있었던 다선박 장면은 "AI가 혼자 못 푼 문제"로 따로 모읍니다. 실증에서 수동 전환이 있었다고만 공개되고 그 원인은 남지 않는 지금의 빈칸을 채웁니다</li>
+<li>사고 시: 기록으로 디지털트윈에서 재현하고, LLM이 책임 분석 리포트 작성. 자율주행차에서도 미국 NTSB가 시스템 로그로 Uber 사망사고 과정을 재구성했습니다(<a target="_blank" rel="noopener" href="https://www.ntsb.gov/investigations/accidentreports/reports/har1903.pdf">NTSB 보고서</a>)</li>
+<li>평소: 망설임과 결과 기록을 모아 보험사용 위험 점수 산출. 국제 P&amp;I 그룹은 자율운항선박 인수 심사 항목에 시험 검증 데이터와 데이터 로깅 체계를 넣었습니다(<a target="_blank" rel="noopener" href="https://www.stephensonharwood.com/insights/de-risking-mass-ig-pi-extends-pooled-pi-cover-to-autonomous-operations/">Stephenson Harwood</a>)</li>
 </ul>
 <h2>차별점</h2>
 <p>씨나리오의 차별점은 새 기술이 아니라 없던 연결입니다. 공개 자료 기준으로 비교했습니다.</p>
@@ -503,7 +568,6 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <th>Orca AI</th>
 <th>KRISO·Wärtsilä·Kongsberg 시뮬레이터</th>
 <th>시나리오 연구·ISO 표준</th>
-<th>항로 최적화·고장 예측 서비스</th>
 <th>기존 VDR</th>
 <th>씨나리오</th>
 </tr>
@@ -514,50 +578,44 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <td>위험 경고·분석</td>
 <td>시험장</td>
 <td>시나리오 생성 방법</td>
-<td>사람 운항 지원</td>
 <td>장비 데이터 기록</td>
 <td><strong>문제은행 + 오답노트</strong></td>
 </tr>
 <tr>
-<td>다루는 산업 이슈</td>
-<td>충돌</td>
-<td>충돌 중심</td>
-<td>충돌</td>
-<td>항로 또는 고장</td>
+<td>다선박</td>
+<td>탐지·기록</td>
+<td>사용자가 직접 제작</td>
+<td>연구 단계, 표준 초록은 두 척 조우 예시</td>
 <td>-</td>
-<td><strong>충돌·항로·고장 3과목</strong></td>
+<td><strong>다선박 조우 유형별 문제은행</strong></td>
+</tr>
+<tr>
+<td>채점</td>
+<td>-</td>
+<td>시험장마다 다름</td>
+<td>-</td>
+<td>-</td>
+<td><strong>정답 범위 3단계 공통 정답지</strong></td>
 </tr>
 <tr>
 <td>위험 순간 활용</td>
 <td>감사·교육</td>
 <td>✕</td>
 <td>연구 DB</td>
-<td>✕</td>
 <td>사고 조사</td>
 <td><strong>AI 시험 문제로 자산화</strong></td>
-</tr>
-<tr>
-<td>시나리오 출처</td>
-<td>-</td>
-<td>사용자 제작</td>
-<td>AIS 데이터</td>
-<td>-</td>
-<td>-</td>
-<td><strong>실운항 데이터에서 자동 출제</strong></td>
 </tr>
 <tr>
 <td>공유 범위</td>
 <td>자사 고객</td>
 <td>이용 기관</td>
 <td>논문·표준 문서</td>
-<td>자사 고객</td>
 <td>선박별</td>
 <td><strong>공공 공유 (중소조선사 포함)</strong></td>
 </tr>
 <tr>
 <td>한국 연안 어선 반영</td>
 <td>카메라 탐지</td>
-<td>✕</td>
 <td>✕</td>
 <td>✕</td>
 <td>✕</td>
@@ -568,21 +626,19 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <td>✕</td>
 <td>✕</td>
 <td>✕</td>
-<td>✕</td>
 <td>정해지지 않음</td>
-<td><strong>표준 포맷 제안</strong></td>
+<td><strong>배마다 의무를 남기는 표준 포맷 제안</strong></td>
 </tr>
 </tbody>
 </table>
 <p>네 가지 포지션:</p>
 <ol>
 <li><strong>시험장이 아니라 문제은행</strong>: 시뮬레이터 업체·KRISO와 경쟁하지 않고 콘텐츠를 공급하는 협력 관계</li>
-<li><strong>산업 이슈 3가지를 한 곳에서</strong>: 충돌 회피·항로 최적화·고장 예측을 시험 3과목으로. 연구·표준이 충돌 중심인 것과 달리 기상과 고장까지 다룸</li>
-<li><strong>망설임을 재고, 규정의 빈칸을 채움</strong>: "AI가 망설인 순간"을 COLREG 8조와 사람 항해사 기준선으로 측정 가능하게 정의하고, 결과만 보면 성공인 "조건부 통과" 장면까지 잡아냄. 이를 위해 MASS Code가 요구하지만 형식이 없는 AI 판단 기록의 표준을 제안하고, 그 기록이 다시 시험 문제가 되는 순환 구조</li>
-<li><strong>한국 연안 특화</strong>: AIS 의무 대상이 아닌 소형 어선이 대부분인 환경을, 비식별 <a target="_blank" rel="noopener" href="https://www.data.go.kr/data/15126803/fileData.do">AIS·V-Pass 융합 항적</a>으로 반영. 자율운항 시험 시나리오에 이 데이터를 넣은 사례는 확인한 범위에서 없음</li>
+<li><strong>규칙이 답을 주지 않는 다선박에 집중</strong>: 두 척 기준 규칙의 빈틈을 시험 문제로. 정답 하나 대신 합격 범위로 채점</li>
+<li><strong>망설임을 재고, 규정의 빈칸을 채움</strong>: 결과만 보면 성공인 "조건부 통과"까지 잡고, MASS Code가 요구하지만 형식이 없는 판단 기록 표준을 제안. 그 기록이 다시 시험 문제가 되는 순환 구조</li>
+<li><strong>한국 연안 특화</strong>: AIS 의무 대상이 아닌 소형 어선이 대부분인 환경을 비식별 <a target="_blank" rel="noopener" href="https://www.data.go.kr/data/15126803/fileData.do">AIS·V-Pass 융합 항적</a>으로 반영</li>
 </ol>
 <h2>생태계와 사용자 가치</h2>
-<p>정부 데이터플랫폼이 데이터를 주고, 씨나리오가 문제를 만들며, 시험장·조선사·선급·보험사가 각자 필요한 결과를 가져갑니다.</p>
 <table>
 <thead>
 <tr>
@@ -593,33 +649,32 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <tbody>
 <tr>
 <td>중소조선사</td>
-<td>큰 비용 없이 3과목 AI 검증, 안전성 평가·MASS Code 대응 자료 확보</td>
+<td>큰 비용 없이 다선박 충돌회피 AI 검증, 안전성 평가·MASS Code 대응 자료 확보</td>
 </tr>
 <tr>
 <td>대형조선사·AI 기업</td>
-<td>자체적으로는 모으기 어려운 희귀 위험 문제 확보</td>
+<td>자체적으로는 모으기 어려운 다선박 위험 문제 확보, 약점 지도로 작동 한계(교통밀도) 설정</td>
 </tr>
 <tr>
 <td>정부·KRISO</td>
-<td>346억 원 데이터의 활용도 극대화, 테스트베드에 넣을 콘텐츠 확보</td>
+<td>346억 원 데이터의 활용도 극대화, 테스트베드에 넣을 다선박 콘텐츠 확보</td>
 </tr>
 <tr>
 <td>선급·인증기관</td>
-<td>표준 시험 문제로 인증 근거 마련</td>
+<td>표준 시험 문제와 공통 정답지로 인증 근거 마련</td>
+</tr>
+<tr>
+<td>원격운항센터·운항사</td>
+<td>어떤 다선박 상황에서 사람에게 넘겨야 하는지 미리 파악</td>
 </tr>
 <tr>
 <td>보험사</td>
-<td>시험 검증 데이터와 판단 기록 기반 위험 통계 → 보험 인수 심사·상품 설계</td>
-</tr>
-<tr>
-<td>고장 예측 서비스 기업</td>
-<td>오답노트에 쌓인 고장 전조 데이터 확보</td>
+<td>시험 검증 데이터와 판단 기록 기반 위험 통계 → 인수 심사·상품 설계</td>
 </tr>
 </tbody>
 </table>
-<p>수익 모델: 기본 문제 세트는 공공에 무료로 제공하고, 고급 성적표·인증 리포트(조선사·선급), 위험 점수(보험사), 고장 전조 데이터셋(장비 기업)은 유료로 제공합니다.</p>
+<p>수익 모델: 기본 문제 세트는 공공에 무료로 제공하고, 고급 성적표·인증 리포트(조선사·선급), 위험 점수(보험사)는 유료로 제공합니다.</p>
 <h2>로드맵과 기대효과</h2>
-<p>씨나리오는 공개 데이터로 먼저 시작해 정부 사업 일정에 맞춰 커지고, MASS Code 의무화 목표 시점(2032년)에 맞춰 판단 기록 포맷을 표준 논의에 제안하는 것을 목표로 합니다.</p>
 <table>
 <thead>
 <tr>
@@ -632,30 +687,30 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <tr>
 <td>2026~2027</td>
 <td>데이터플랫폼 출범·수집 체계 구축</td>
-<td>공개 AIS·융합 항적·기상 데이터로 충돌 회피 과목 한국 연안 문제 세트 1차 공개</td>
+<td>공개 AIS·융합 항적으로 <strong>한국 연안 다선박 충돌회피 문제 세트</strong> 1차 공개, 정답지(①②③) 시범 운영</td>
 </tr>
 <tr>
 <td>2028~2029</td>
 <td>플랫폼 사업 종료(2029)</td>
-<td>플랫폼 데이터 결합, 항로·기상·고장 대응 과목 추가, 채점 서비스 개시(KRISO 테스트베드 연계), 판단 기록 포맷 실증</td>
+<td>플랫폼 데이터 결합, 채점 서비스 개시(KRISO 테스트베드 연계), 판단 기록 포맷 실증. <strong>확장</strong>: 같은 구조로 항로·기상, 고장 대응 문제 추가</td>
 </tr>
 <tr>
 <td>2030~2032</td>
 <td>AI 완전자율운항(레벨4) 기술개발, MASS Code 의무화 목표(2032)</td>
-<td>판단 기록 포맷 표준 제안(ISO 등), 보험 연계</td>
+<td>판단 기록 포맷·다선박 시험 시나리오 표준 제안(ISO 등), 보험 연계</td>
 </tr>
 </tbody>
 </table>
 <p>기대효과:</p>
 <ul>
-<li>비정형 상황(소형 어선, 기상 급변, 기관 고장) 대응력 향상</li>
+<li>규칙이 답을 주지 않는 다선박 상황에서의 AI 대응력 향상</li>
+<li>혼잡 해역에서 사람에게 넘길 시점을 정하는 근거 마련</li>
 <li>중소조선사 자율운항 진입장벽 완화</li>
 <li>MASS Code 판단 기록 요구에 대한 공통 대응 수단 제공, 책임·보험 제도 공백 보완</li>
-<li>국제표준 대응에 필요한 운항 데이터 근거 확보</li>
 </ul>
-<p>정량 수치는 근거를 확보한 뒤 넣습니다. 근거 없는 추정치는 감점 요인이 될 수 있습니다.</p>
-<h2>PPT 슬라이드 구성 (16장)</h2>
-<p>발표는 배경 → 문제 3가지 → 기존 한계 → 솔루션 → 차별점 → 가치 순서입니다. 10~12번 기능 슬라이드에는 서비스 데모 화면을 1장씩 넣었습니다. 발표 대본은 슬라이드마다 발표자 노트에 있습니다.</p>
+<p>정량 수치는 근거를 확보한 뒤 넣습니다.</p>
+<h2>PPT 슬라이드 구성 (17장)</h2>
+<p>발표는 배경 → 다선박에 집중한 이유 → 문제 4가지 → 솔루션 → 차별점 → 가치 순서입니다. 11~13번 기능 슬라이드에는 서비스 데모 화면을 1장씩 넣었습니다. 발표 대본은 슬라이드마다 발표자 노트에 있습니다.</p>
 <table>
 <thead>
 <tr>
@@ -675,89 +730,95 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <tr>
 <td>2</td>
 <td>배경: 자율운항 시대</td>
-<td>이미 왔고, 규칙도 생겼다 (MASS Code, 6,000억, 시장 전망)</td>
+<td>이미 왔고, 규칙도 생겼다</td>
 <td></td>
 </tr>
 <tr>
 <td>3</td>
-<td>정부 사업: AI 데이터플랫폼</td>
+<td>정부 사업</td>
 <td>정부는 AI를 학습시킬 데이터를 모은다. 그 AI는 누가 시험하나?</td>
 <td></td>
 </tr>
 <tr>
 <td>4</td>
-<td>문제 ①</td>
-<td>위험한 순간은 데이터에 드물다 (위험 후보 조우 1~2% 미만)</td>
+<td>자율운항의 숙제</td>
+<td>숙제는 많지만 다선박에 집중한다 (네 가지 이유)</td>
 <td></td>
 </tr>
 <tr>
 <td>5</td>
-<td>문제 ②</td>
-<td>한국 연안은 AIS로 보이지 않는 표적이 많다 (어선 79%가 5톤 미만, 섬 3,390개)</td>
+<td>문제 ①</td>
+<td>규칙은 두 척 기준이다: 지켜야 하면서 피해야 하는 순간</td>
 <td></td>
 </tr>
 <tr>
 <td>6</td>
-<td>문제 ③</td>
-<td>AI 판단 기록은 요구되지만 형식이 없다 (MASS Code 9.10.4)</td>
+<td>문제 ②</td>
+<td>다선박은 흔하고, 결국 사람에게 넘긴다 (도쿄만 회피 107회, MASS Code 교통밀도 한계)</td>
 <td></td>
 </tr>
 <tr>
 <td>7</td>
-<td>기존 시도와 한계</td>
-<td>연구와 시험장은 있는데, 실데이터 문제은행과 판단 기록 형식이 없다</td>
+<td>문제 ③</td>
+<td>한국 연안은 더 복잡하다 (어선 79%가 5톤 미만, 섬 3,390개)</td>
 <td></td>
 </tr>
 <tr>
 <td>8</td>
-<td>솔루션 개요</td>
-<td>출제 → 채점 → 오답노트 루프 + 시험 3과목</td>
+<td>문제 ④</td>
+<td>시험할 문제도, 판단 기록 형식도 없다</td>
 <td></td>
 </tr>
 <tr>
 <td>9</td>
-<td>핵심 설계: 망설인 순간</td>
-<td>정의(COLREG 8조, 사람 항해사 기준선) → 기록(판단 기록 표준 3레벨) → 평가(통과·조건부 통과·실패)</td>
+<td>솔루션 개요</td>
+<td>출제 → 채점 → 오답노트 + 다선박 조우 유형</td>
 <td></td>
 </tr>
 <tr>
 <td>10</td>
-<td>기능 ① 출제</td>
-<td>위험 순간 1건을 시험 문제 수천 개로 (케이스 분류, 태그 혼합, 출제 요청변수)</td>
+<td>핵심 설계</td>
+<td>망설임 정의 → 판단 기록 → 정답 범위 3단계</td>
 <td></td>
 </tr>
 <tr>
 <td>11</td>
-<td>기능 ② 채점</td>
-<td>결과만 보면 성공인 "조건부 통과"까지 잡는 성적표, 약점 지도 (KRISO 연계)</td>
+<td>기능 ① 출제</td>
+<td>위험 순간 1건을 시험 문제 수천 개로</td>
 <td></td>
 </tr>
 <tr>
 <td>12</td>
-<td>기능 ③ 오답노트</td>
-<td>실제 운항에서 망설인 순간을 찾아 다시 문제로 (혁신 포인트)</td>
+<td>기능 ② 채점</td>
+<td>무사해도 망설였다면 조건부 통과</td>
 <td></td>
 </tr>
 <tr>
 <td>13</td>
-<td>차별점</td>
-<td>새 기술이 아니라 없던 연결 (비교표)</td>
+<td>기능 ③ 오답노트</td>
+<td>실제 운항의 망설임을 다시 문제로</td>
 <td></td>
 </tr>
 <tr>
 <td>14</td>
-<td>생태계와 사용자 가치</td>
-<td>모두가 이득을 보는 구조</td>
+<td>차별점</td>
+<td>새 기술이 아니라 없던 연결</td>
 <td></td>
 </tr>
 <tr>
 <td>15</td>
-<td>로드맵 &amp; 기대효과</td>
-<td>공개 데이터로 시작해 정부 사업과 함께 성장</td>
+<td>생태계</td>
+<td>모두가 쓰는 문제은행</td>
 <td></td>
 </tr>
 <tr>
 <td>16</td>
+<td>로드맵</td>
+<td>다선박 문제은행으로 시작해 국제표준까지</td>
+<td></td>
+</tr>
+<tr>
+<td>17</td>
 <td>마무리</td>
 <td>슬로건</td>
 <td></td>
@@ -766,8 +827,7 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 </table>
 <p>슬로건 임시안: "바다의 모든 위험한 순간이, 더 안전한 AI의 교과서가 됩니다"</p>
 <h2>서비스 데모</h2>
-<p>클릭해서 넘겨 보는 데모를 만들었습니다(<a target="_blank" rel="noopener" href="https://hj0304.github.io/sea-nario/demo.html">데모 열기</a>, 방향키 → 또는 스페이스로 진행). 한 화면에 메시지 하나만 보여 주고, 화면 속 수치는 모두 예시 데이터입니다.</p>
-<p>데모는 한 장면이 출제 → 시험 → 성적표 → 오답노트를 거쳐 다시 문제로 돌아오는 순환을 따라갑니다.</p>
+<p>클릭해서 넘겨 보는 데모입니다(<a target="_blank" rel="noopener" href="https://hj0304.github.io/sea-nario/demo.html">데모 열기</a>, 방향키 → 또는 스페이스로 진행). 한 화면에 메시지 하나만 보여 주고, 화면 속 수치는 모두 예시 데이터입니다.</p>
 <table>
 <thead>
 <tr>
@@ -780,27 +840,26 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <tr>
 <td>① 출제</td>
 <td>위험 순간 지도 → 가장 어려운 장면 → 조건 섞기 → 변형 문제 생성</td>
-<td>남해 실제 항적에서 찾은 위험 순간 가운데 "야간에 AIS 없는 어선이 가로질러 오는 장면"을 골라, 안개·좁은 수로·엔진 출력 저하를 섞어 난이도를 올린 변형 문제 1,000개를 만든다</td>
+<td>남해 항적에서 찾은 다선박 위험 순간 가운데 "좁은 수로에서 추월선과 어선이 동시에 다가오는 장면"을 골라, 어선 1척 더·맞은편 선박·안개를 섞어 변형 문제 1,000개를 만든다</td>
 </tr>
 <tr>
 <td>② 시험</td>
 <td>상황 카드 → 시험 장면 → 판정</td>
-<td>밤 10시 좁은 수로, 자율운항 화물선 앞으로 레이더에만 잡히는 3톤 어선이 가로질러 온다. 사람 항해사 기준 항적(일찍, 한 번에, 크게 피함) 옆에서 AI가 늦게 5°만 틀고, 되돌아오고, 다시 3°만 틀다 관제센터에 도움을 요청한다. 충돌은 없었으므로 기존 시험은 "통과", 씨나리오는 "조건부 통과"</td>
+<td>밤이지만 시야는 좋은 좁은 수로. 뒤의 추월선에 대해서는 침로를 지켜야 하고, 오른쪽 어선은 피해야 한다. 사람 항해사 기준 항적(일찍 감속) 옆에서 AI가 5°만 틀고, 되돌아오고, 다시 3°만 틀다 결국 급감속한다. 충돌은 없었으므로 기존 시험은 "통과", 씨나리오는 정답지 기준으로 "조건부 통과"</td>
 </tr>
 <tr>
 <td>③ 성적표</td>
-<td>통과·조건부 통과·실패 비율 → 가장 약한 조건</td>
-<td>1,200문제 중 18%가 "무사했지만 망설인" 문제이고, 가장 약한 조건은 시계 제한이다</td>
+<td>통과·조건부 통과·실패 비율 → 가장 약한 상황</td>
+<td>다선박 1,200문제 중 18%가 "무사했지만 망설인" 문제이고, 가장 약한 상황은 "추월+횡단 동시"다</td>
 </tr>
 <tr>
 <td>④ 오답노트</td>
 <td>항적 재현 → 재출제 판정</td>
-<td>판단 기록으로 그때 상황을 시간대별로 다시 따라가고, "난이도 상 × 조건부 통과 → 우선 출제"로 이 장면을 다시 문제은행에 넣는다</td>
+<td>판단 기록으로 그때 상황을 시간대별로 다시 따라가고, "난이도 상 × 조건부 통과 → 우선 출제"로 다시 문제은행에 넣는다</td>
 </tr>
 </tbody>
 </table>
 <h2>예상 질문과 답변</h2>
-<p>심사위원이 가장 먼저 물을 질문은 "KRISO가 이미 하지 않느냐"입니다.</p>
 <table>
 <thead>
 <tr>
@@ -810,52 +869,48 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 </thead>
 <tbody>
 <tr>
-<td>KRISO 테스트베드가 이미 시나리오 기반 시험을 하지 않나요?</td>
-<td>테스트베드(S-TAS)는 시험장이고, 씨나리오는 그 시험장에 넣을 문제를 실운항 데이터에서 자동 출제합니다. 경쟁이 아니라 콘텐츠 공급 관계입니다.</td>
+<td>왜 다선박만 다루나요?</td>
+<td>두 척 조우는 COLREG가 누가 피할지 정해 주지만, 다선박은 의무가 부딪혀 규칙이 답을 주지 않습니다. AI가 가장 망설이기 쉽고, 시험 표준도 아직 비어 있는 곳이라 여기서 시작합니다. 같은 구조로 항로·기상, 고장 대응으로 넓힙니다.</td>
+</tr>
+<tr>
+<td>다선박이면 사람이 개입하면 되지 않나요?</td>
+<td>맞습니다. MASS Code와 개발사도 혼잡 상황에서는 사람이 개입하도록 합니다. 그런데 언제 넘길지 정하려면 AI가 어떤 다선박 상황에서 흔들리는지 먼저 알아야 하고, 원격운항자가 여러 척을 짧은 시간에 넘겨받으면 성능이 떨어진다는 실험도 있습니다. 씨나리오의 약점 지도가 그 기준이 됩니다.</td>
+</tr>
+<tr>
+<td>정답이 하나가 아닌데 어떻게 채점하나요?</td>
+<td>정답 하나 대신 합격 범위를 씁니다. ① 충돌 없음·규칙 위반 없음, ② 사람 항해사 대부분이 보인 범위, ③ 그 순간 모든 배에 동시에 안전한 침로·속력 범위. 해설은 해양안전심판원 재결서를 근거로 붙입니다.</td>
+</tr>
+<tr>
+<td>KRISO 테스트베드가 이미 시나리오 시험을 하지 않나요?</td>
+<td>테스트베드(S-TAS)는 시험장이고, 씨나리오는 그 시험장에 넣을 다선박 문제를 실운항 데이터에서 출제합니다. 경쟁이 아니라 콘텐츠 공급 관계입니다.</td>
 </tr>
 <tr>
 <td>AIS로 시나리오를 만드는 연구는 이미 있지 않나요?</td>
-<td>맞습니다. 그래서 기술이 아니라 연결과 공유를 차별점으로 둡니다. 연구는 충돌 중심의 방법론이고, 씨나리오는 3과목 문제를 공공으로 공유하는 서비스입니다. ISO 25927 표준이 나오면 그 형식을 따릅니다.</td>
+<td>맞습니다. 그래서 기술이 아니라 연결과 공유를 차별점으로 둡니다. 연구는 방법론 단계이고, 씨나리오는 다선박 문제를 공통 정답지와 함께 공공으로 공유하는 서비스입니다. ISO 25927 표준이 나오면 그 형식을 따릅니다.</td>
 </tr>
 <tr>
 <td>MASS Code가 이미 판단 기록을 요구하는데 새로운 건가요?</td>
-<td>Code는 "적절한 수준의 상세함", "적절한 형식"이라고만 하고, 판단 과정의 어떤 항목을 어떤 형식으로 남길지는 IMO 규범 수준에서 정해지지 않았습니다. 씨나리오는 그 공통 기록 방식과 재현 도구를 제안하고, 기록을 시험 문제로 되돌리는 점이 새롭습니다.</td>
+<td>Code는 "적절한 형식"이라고만 하고 판단 과정의 항목을 정하지 않았습니다. 씨나리오는 다선박에서 배마다 어떤 의무로 판단했는지까지 남기는 공통 형식을 제안하고, 그 기록을 시험 문제로 되돌립니다.</td>
 </tr>
 <tr>
 <td>"AI가 망설인 순간"은 어떻게 정의하나요?</td>
-<td>국제해상충돌예방규칙 COLREG 8조가 사람 항해사에게 요구하는 "분명하고, 충분히 일찍, 알아볼 수 있을 만큼 크게"를 기준으로 삼습니다. 작은 변침 반복(8(b)), 늦은 회피(8(a)), 결정 여유 부족, 사람 개입을 신호로 잽니다.</td>
+<td>COLREG 8조의 "분명하고, 충분히 일찍, 알아볼 수 있을 만큼 크게"를 기준으로, 작은 변침 반복, 늦은 회피, 결정 여유 부족, 사람 개입을 신호로 잽니다. 8조는 상대 배 수와 관계없이 적용됩니다.</td>
 </tr>
 <tr>
 <td>기준값(몇 분, 몇 도)은 누가 정하나요?</td>
-<td>COLREG는 일부러 숫자를 정하지 않았습니다. 그래서 공개 AIS에서 같은 유형 조우의 사람 항해사 행동 분포를 구해 기준선으로 쓰고, 경계선은 조정 가능한 변수로 둡니다.</td>
-</tr>
-<tr>
-<td>AI 내부를 공개하지 않으면 결정 여유를 어떻게 재나요?</td>
-<td>시뮬레이터에서 같은 문제를 아주 조금씩 바꿔 반복해 풀게 하고, 선택이 얼마나 일관된지 봅니다(흔들어 보기 시험). 내부 점수 없이도 잴 수 있습니다.</td>
-</tr>
-<tr>
-<td>Orca AI도 위험 순간을 분석하지 않나요?</td>
-<td>Orca는 감사·선원 교육·안전 분석용입니다. 우리는 위험 순간을 AI 시험 문제로 바꿔 공유 자산으로 만듭니다.</td>
-</tr>
-<tr>
-<td>항로 최적화·고장 예측은 이미 서비스가 있지 않나요?</td>
-<td>그 서비스들은 사람이 운항하는 배를 돕습니다. 우리는 자율운항 AI가 기상 급변·고장 상황에서 제대로 판단하는지를 시험합니다. 고장 예측 기업에는 고장 전조 데이터를 공급합니다.</td>
+<td>COLREG는 일부러 숫자를 정하지 않았습니다. 공개 AIS에서 같은 유형 조우의 사람 항해사 행동 분포를 기준선으로 쓰고, 경계선은 조정 가능한 변수로 둡니다.</td>
 </tr>
 <tr>
 <td>정부 플랫폼 데이터가 아직 개방되지 않았는데요?</td>
-<td>1단계는 이미 공개된 AIS 동적정보, 융합 항적도, KOMSA 혼잡도, 기상청 해양기상 데이터로 시작하고, 플랫폼 데이터는 개방되는 시점에 결합합니다.</td>
+<td>1단계는 이미 공개된 AIS 동적정보, 융합 항적도, KOMSA 혼잡도, 기상청 해양기상 데이터로 시작합니다.</td>
 </tr>
 <tr>
 <td>기업들이 데이터를 내주려 할까요?</td>
-<td>원본 데이터는 회사가 보관하고, 비식별화한 위험 순간 시나리오와 성적표만 오갑니다. 기여한 회사는 문제은행 이용 혜택을 받습니다.</td>
-</tr>
-<tr>
-<td>생성형 AI가 만든 시나리오는 현실성이 있나요?</td>
-<td>실제 위험 순간을 뼈대로 조건만 바꾸고, 문제마다 실제 분포와의 통계 일치도와 COLREG 조건 충족률을 함께 보고합니다.</td>
+<td>원본 데이터는 회사가 보관하고, 비식별화한 시나리오와 성적표만 오갑니다.</td>
 </tr>
 <tr>
 <td>수익 모델은요?</td>
-<td>기본 문제 세트는 공공에 무료입니다. 고급 성적표·인증 리포트, 위험 점수, 고장 전조 데이터셋은 유료입니다.</td>
+<td>기본 문제 세트는 공공에 무료, 고급 성적표·인증 리포트와 위험 점수는 유료입니다.</td>
 </tr>
 </tbody>
 </table>
@@ -863,13 +918,12 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <ul>
 <li>☐ 서비스 이름 확정 (현재 가칭: 씨나리오)</li>
 <li>☐ 슬로건 확정</li>
-<li>☐ 데모와 발표 자료(16장) 팀 검토</li>
-<li>☐ 발표 분량: 16장 유지 또는 2·3번, 4·5·6번 합치기</li>
-<li>☐ 역할 분담: 리서치·근거 / 스토리·대본 / 데모 / PPT 디자인 (슬라이드 표의 담당 열에 기입)</li>
+<li>☐ 데모와 발표 자료(17장) 팀 검토</li>
+<li>☐ 역할 분담: 리서치·근거 / 스토리·대본 / 데모 / PPT 디자인</li>
 <li>☐ 기대효과 정량 수치의 근거 찾기</li>
 </ul>
 <h2>팩트체크 기록</h2>
-<p>2026-10-05~06에 아래 항목의 근거 페이지를 직접 열어 확인했습니다.</p>
+<p>2026-10-05~07에 아래 항목의 근거 페이지를 직접 열어 확인했습니다. v6에서 추가한 근거는 <code>리서치_v6_팩트체크.md</code>, <code>../리서치_다선박_사람개입.md</code>에 원문 인용과 함께 정리했습니다.</p>
 <table>
 <thead>
 <tr>
@@ -879,174 +933,87 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 </thead>
 <tbody>
 <tr>
-<td>정부 사업 개요·8개 분야</td>
-<td><a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">보도자료</a></td>
-</tr>
-<tr>
-<td>플랫폼 개방 방침</td>
-<td><a target="_blank" rel="noopener" href="https://v.daum.net/v/20260507185652615">아시아경제</a></td>
-</tr>
-<tr>
-<td>위험 후보 조우 비율</td>
-<td><a target="_blank" rel="noopener" href="https://www.marin.nl/en/publications/detection-of-hazardous-encounters-at-the-north-sea-from-ais-data">MARIN</a></td>
-</tr>
-<tr>
-<td>실주행 검증의 한계</td>
-<td><a target="_blank" rel="noopener" href="https://www.automotive-fleet.com/134757/new-testing-methods-urged-for-self-driving-cars">RAND 연구 요약</a></td>
-</tr>
-<tr>
-<td>어선 규모·5톤 미만 비율</td>
-<td><a target="_blank" rel="noopener" href="https://www.newsseoul.co.kr/news/view/1065606019568031">해수부 통계 보도</a></td>
-</tr>
-<tr>
-<td>어선 AIS 의무 기준</td>
-<td><a target="_blank" rel="noopener" href="https://www.badatime.com/v-pass">바다타임</a></td>
-</tr>
-<tr>
-<td>섬 개수</td>
-<td><a target="_blank" rel="noopener" href="https://biz.sbs.co.kr/amp/article/20000251997">SBS Biz</a></td>
-</tr>
-<tr>
-<td>해양사고 통계</td>
-<td><a target="_blank" rel="noopener" href="https://www.etoday.co.kr/news/view/2567005">이투데이</a></td>
-</tr>
-<tr>
-<td>MASS Code 판단 기록(9.10)·설명가능성(10.4)·시뮬레이션 시험(9.12.1) 조항</td>
-<td><a target="_blank" rel="noopener" href="https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/IndexofIMOResolutions/MSCResolutions/MSC.595(111).pdf">MASS Code 원문</a></td>
-</tr>
-<tr>
-<td>COLREG 8조 원문</td>
+<td>COLREG 8·13·15·16·17·2(b)·11조 원문</td>
 <td><a target="_blank" rel="noopener" href="https://www.navcen.uscg.gov/navigation-rules-amalgamated">USCG</a></td>
 </tr>
 <tr>
-<td>COLREG 8조에 수치 기준이 없음</td>
-<td><a target="_blank" rel="noopener" href="https://www.cultofsea.com/colregs/part-b-steering-and-sailing-rules-4-19/rule-8-action-to-avoid-collision/">Cult of Sea</a></td>
+<td>다선박에서 피항선이자 유지선</td>
+<td><a target="_blank" rel="noopener" href="https://www.mdpi.com/2077-1312/12/8/1289">Lyu 외, JMSE 2024</a>, <a target="_blank" rel="noopener" href="https://doi.org/10.1016/j.oceaneng.2015.06.054">Zhang 외 2015</a>, <a target="_blank" rel="noopener" href="https://marifuture.org/Publications/Papers/ACTS_Plus_IMLA25_Paper.pdf">Mohovic 외</a></td>
 </tr>
 <tr>
-<td>연구별 DCPA·TCPA 기준 예시</td>
-<td><a target="_blank" rel="noopener" href="https://academic.oup.com/jcde/article/8/3/894/6275214">Ha et al. 2021</a></td>
+<td>USS Fitzgerald 충돌</td>
+<td><a target="_blank" rel="noopener" href="https://www.ntsb.gov/investigations/AccidentReports/Reports/MAR2002.pdf">NTSB MAR-20/02</a></td>
 </tr>
 <tr>
-<td>ISO 21448 적용 범위(도로 차량)</td>
-<td><a target="_blank" rel="noopener" href="https://www.iso.org/standard/77490.html">ISO</a></td>
+<td>MEGURI2040 도쿄만 실증·개발사 발언</td>
+<td><a target="_blank" rel="noopener" href="https://en.nippon-foundation.or.jp/news/articles/2022/20220602-74388.html">닛폰재단</a>, <a target="_blank" rel="noopener" href="https://www.monohakobi.com/en/wp-content/uploads/2026/01/20251201-05_seminar_DFFASplus_v.pdf">NYK·MTI</a>, <a target="_blank" rel="noopener" href="https://www.nyk.com/english/stories/04/02/20260428.html">NYK</a></td>
 </tr>
 <tr>
-<td>선급 로깅 지침</td>
-<td><a target="_blank" rel="noopener" href="https://www.smashroadmap.com/files/dnvgl-cg-.pdf">DNVGL-CG-0264</a></td>
+<td>MASS Code 교통밀도·사람 개입·판단 기록 조항</td>
+<td><a target="_blank" rel="noopener" href="https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/IndexofIMOResolutions/MSCResolutions/MSC.595(111).pdf">MASS Code 원문</a></td>
 </tr>
 <tr>
-<td>MASS Code 적용·일정</td>
-<td><a target="_blank" rel="noopener" href="https://www.dnv.com/news/2026/imo-mcs-111-new-mass-code-adopted/">DNV</a></td>
+<td>원격운항자 인계 실험</td>
+<td><a target="_blank" rel="noopener" href="https://trid.trb.org/View/2350291">Veitch 외 2024</a></td>
+</tr>
+<tr>
+<td>ISO/AWI 25927 상태·범위</td>
+<td><a target="_blank" rel="noopener" href="https://www.iso.org/standard/92071.html">ISO</a></td>
+</tr>
+<tr>
+<td>시험 시나리오 연구 현황</td>
+<td><a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/pii/S0968090X25002505">Xin 외 2025</a>, <a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/abs/pii/S0029801823028202">Wang 외 2024</a>, <a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/abs/pii/S0965856425000552">Yu 외 2025</a></td>
+</tr>
+<tr>
+<td>국내 충돌 인적과실 분석</td>
+<td><a target="_blank" rel="noopener" href="https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002305685">김대식 2017</a></td>
+</tr>
+<tr>
+<td>국내 충돌 건수(2021~2026.7)</td>
+<td><a target="_blank" rel="noopener" href="https://www.dtoday.co.kr/news/articleView.html?idxno=795321">일간투데이</a></td>
+</tr>
+<tr>
+<td>재결서 공개·이용 조건</td>
+<td><a target="_blank" rel="noopener" href="https://www.kmst.go.kr/web/verdictList.do?menuIdx=121">KMST</a></td>
+</tr>
+<tr>
+<td>MAIB 독일만 충돌</td>
+<td><a target="_blank" rel="noopener" href="https://www.gov.uk/maib-reports/collision-between-the-bulk-carrier-polesie-and-the-general-cargo-ship-verity-resulting-in-the-sinking-of-verity-and-loss-of-five-lives">MAIB</a></td>
 </tr>
 <tr>
 <td>자율운항선박법 조문</td>
-<td><a target="_blank" rel="noopener" href="https://casenote.kr/법령/자율운항선박_개발_및_상용화_촉진에_관한_법률">조문</a></td>
+<td><a target="_blank" rel="noopener" href="https://www.law.go.kr/lsInfoP.do?lsiSeq=257803">국가법령정보센터</a></td>
 </tr>
 <tr>
-<td>Uber 사고 로그 재구성</td>
-<td><a target="_blank" rel="noopener" href="https://www.ntsb.gov/investigations/accidentreports/reports/har1903.pdf">NTSB 보고서</a></td>
+<td>정부 사업 개요</td>
+<td><a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">보도자료</a></td>
 </tr>
 <tr>
-<td>ISO 시나리오 생성 표준</td>
-<td><a target="_blank" rel="noopener" href="https://isme.me/en/project/show/iso:proj:92071">ISME</a></td>
+<td>어선 규모(2025년 말)·AIS 의무·섬(2024년 말)</td>
+<td><a target="_blank" rel="noopener" href="http://www.knongnews.com/news/articleView.html?idxno=24850">농어업경제귀농신문</a>, <a target="_blank" rel="noopener" href="https://www.badatime.com/v-pass">바다타임</a>, <a target="_blank" rel="noopener" href="https://biz.sbs.co.kr/amp/article/20000251997">SBS Biz</a></td>
 </tr>
 <tr>
-<td>AIS 근접충돌 DB 연구</td>
-<td><a target="_blank" rel="noopener" href="https://www.cambridge.org/core/services/aop-cambridge-core/content/view/42DBC5CFDB6C67EC8743586350B49ACF/S0373463321000357a.pdf/div-class-title-ais-based-near-collision-database-generation-and-analysis-of-real-collision-avoidance-manoeuvres-div.pdf">Journal of Navigation</a></td>
+<td>MEGURI2040 상업 운항(2026.3)</td>
+<td><a target="_blank" rel="noopener" href="https://www.mol.co.jp/en/pr/2026/26032.html">MOL</a></td>
 </tr>
 <tr>
-<td>P&amp;I 인수 심사 항목</td>
-<td><a target="_blank" rel="noopener" href="https://www.stephensonharwood.com/insights/de-risking-mass-ig-pi-extends-pooled-pi-cover-to-autonomous-operations/">Stephenson Harwood</a></td>
+<td>시장 전망·MASS Code 일정</td>
+<td><a target="_blank" rel="noopener" href="https://www.gminsights.com/industry-analysis/autonomous-ships-market">GMI</a>, <a target="_blank" rel="noopener" href="https://www.imo.org/en/mediacentre/hottopics/pages/autonomous-shipping.aspx">IMO</a></td>
+</tr>
+<tr>
+<td>통계 최신성 점검(2026.10.7)</td>
+<td><code>리서치_v6_최신성점검.md</code></td>
+</tr>
+<tr>
+<td>선급 로깅·복잡도 지침</td>
+<td><a target="_blank" rel="noopener" href="https://www.smashroadmap.com/files/dnvgl-cg-.pdf">DNVGL-CG-0264</a></td>
 </tr>
 <tr>
 <td>공개 데이터</td>
 <td><a target="_blank" rel="noopener" href="https://www.data.go.kr/data/15129186/fileData.do">AIS 동적정보</a>, <a target="_blank" rel="noopener" href="https://www.data.go.kr/data/15126803/fileData.do">융합 항적도</a></td>
 </tr>
-<tr>
-<td>시장 전망</td>
-<td><a target="_blank" rel="noopener" href="https://edaily.co.kr/News/Read?mediaCodeNo=257&amp;newsId=06330406642363096">이데일리</a></td>
-</tr>
-<tr>
-<td>KRISO 테스트베드</td>
-<td><a target="_blank" rel="noopener" href="https://www.kriso.re.kr/menu.es?mid=a10208040000">KRISO</a></td>
-</tr>
-<tr>
-<td>Orca AI</td>
-<td><a target="_blank" rel="noopener" href="https://thedigitalship.com/news/electronics-navigation/48-fewer-close-encounters-as-eastern-pacific-shipping-expands-ai-navigation/">The Digital Ship</a></td>
-</tr>
-<tr>
-<td>KOMSA</td>
-<td><a target="_blank" rel="noopener" href="https://www.klnews.co.kr/news/articleView.html?idxno=322879">물류신문</a></td>
-</tr>
-<tr>
-<td>시뮬레이터 DNV 인증</td>
-<td><a target="_blank" rel="noopener" href="https://www.wartsila.com/insights/article/simulating-the-future-of-maritime">Wärtsilä</a></td>
-</tr>
 </tbody>
 </table>
-<h2>출처</h2>
-<p>정부·통계·법령</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://minwho.kr/data/bbsData/17784831801.pdf">산업부·해수부 보도자료 원문: 자율운항선박 AI 데이터플랫폼 사업 출범 (2026.5.7)</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.korea.kr/briefing/pressReleaseView.do?newsId=156760191&amp;call_from=rsslink">정책브리핑 보도자료</a></li>
-<li><a target="_blank" rel="noopener" href="https://v.daum.net/v/20260507185652615">아시아경제: 데이터플랫폼 개방형 데이터셋 방침 (2026.5.7)</a></li>
-<li><a target="_blank" rel="noopener" href="https://edaily.co.kr/News/Read?mediaCodeNo=257&amp;newsId=06330406642363096">이데일리: AI 완전자율운항 6,000억 사업 예타 면제 (2025.11.6)</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.etoday.co.kr/news/view/2567005">이투데이: 2025년 해양사고 통계 (2026.3.19)</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.newsseoul.co.kr/news/view/1065606019568031">뉴스서울: 해수부 어선 통계</a></li>
-<li><a target="_blank" rel="noopener" href="https://biz.sbs.co.kr/amp/article/20000251997">SBS Biz: 한국 섬 3,390개 첫 공식 발표</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.badatime.com/v-pass">바다타임: V-Pass와 어선 AIS 의무 기준</a></li>
-<li><a target="_blank" rel="noopener" href="https://casenote.kr/법령/자율운항선박_개발_및_상용화_촉진에_관한_법률">자율운항선박 개발 및 상용화 촉진에 관한 법률 조문</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.klnews.co.kr/news/articleView.html?idxno=322879">물류신문: KOMSA 72시간 해상 혼잡도 데이터 개방 (2026.9.28)</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.kriso.re.kr/menu.es?mid=a10208040000">KRISO 자율운항선박실증연구센터</a></li>
-</ul>
-<p>공개 데이터</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://www.data.go.kr/data/15129186/fileData.do">공공데이터포털: 선박 AIS 동적정보</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.data.go.kr/data/15126803/fileData.do">공공데이터포털: (융합)선박 항적도</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.data.go.kr/data/15161594/openapi.do">공공데이터포털: KOMSA 해양교통 혼잡도 오픈API</a></li>
-<li><a target="_blank" rel="noopener" href="https://data.go.kr/catalog/15139440/openapi.json">공공데이터포털: 기상청 해양기상 오픈API</a></li>
-</ul>
-<p>국제 규범·보험</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://www.navcen.uscg.gov/navigation-rules-amalgamated">USCG: COLREG 원문 (Navigation Rules)</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cultofsea.com/colregs/part-b-steering-and-sailing-rules-4-19/rule-8-action-to-avoid-collision/">Cult of Sea: COLREG 8조 해설</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.iso.org/standard/77490.html">ISO 21448:2022 Road vehicles — SOTIF</a></li>
-<li><a target="_blank" rel="noopener" href="https://wwwcdn.imo.org/localresources/en/KnowledgeCentre/IndexofIMOResolutions/MSCResolutions/MSC.595(111).pdf">IMO MASS Code 원문 (MSC.595(111))</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.dnv.com/news/2026/imo-mcs-111-new-mass-code-adopted/">DNV: IMO MSC 111, MASS Code 채택</a></li>
-<li><a target="_blank" rel="noopener" href="https://gcaptain.com/imo-adopts-mass-code-the-autonomous-ship-moves-from-drawing-board-to-regulated-reality/">gCaptain: IMO Adopts MASS Code</a></li>
-<li><a target="_blank" rel="noopener" href="https://isme.me/en/project/show/iso:proj:92071">ISME: ISO/AWI 25927 MASS 충돌회피 시험 시나리오 생성 지침</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.smashroadmap.com/files/dnvgl-cg-.pdf">DNVGL-CG-0264: Autonomous and remotely operated ships (2018)</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.stephensonharwood.com/insights/de-risking-mass-ig-pi-extends-pooled-pi-cover-to-autonomous-operations/">Stephenson Harwood: IG P&amp;I 자율운항선박 공동 인수</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.ntsb.gov/investigations/accidentreports/reports/har1903.pdf">NTSB: Uber 자율주행 사망사고 보고서 (HAR-19/03)</a></li>
-</ul>
-<p>언론·과제 분석</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://www.sentv.co.kr/article/view/sentv202601270198">서울경제TV: 자율운항 상용화까지 남은 과제</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.dailysecu.com/news/articleView.html?idxno=206632">데일리시큐: 데이터 표준화·보안 과제</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.newspim.com/news/view/20260407000585">뉴스핌: HD현대 아비커스 형식승인 (2026.4.7)</a></li>
-</ul>
-<p>기존 서비스</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://thedigitalship.com/news/electronics-navigation/48-fewer-close-encounters-as-eastern-pacific-shipping-expands-ai-navigation/">The Digital Ship: Orca AI, 근접 조우 48% 감소</a></li>
-<li><a target="_blank" rel="noopener" href="https://cyprusshippingnews.com/2026/04/21/joint-orca-ai-northstandard-study-highlights-strong-impact-of-ai-on-navigational-safety/">Cyprus Shipping News: Orca AI·NorthStandard 공동 연구 (2026.4)</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.wartsila.com/insights/article/simulating-the-future-of-maritime">Wärtsilä: Simulating the future of maritime</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.kongsberg.com/maritime/products/simulation/k-sim-navigation/">Kongsberg K-Sim Navigation</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.appliedintuition.com/press-releases/applied-intuition-uk-teams-with-kraken-technology-group">Applied Intuition × Kraken (Axion Sim)</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.napa.fi/software-and-services/ship-operations/napa-fleet-intelligence/voyage-optimization/">NAPA Voyage Optimization</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.wartsila.com/marine/services/lifecycle-agreements/expert-insight-service">Wärtsilä Expert Insight</a></li>
-<li><a target="_blank" rel="noopener" href="https://kongsbergmaritime.com/services/kongsberg-remote-services/health-management/">Kongsberg Health Management</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.marineinsight.com/marine-navigation/voyage-data-recorder-on-a-ship-explained/">Marine Insight: VDR 기록 항목</a></li>
-</ul>
-<p>연구</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://www.marin.nl/en/publications/detection-of-hazardous-encounters-at-the-north-sea-from-ais-data">MARIN: 북해 AIS 데이터의 위험 조우 탐지</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.automotive-fleet.com/134757/new-testing-methods-urged-for-self-driving-cars">RAND 연구 요약: 자율주행 검증에 필요한 주행거리</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cambridge.org/core/services/aop-cambridge-core/content/view/42DBC5CFDB6C67EC8743586350B49ACF/S0373463321000357a.pdf/div-class-title-ais-based-near-collision-database-generation-and-analysis-of-real-collision-avoidance-manoeuvres-div.pdf">Journal of Navigation: AIS 기반 근접충돌 DB 생성 (DNV 공저, 2021)</a></li>
-<li><a target="_blank" rel="noopener" href="https://academic.oup.com/jcde/article/8/3/894/6275214">Ha et al. 2021: CPA와 선박 영역 기반 충돌 위험 정량화 (JCDE)</a></li>
-<li><a target="_blank" rel="noopener" href="https://iapsam.org/PSAM17/program/Papers/PSAM17&amp;ASRAM2024-1308.pdf">Nakashima 2024: 자율항해 시스템 안전성 평가 방법론 (PSAM17)</a></li>
-<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2603.28067">arXiv 2603.28067: From Vessel Trajectories to Safety-Critical Encounter Scenarios (2026.3)</a></li>
-<li><a target="_blank" rel="noopener" href="https://arxiv.org/abs/2509.15959">arXiv 2509.15959: Explainable Decision Support for MASS (2025.9)</a></li>
-</ul>
 </main>
 </body>
 </html>

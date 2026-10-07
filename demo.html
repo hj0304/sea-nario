@@ -121,13 +121,21 @@ svg text{font-family:var(--font)}
 .ans b{display:inline-flex;align-items:center;height:42px;padding:0 16px;border-radius:999px;background:var(--blue);color:#fff;font-size:21px}
 .ans i{margin-left:auto;font-style:normal;font-size:20px;font-weight:600;color:#5b8fc7}
 .scr.on .ans{animation:up .6s .5s both}
+.sit{width:1000px}
+.rw b.kp{color:var(--blue)}.rw b.av{color:var(--fail)}
+.ans.dl{background:var(--warn-soft);color:var(--warn-ink);box-shadow:inset 0 0 0 2px #f8d79a}
+.ans.dl b{background:var(--warn)}
+.ans.dl i{color:#c98a2e}
+#s2-1 .vis{margin-top:24px}
 
 /* 2-2 시험 */
-#map22{height:372px}
+#map22{height:392px}
+#s2-2 .cap{margin-top:16px}
 .chip.gray{background:#eef1f4;color:var(--ink2)}
 .cap{display:flex;align-items:center;justify-content:center;gap:16px;height:56px;margin-top:22px;font-size:28px;font-weight:600;letter-spacing:-.02em;white-space:nowrap}
 .cap .tm{color:var(--blue);font-weight:700}
 .cap .tx{color:var(--ink)}
+.cap .tx .nt{font-style:normal;font-size:23px;font-weight:600;color:var(--gray)}
 .cap.fx{animation:capin .4s both}
 @keyframes capin{from{opacity:0;transform:translateY(8px)}}
 .cap .chip{transition:opacity .3s,transform .3s}
@@ -151,6 +159,10 @@ svg text{font-family:var(--font)}
 .scr.on .vc.old{animation:up .6s .3s both}
 .scr.on .neq{animation:up .5s .7s both}
 .scr.on .vc.new{animation:up .6s 1s both}
+.vc{height:316px}
+.crit{margin-top:30px;display:flex;align-items:center;gap:12px;font-size:22px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.crit .ok{color:var(--pass)}.crit .ng{color:var(--warn-ink)}.crit .dot{color:#c5ccd3}
+.scr.on .crit{animation:up .6s 1.4s both}
 
 /* 3-1 */
 .share{width:900px}
@@ -172,7 +184,7 @@ svg text{font-family:var(--font)}
 .wk.top .v{color:var(--warn-ink)}
 
 /* 4-1 */
-#map41{height:332px}
+#map41{height:368px}
 #s4-1 .cap{margin-top:20px}
 .scrub{position:relative;width:1000px;height:52px;margin-top:14px;cursor:pointer;touch-action:none}
 .scrub .rail{position:absolute;left:0;right:0;top:22px;height:8px;border-radius:4px;background:#e5e8eb}
@@ -218,14 +230,14 @@ svg text{font-family:var(--font)}
 
   <!-- 1-1 -->
   <section class="scr" id="s1-1">
-    <h2 class="h1">남해에서 위험한 순간을<br><em class="num" data-cu="3482">3,482</em>개 찾았어요</h2>
+    <h2 class="h1">남해에서 여러 척이 얽힌 위험 순간을<br><em class="num" data-cu="3482">3,482</em>개 찾았어요</h2>
     <div class="sub">실제 배들이 다닌 1년치 기록에서 찾았어요</div>
     <div class="vis"><div class="mapbox" id="map11"><svg id="m11" viewBox="0 222 1000 326.7" preserveAspectRatio="xMidYMid slice"></svg></div></div>
   </section>
 
   <!-- 1-2 -->
   <section class="scr" id="s1-2">
-    <h2 class="h1">야간에 AIS 없는 어선이<br>가로질러 와요</h2>
+    <h2 class="h1">좁은 수로에서 추월선과 어선이<br>동시에 다가와요</h2>
     <div class="sub">22:14 · 남해도–거제 사이 수로</div>
     <div class="vis">
       <div class="card scene">
@@ -233,18 +245,25 @@ svg text{font-family:var(--font)}
           <rect width="664" height="230" fill="#e8f1fb"/>
           <path d="M0 0H118C98 58 140 104 104 156C86 192 112 214 100 230H0Z" fill="#fff" stroke="#d5e2ef" stroke-width="1.5"/>
           <path d="M664 0V230H612C628 182 588 150 606 112C624 74 596 38 616 0Z" fill="#fff" stroke="#d5e2ef" stroke-width="1.5"/>
-          <path d="M52 30a16 16 0 1 0 16 22a13 13 0 1 1-16-22z" fill="#b0c4d8"/>
-          <line x1="300" y1="152" x2="300" y2="48" stroke="#0b6bcb" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round" opacity=".55"/>
-          <circle cx="302" cy="104" r="26" fill="rgba(220,38,38,.08)" stroke="#dc2626" stroke-width="2" stroke-dasharray="5 5"/>
-          <line x1="492" y1="92" x2="350" y2="102" stroke="#8b95a1" stroke-width="2.5" stroke-dasharray="7 7" stroke-linecap="round"/>
-          <path d="M342 102.5l14-8v16z" fill="#8b95a1"/>
-          <path d="M498 88l14-10h20v20h-20z" fill="#8b95a1" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
-          <text x="518" y="62" text-anchor="middle" font-size="17" font-weight="700" fill="#6b7684">어선 · AIS 없음</text>
-          <path d="M300 156L318 202L300 193L282 202Z" fill="#0b6bcb" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
-          <text x="328" y="196" font-size="17" font-weight="700" fill="#0b6bcb">AI 선박</text>
+          <!-- 우리 배 예상 항로 + 충돌 예상 -->
+          <line x1="330" y1="150" x2="330" y2="50" stroke="#0b6bcb" stroke-width="3" stroke-dasharray="2 9" stroke-linecap="round" opacity=".55"/>
+          <circle cx="330" cy="70" r="24" fill="rgba(220,38,38,.08)" stroke="#dc2626" stroke-width="2" stroke-dasharray="5 5"/>
+          <!-- 어선: 오른쪽에서 가로질러 -->
+          <line x1="500" y1="70" x2="372" y2="70" stroke="#8b95a1" stroke-width="2.5" stroke-dasharray="7 7" stroke-linecap="round"/>
+          <path d="M364 70l14-8v16z" fill="#8b95a1"/>
+          <path d="M504 70l10-8h20v16h-20z" fill="#6b7684" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+          <text x="522" y="46" text-anchor="middle" font-size="17" font-weight="700" fill="#6b7684">어선</text>
+          <!-- 추월선: 뒤 왼쪽에서 더 빠르게 -->
+          <line x1="240" y1="196" x2="240" y2="110" stroke="#8b95a1" stroke-width="2.5" stroke-dasharray="7 7" stroke-linecap="round"/>
+          <path d="M240 100l8 14h-16z" fill="#8b95a1"/>
+          <path d="M240 168L254 186V226H226V186Z" fill="#8b95a1" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+          <text x="216" y="206" text-anchor="end" font-size="17" font-weight="700" fill="#6b7684">추월선</text>
+          <!-- 우리 배 -->
+          <path d="M330 150L344 166V200H316V166Z" fill="#0b6bcb" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+          <text x="356" y="190" font-size="17" font-weight="700" fill="#0b6bcb">우리 배 (AI)</text>
         </svg>
         <div class="row">
-          <span class="chip">시계 제한</span><span class="chip">AIS 없는 소형선</span>
+          <span class="chip">추월+횡단 동시</span><span class="chip">좁은 수로</span>
           <div class="lv"><span>난이도</span><b>상</b></div>
         </div>
       </div>
@@ -275,15 +294,16 @@ svg text{font-family:var(--font)}
 
   <!-- 2-1 상황 카드 -->
   <section class="scr" id="s2-1">
-    <h2 class="h1">밤 10시, 남해 좁은 수로에서<br>작은 어선이 앞을 가로질러 와요</h2>
+    <h2 class="h1">밤 10시, 좁은 수로에서<br>두 척이 동시에 다가와요</h2>
+    <div class="sub">🌙 22:14 · 밤이지만 시야는 좋아요</div>
     <div class="vis">
       <div class="sit">
         <div class="card rows">
-          <div class="rw"><span class="em">🌙</span><span><b>밤 10시 14분</b> · 앞이 잘 안 보여요 <i>(시정 1.2km)</i></span></div>
-          <div class="rw"><span class="em">🚢</span><span><b>우리 배</b> · 자율운항 화물선, 시속 약 22km <i>(12노트)</i></span></div>
-          <div class="rw"><span class="em">🎣</span><span><b>3톤 어선</b> · AIS 신호 없음 → 레이더에만 작게 잡혀요</span></div>
+          <div class="rw"><span class="em">🚢</span><span><b>우리 배</b> · 자율운항 화물선, 12노트</span></div>
+          <div class="rw"><span class="em">⏩</span><span>뒤에서 더 빠른 배가 추월해 와요 → <b class="kp">침로를 지켜야 해요</b> <i>(유지선)</i></span></div>
+          <div class="rw"><span class="em">🎣</span><span>오른쪽에서 어선이 가로질러 와요 → <b class="av">피해야 해요</b> <i>(피항선)</i></span></div>
         </div>
-        <div class="ans"><b>정답</b> 일찍, 한 번에, 크게 피하기<i>국제 충돌예방규칙 8조</i></div>
+        <div class="ans dl"><b>두 의무가 부딪혀요</b> 지키면서 동시에 피해야 해요<i>국제충돌예방규칙은 두 척 기준</i></div>
       </div>
     </div>
   </section>
@@ -314,15 +334,16 @@ svg text{font-family:var(--font)}
           <div class="who">씨나리오</div>
           <div class="ic"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17.2v.3"/></svg></div>
           <div class="big">조건부 통과</div>
-          <div class="why">늦게, 조금씩, 결국 도움 요청</div>
+          <div class="why">늦게, 조금씩, 결국 급감속</div>
         </div>
       </div>
+      <div class="crit"><span class="ok">충돌 없음 ✓</span><span class="dot">·</span><span class="ng">사람 기준보다 늦음 ✗</span><span class="dot">·</span><span class="ng">세 척 모두에게 안전한 범위 벗어남 ✗</span></div>
     </div>
   </section>
 
   <!-- 3-1 -->
   <section class="scr" id="s3-1">
-    <h2 class="h1"><span class="num">1,200</span>문제 중 <span class="w num" data-cu="18" data-suf="%">18%</span>는<br>무사했지만 망설였어요</h2>
+    <h2 class="h1">다선박 <span class="num">1,200</span>문제 중 <span class="w num" data-cu="18" data-suf="%">18%</span>는<br>무사했지만 망설였어요</h2>
     <div class="sub">기존 시험이었다면 모두 ‘통과’였을 문제예요</div>
     <div class="vis">
       <div class="share">
@@ -334,13 +355,13 @@ svg text{font-family:var(--font)}
 
   <!-- 3-2 -->
   <section class="scr" id="s3-2">
-    <h2 class="h1">가장 약한 조건은<br><span class="w">‘시계 제한’</span>이에요</h2>
-    <div class="sub">이 조건에서 AI가 가장 자주 망설였어요</div>
+    <h2 class="h1">가장 약한 상황은<br><span class="w">‘추월+횡단 동시’</span>예요</h2>
+    <div class="sub">이런 배들의 조합에서 AI가 가장 자주 망설였어요</div>
     <div class="vis">
       <div class="weak">
-        <div class="wk top"><span class="t">시계 제한</span><span class="bar"><b data-w="91"></b></span><span class="v num">41%</span></div>
-        <div class="wk"><span class="t">AIS 없는 소형선</span><span class="bar"><b data-w="73"></b></span><span class="v num">33%</span></div>
-        <div class="wk"><span class="t">다수 선박</span><span class="bar"><b data-w="62"></b></span><span class="v num">28%</span></div>
+        <div class="wk top"><span class="t">추월+횡단 동시</span><span class="bar"><b data-w="91"></b></span><span class="v num">41%</span></div>
+        <div class="wk"><span class="t">어선 3척 이상</span><span class="bar"><b data-w="73"></b></span><span class="v num">33%</span></div>
+        <div class="wk"><span class="t">좁은 수로 마주침</span><span class="bar"><b data-w="62"></b></span><span class="v num">28%</span></div>
       </div>
     </div>
   </section>
@@ -362,7 +383,7 @@ svg text{font-family:var(--font)}
       <div class="card re">
         <div class="top">
           <div class="ic"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 1-2.3-5.6"/><path d="M20 4v5h-5"/></svg></div>
-          <div><div class="nm">야간 · AIS 없는 어선</div><div class="ds">다음 회차에 변형 문제로 먼저 나가요</div></div>
+          <div><div class="nm">좁은 수로 · 추월선과 어선 동시 접근</div><div class="ds">다음 회차에 변형 문제로 먼저 나가요</div></div>
         </div>
         <div class="fm"><span class="r">난이도 상</span><span class="op">×</span><span class="a">조건부 통과</span><span class="op">→</span><span class="b">우선 출제</span></div>
       </div>
@@ -423,120 +444,145 @@ function buildMap(svg,k,halo){
   const lg=S("g",{fill:"#f4f6f8",stroke:"#d3dde8","stroke-width":1.4*k,"stroke-linejoin":"round"},g);LAND.forEach(l=>S("path",{d:l.d},lg));
 }
 
-/* ---------- 조우 시뮬레이션 (#A-0417) ---------- */
-const DEG=Math.PI/180,DT=0.5,TEND=240,GH_T=6,GH_H=50;
-function hdgCmd(t){if(t<10)return 10;if(t<100)return 15;if(t<150)return 10;if(t<200)return 13;return 48;}
+/* ---------- 다선박 조우 시뮬레이션: 우리 배 + 추월선(좌현 후방) + 횡단 어선(우현) ---------- */
+const DEG=Math.PI/180,DT=0.5,TEND=240,GH_T=8,TC=235;
+const H0=10;                                   /* 수로 방향(북쪽) */
+const dir=h=>[Math.sin(h*DEG),-Math.cos(h*DEG)];
+/* AI: 22:14:20 5° → 22:15:30 복귀 → 22:16:20 3° → 22:16:50 급감속 */
+function hdgAI(t){if(t<20)return H0;if(t<90)return H0+5;if(t<140)return H0;return H0+3;}
+function spdAI(t){return t<170?.35:.03;}
+/* 사람 항해사 기준: 두 배를 본 직후 일찍 감속 + 조금 우현 (예시) */
+function hdgGH(t){return t<12?H0:H0+15;}
+function spdGH(t){return t<GH_T?.35:.13;}
 const SIM=(function(){
-  const v=0.35,tv=0.45,th=255,T=225,ox=600,oy=402;
-  const cx=ox+T*v*Math.sin(10*DEG),cy=oy-T*v*Math.cos(10*DEG);
-  const ts={x:cx-T*tv*Math.sin(th*DEG),y:cy+T*tv*Math.cos(th*DEG)};
-  const own=[],tg=[];let x=ox,y=oy,h=10;
-  for(let i=0;i<=TEND/DT;i++){const t=i*DT;own.push({x,y,h});tg.push({x:ts.x+t*tv*Math.sin(th*DEG),y:ts.y-t*tv*Math.cos(th*DEG)});
-    const c=hdgCmd(t),rate=(t>=200?5:1)*DT;h+=Math.max(-rate,Math.min(rate,c-h));x+=DT*v*Math.sin(h*DEG);y-=DT*v*Math.cos(h*DEG);}
-  /* 사람 항해사 기준 항적: 발견 직후 한 번에 크게 우현 변침 (예시) */
-  const gh=[];x=ox;y=oy;h=10;
-  for(let i=0;i<=TEND/DT;i++){const t=i*DT;gh.push({x,y,h});
-    const c=t<GH_T?10:GH_H,rate=3*DT;h+=Math.max(-rate,Math.min(rate,c-h));x+=DT*v*Math.sin(h*DEG);y-=DT*v*Math.cos(h*DEG);}
+  const v=.35,vf=.4,vt=.42,ox=600,oy=402;
+  const [dx,dy]=dir(H0),[lx,ly]=dir(H0-90);
+  const hit={x:ox+TC*v*dx,y:oy+TC*v*dy};      /* 그대로 가면 어선과 만나는 곳 */
+  const f0={x:hit.x+TC*vf*(-lx),y:hit.y+TC*vf*(-ly)};
+  const t0={x:ox-12*dx+20*lx,y:oy-12*dy+20*ly}; /* 추월선: 뒤 12, 왼쪽 20 */
+  function run(H,Sp,acc){const a=[];let x=ox,y=oy,h=H0,s=v;
+    for(let i=0;i<=TEND/DT;i++){const t=i*DT;a.push({x,y,h});
+      h+=Math.max(-DT,Math.min(DT,H(t)-h));s+=Math.max(-acc*DT,Math.min(acc*DT,Sp(t)-s));
+      const [ux,uy]=dir(h);x+=DT*s*ux;y+=DT*s*uy;}return a;}
+  const own=run(hdgAI,spdAI,.025),gh=run(hdgGH,spdGH,.006),tg=[],ot=[];
+  for(let i=0;i<=TEND/DT;i++){const t=i*DT;tg.push({x:f0.x+t*vf*lx,y:f0.y+t*vf*ly});ot.push({x:t0.x+t*vt*dx,y:t0.y+t*vt*dy});}
   function at(t){t=Math.max(0,Math.min(TEND,t));const f=t/DT,i=Math.min(Math.floor(f),own.length-2),u=f-i;
     const L=(a,b)=>({x:a.x+(b.x-a.x)*u,y:a.y+(b.y-a.y)*u,h:a.h!=null?a.h+(b.h-a.h)*u:0});
-    return{o:L(own[i],own[i+1]),g:L(tg[i],tg[i+1]),p:L(gh[i],gh[i+1])};}
-  return{own,tg,gh,at,hit:{x:cx,y:cy}};
+    return{o:L(own[i],own[i+1]),g:L(tg[i],tg[i+1]),v:L(ot[i],ot[i+1]),p:L(gh[i],gh[i+1])};}
+  return{own,tg,ot,gh,at,hit};
 })();
 function clockStr(t){const s=Math.floor(14*60+t);return"22:"+String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");}
 
 /* 판단 기록 (오답노트) */
 const LOG=[
-  {t:0,tm:"22:14:00",txt:"수로를 따라 북쪽으로 가고 있어요"},
-  {t:5,tm:"22:14:05",txt:"어선을 레이더로 발견했어요 · 부딪히기까지 약 4분"},
-  {t:10,tm:"22:14:10",txt:"오른쪽으로 5°만 살짝 틀었어요",chip:"늦은 판단",n:1},
-  {t:100,tm:"22:15:40",txt:"다시 원래 방향으로 돌아왔어요",chip:"판단 번복",gray:true},
-  {t:150,tm:"22:16:30",txt:"또 3°만 틀었어요",chip:"작은 변침 반복",n:2},
-  {t:180,tm:"22:17:00",txt:"AI가 관제센터에 도움을 요청했어요",chip:"AI 도움 요청",n:3},
-  {t:200,tm:"22:17:20",txt:"관제사가 넘겨받아 35° 크게 틀었어요",chip:"관제 개입",blue:true},
-  {t:240,tm:"22:18:00",txt:"약 550m(0.3해리) 차이로 지나갔어요"}
+  {t:0,tm:"22:14:00",txt:"좁은 수로를 따라 북쪽으로 가고 있어요"},
+  {t:5,tm:"22:14:05",txt:"뒤의 추월선과 오른쪽 어선을 동시에 발견했어요"},
+  {t:20,tm:"22:14:20",txt:"오른쪽으로 5°만 틀었어요 · 추월선 때문에 크게 못 꺾어요",chip:"늦고 작은 회피",n:1},
+  {t:90,tm:"22:15:30",txt:"추월선이 가까워지자 원래 방향으로 돌아왔어요",chip:"판단 번복",gray:true},
+  {t:140,tm:"22:16:20",txt:"또 3°만 틀었어요",chip:"작은 변침 반복",n:2},
+  {t:170,tm:"22:16:50",txt:"어선이 코앞에 오자 급하게 속도를 줄였어요",chip:"늦은 감속",n:3},
+  {t:240,tm:"22:18:00",txt:"어선 뒤로 약 550m 차이로 지나갔어요 · 추월선은 왼쪽으로"}
 ];
 /* 시험 자막: LOG와 같은 시점·표현, 칩은 망설임 순간에만 */
 const CAP2=LOG.map(e=>{const c={t:e.t,tm:e.tm,txt:e.txt};
-  if(e.t===10)c.txt+=" · 사람이라면 이미 크게 피했을 때";
+  if(e.t===20)c.txt="오른쪽으로 5°만 틀었어요 · 사람이라면 이미 속도를 줄였을 때";
+  if(e.t===TEND){c.txt="어선 뒤로 약 550m 차이로 지나갔어요";c.note="실제 혼잡 해역에선 이럴 때 사람이 개입하도록 설계해요";}
   if(e.n){c.chip="망설임 "+e.n+" · "+e.chip;}else if(e.gray){c.chip=e.chip;c.gray=true;}
   return c;});
-const HES=LOG.filter(e=>e.n).map(e=>({t:e.t,n:e.n}));
+const LOG4=LOG.map(e=>Object.assign({},e,e.n?{chip:"망설임 "+e.n+" · "+e.chip}:{}));
 
+/* 세 배 항적 + 선체 + 라벨(px 단위)까지 모두 들어가는 viewBox */
 function encVB(bw,bh,ghost){
-  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;const add=p=>{x0=Math.min(x0,p.x);y0=Math.min(y0,p.y);x1=Math.max(x1,p.x);y1=Math.max(y1,p.y);};
-  SIM.own.forEach(add);SIM.tg.slice(ghost?0:10).forEach(p=>{add(p);add({x:p.x,y:p.y-44});});if(ghost)SIM.gh.forEach(add);
-  let w=x1-x0,h=y1-y0;let cx=(x0+x1)/2,cy=(y0+y1)/2;w*=1.12;h*=ghost?1.42:1.3;if(ghost)cy-=h*.02;
-  const asp=bw/bh;if(w/h<asp)w=h*asp;else h=w/asp;
-  return[cx-w/2,cy-h/2,w,h];
+  let k=.5,vb;
+  for(let it=0;it<4;it++){
+    let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;const add=(p,dx,dy)=>{const x=p.x+(dx||0)*k,y=p.y+(dy||0)*k;x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y);};
+    SIM.own.forEach(p=>{add(p,-42,-26);add(p,90,30);});
+    SIM.tg.forEach(p=>{add(p,-14,-36);add(p,60,12);});
+    SIM.ot.forEach(p=>{add(p,-90,-34);add(p,14,30);});
+    if(ghost)SIM.gh.forEach(p=>{add(p,0,24);add(p,120,46);});
+    let w=x1-x0,h=y1-y0;const cx=(x0+x1)/2,cy=(y0+y1)/2;w+=36*k;h+=28*k;
+    const asp=bw/bh;if(w/h<asp)w=h*asp;else h=w/asp;
+    vb=[cx-w/2,cy-h/2,w,h];k=w/bw;
+  }
+  return vb;
 }
 function buildEnc(svg,bw,bh,mode){
   const HM=mode==="hes";
-  const vb=encVB(bw,bh,HM);svg.setAttribute("viewBox",vb.map(v=>v.toFixed(2)).join(" "));
+  const vb=encVB(bw,bh,HM);const SC=.8;svg.setAttribute("viewBox",vb.map(v=>v.toFixed(2)).join(" "));
   const k=vb[2]/bw;
   buildMap(svg,k);
   const LBL=(fill,size)=>({"font-size":(size||19)*k,"font-weight":700,fill,"paint-order":"stroke",stroke:"#fff","stroke-width":5*k,"stroke-linejoin":"round"});
   const HULL=s=>`M0 ${-26*s}C${9*s} ${-16*s} ${9*s} ${-10*s} ${9*s} ${-4*s}L${9*s} ${22*s}L${-9*s} ${22*s}L${-9*s} ${-4*s}C${-9*s} ${-10*s} ${-9*s} ${-16*s} 0 ${-26*s}Z`;
   /* 사람 항해사 기준(고스트) + 충돌 예상 지점 */
-  let gShip=null,hitG=null,hitL=null,pred=null;
+  let gShip=null,gLab=null,hitG=null,hitL=null,pred=null,ghTrk=null;
   if(HM){
-    /* 이대로 가면 만나는 두 예상 항로 (시작 직후에만) */
+    /* 이대로 가면 만나는 두 예상 항로 (첫 판단 전까지만) */
     pred=S("g",{fill:"none","stroke-width":2.6*k,"stroke-dasharray":`${7*k} ${7*k}`,"stroke-linecap":"round"},svg);
     const o0=SIM.own[0],g0=SIM.tg[0];
     S("line",{x1:o0.x,y1:o0.y,x2:SIM.hit.x,y2:SIM.hit.y,stroke:"#0b6bcb",opacity:.45},pred);
     S("line",{x1:g0.x,y1:g0.y,x2:SIM.hit.x,y2:SIM.hit.y,stroke:"#8b95a1",opacity:.7},pred);
-    S("polyline",{points:SIM.gh.map(p=>p.x.toFixed(2)+","+p.y.toFixed(2)).join(" "),fill:"none",stroke:"#16a34a","stroke-width":4*k,"stroke-dasharray":`${2*k} ${9*k}`,"stroke-linecap":"round",opacity:.9},svg);
-    const ge=SIM.gh[SIM.gh.length-1];
-    const gl=S("text",Object.assign({x:ge.x+24*k,y:ge.y+26*k},LBL("#15803d")),svg);gl.textContent="사람 항해사";
+    ghTrk=S("polyline",{fill:"none",stroke:"#16a34a","stroke-width":4*k,"stroke-dasharray":`${2*k} ${9*k}`,"stroke-linecap":"round",opacity:.9},svg);
     hitG=S("g",{transform:`translate(${SIM.hit.x} ${SIM.hit.y})`},svg);
     S("circle",{r:24*k,fill:"rgba(220,38,38,.08)",stroke:"#dc2626","stroke-width":2.4*k,"stroke-dasharray":`${5*k} ${5*k}`},hitG);
     S("path",{d:`M${-8*k} ${-8*k}L${8*k} ${8*k}M${8*k} ${-8*k}L${-8*k} ${8*k}`,stroke:"#dc2626","stroke-width":3.6*k,"stroke-linecap":"round"},hitG);
-    hitL=S("text",Object.assign({x:-32*k,y:7*k,"text-anchor":"end"},LBL("#dc2626",18)),hitG);hitL.textContent="충돌 예상";
-    gShip=S("path",{d:HULL(k*.9),fill:"#16a34a","fill-opacity":.35,stroke:"#16a34a","stroke-width":1.6*k,"stroke-opacity":.7},svg);
+    hitL=S("text",Object.assign({x:32*k,y:-14*k},LBL("#dc2626",18)),hitG);hitL.textContent="충돌 예상";
+    gShip=S("path",{d:HULL(k*.72),fill:"#16a34a","fill-opacity":.3,stroke:"#16a34a","stroke-width":1.6*k,"stroke-opacity":.7,"stroke-dasharray":`${3*k} ${2.5*k}`},svg);
+    gLab=S("text",LBL("#15803d"),svg);gLab.textContent="사람 항해사";
   }
   const trkT=S("polyline",{fill:"none",stroke:"#a7b1bc","stroke-width":2.6*k,"stroke-dasharray":`${6*k} ${6*k}`,"stroke-linecap":"round"},svg);
+  const trkV=S("polyline",{fill:"none",stroke:"#a7b1bc","stroke-width":2.6*k,"stroke-dasharray":`${6*k} ${6*k}`,"stroke-linecap":"round"},svg);
   const trkO=S("polyline",{fill:"none",stroke:"#0b6bcb","stroke-width":4.5*k,"stroke-linecap":"round","stroke-linejoin":"round",opacity:.85},svg);
   const mkG=S("g",{},svg);
-  let marks;
-  if(mode==="hes"){
-    marks=HES.map(e=>{const p=SIM.own[Math.round(e.t/DT)];const g=S("g",{transform:`translate(${p.x} ${p.y})`,opacity:0},mkG);
-      S("circle",{r:15*k,fill:"#f59e0b",stroke:"#fff","stroke-width":3*k},g);
-      const t=S("text",{y:6*k,"text-anchor":"middle","font-size":17*k,"font-weight":800,fill:"#fff"},g);t.textContent=e.n;return{e,g};});
-  }else{
-    marks=LOG.filter(e=>e.t>0&&e.t<TEND).map(e=>{const p=SIM.own[Math.round(e.t/DT)];const g=S("g",{transform:`translate(${p.x} ${p.y})`,opacity:0},mkG);
-      const col=e.blue?"#0b6bcb":e.gray?"#a7b1bc":e.chip?"#f59e0b":"#a7b1bc";
-      const ring=S("circle",{r:20*k,fill:col,"fill-opacity":.18,opacity:0},g);
-      S("circle",{r:9*k,fill:col,stroke:"#fff","stroke-width":3*k},g);return{e,g,ring};});
-  }
-  /* 어선: 작고 회색 + 레이더 반점 */
+  /* 망설임: 항적 왼쪽에 번호 표시 / 그 밖의 판단: 항적 위 회색 점 (4-1만) */
+  const marks=LOG.filter(e=>e.t>0&&e.t<TEND&&(e.n||!HM)).map(e=>{const p=SIM.own[Math.round(e.t/DT)];
+    if(e.n){const g=S("g",{transform:`translate(${p.x-24*k} ${p.y})`,opacity:0},mkG);
+      const ring=HM?null:S("circle",{r:22*k,fill:"#f59e0b","fill-opacity":.22,opacity:0},g);
+      S("line",{x1:9*k,y1:0,x2:24*k,y2:0,stroke:"#f59e0b","stroke-width":2.5*k},g);
+      S("circle",{r:14*k,fill:"#f59e0b",stroke:"#fff","stroke-width":3*k},g);
+      const t=S("text",{y:6*k,"text-anchor":"middle","font-size":17*k,"font-weight":800,fill:"#fff"},g);t.textContent=e.n;return{e,g,ring};}
+    const g=S("g",{transform:`translate(${p.x} ${p.y})`,opacity:0},mkG);
+    const ring=S("circle",{r:18*k,fill:"#a7b1bc","fill-opacity":.25,opacity:0},g);
+    S("circle",{r:7*k,fill:"#a7b1bc",stroke:"#fff","stroke-width":2.5*k},g);return{e,g,ring};});
+  /* 어선: 작고 회색, 오른쪽에서 왼쪽으로 횡단 */
   const tShip=S("g",{},svg);
-  S("circle",{r:22*k,fill:"#8b95a1","fill-opacity":.13},tShip);
-  S("path",{transform:"rotate(255)",d:`M0 ${-11*k}L${5.5*k} ${-3*k}L${5*k} ${9*k}L${-5*k} ${9*k}L${-5.5*k} ${-3*k}Z`,fill:"#6b7684",stroke:"#fff","stroke-width":1.8*k,"stroke-linejoin":"round"},tShip);
-  const tLab=S("text",Object.assign({"text-anchor":"middle"},LBL("#6b7684")),svg);tLab.textContent=HM?"어선 · AIS 없음":"어선";
+  S("path",{transform:`rotate(${H0-90})`,d:`M0 ${-12*k}L${6*k} ${-3*k}L${5.5*k} ${10*k}L${-5.5*k} ${10*k}L${-6*k} ${-3*k}Z`,fill:"#6b7684",stroke:"#fff","stroke-width":1.8*k,"stroke-linejoin":"round"},tShip);
+  const tLab=S("text",LBL("#6b7684"),svg);tLab.textContent="어선";
+  /* 추월선: 회색 큰 배, 좌현 후방에서 더 빠르게 */
+  const vShip=S("g",{},svg);
+  S("path",{d:HULL(k*.92),fill:"#8b95a1",stroke:"#fff","stroke-width":2.2*k,"stroke-linejoin":"round"},vShip);
+  S("rect",{x:-5.5*k,y:9*k,width:11*k,height:7*k,rx:2*k,fill:"#fff","fill-opacity":.7},vShip);
+  const vLab=S("text",Object.assign({"text-anchor":"end"},LBL("#6b7684")),svg);vLab.textContent="추월선";
   /* AI 화물선: 길쭉한 선체 + 선교 */
   const oShip=S("g",{},svg);
-  S("path",{d:HULL(k),fill:"#0b6bcb",stroke:"#fff","stroke-width":2.4*k,"stroke-linejoin":"round"},oShip);
-  S("rect",{x:-6*k,y:9*k,width:12*k,height:8*k,rx:2*k,fill:"#fff","fill-opacity":.85},oShip);
+  S("path",{d:HULL(k*.8),fill:"#0b6bcb",stroke:"#fff","stroke-width":2.2*k,"stroke-linejoin":"round"},oShip);
+  S("rect",{x:-5*k,y:7*k,width:10*k,height:7*k,rx:2*k,fill:"#fff","fill-opacity":.85},oShip);
   const oLab=S("text",LBL("#0b6bcb"),svg);oLab.textContent="AI 선박";
+  const pts=(arr,n,last)=>{const a=arr.slice(0,n+1).map(p=>p.x.toFixed(2)+","+p.y.toFixed(2));a.push(last.x.toFixed(2)+","+last.y.toFixed(2));return a.join(" ");};
   return function render(t){
     const s=SIM.at(t),n=Math.floor(Math.min(t,TEND)/DT);
-    const op=SIM.own.slice(0,n+1).map(p=>p.x.toFixed(2)+","+p.y.toFixed(2));op.push(s.o.x.toFixed(2)+","+s.o.y.toFixed(2));trkO.setAttribute("points",op.join(" "));
-    const seen=t>=5,t0=HM?0:10;
-    const tp=SIM.tg.slice(t0,Math.max(t0,n+1)).map(p=>p.x.toFixed(2)+","+p.y.toFixed(2));if(seen)tp.push(s.g.x.toFixed(2)+","+s.g.y.toFixed(2));trkT.setAttribute("points",seen?tp.join(" "):"");
+    trkO.setAttribute("points",pts(SIM.own,n,s.o));
+    const seen=t>=5;
+    trkT.setAttribute("points",pts(SIM.tg,n,s.g));trkV.setAttribute("points",pts(SIM.ot,n,s.v));
     oShip.setAttribute("transform",`translate(${s.o.x} ${s.o.y}) rotate(${s.o.h})`);
-    oLab.setAttribute("x",s.o.x+22*k);oLab.setAttribute("y",s.o.y+26*k);
+    oLab.setAttribute("x",s.o.x+18*k);oLab.setAttribute("y",s.o.y+22*k);
     tShip.setAttribute("transform",`translate(${s.g.x} ${s.g.y})`);
-    const tv=HM?(seen?1:.45):(seen?1:0);tShip.style.opacity=tLab.style.opacity=tv;
-    tLab.setAttribute("x",s.g.x);tLab.setAttribute("y",s.g.y-30*k);
+    vShip.setAttribute("transform",`translate(${s.v.x} ${s.v.y}) rotate(${H0})`);
+    const tv=seen?1:.45;tShip.style.opacity=tLab.style.opacity=vShip.style.opacity=vLab.style.opacity=tv;
+    tLab.setAttribute("x",s.g.x+12*k);tLab.setAttribute("y",s.g.y-16*k);
+    vLab.setAttribute("x",s.v.x-20*k);vLab.setAttribute("y",s.v.y+8*k);
     if(gShip){gShip.setAttribute("transform",`translate(${s.p.x} ${s.p.y}) rotate(${s.p.h})`);gShip.style.opacity=t>=GH_T?1:0;
-      hitG.style.opacity=t>=200?0:t>=180?.3:1;hitL.style.opacity=t>=150?0:1;pred.style.opacity=t<10?1:0;}
+      ghTrk.setAttribute("points",t>=GH_T?pts(SIM.gh,n,s.p):"");
+      const sep=Math.hypot(s.o.x-s.p.x,s.o.y-s.p.y)/k;
+      gLab.setAttribute("x",s.p.x+20*k);gLab.setAttribute("y",s.p.y+40*k);gLab.style.opacity=sep>46?1:0;
+      hitG.style.opacity=t>=TC?0:t>=170?.35:1;hitL.style.opacity=t>=140?0:1;pred.style.opacity=t<20?1:0;}
     let ci=-1;marks.forEach((m,i)=>{const on=t>=m.e.t;m.g.setAttribute("opacity",on?1:0);if(on)ci=i;});
-    if(mode!=="hes")marks.forEach((m,i)=>m.ring.setAttribute("opacity",i===ci&&t<TEND?1:0));
+    if(!HM)marks.forEach((m,i)=>m.ring.setAttribute("opacity",i===ci&&t<TEND?1:0));
   };
 }
 function setCap(el,c,showChip,state){
   if(state.cur===c&&state.chip===showChip)return;
   const tm=el.querySelector(".tm"),tx=el.querySelector(".tx"),ch=el.querySelector(".chip");
-  if(state.cur!==c){tm.textContent=c.tm;tx.textContent=c.txt;if(!SHOT){el.classList.remove("fx");void el.offsetWidth;el.classList.add("fx");}}
+  if(state.cur!==c){tm.textContent=c.tm;tx.textContent=c.txt;if(c.note){const i=document.createElement("i");i.className="nt";i.textContent=" · "+c.note;tx.appendChild(i);}if(!SHOT){el.classList.remove("fx");void el.offsetWidth;el.classList.add("fx");}}
   if(showChip){ch.textContent=c.chip;ch.className="chip "+(c.blue?"blue":c.gray?"gray":"warn");}else ch.className="chip warn off";
   state.cur=c;state.chip=showChip;
 }
@@ -566,7 +612,7 @@ const CTA={"0":"데모 시작","1-1":"가장 어려운 장면 보기","1-2":"조
 })();
 
 /* 1-3 토글 */
-const TG=[{n:"안개",e:"🌫️"},{n:"좁은 수로",e:"🏝️"},{n:"엔진 출력 저하",e:"⚙️"}];
+const TG=[{n:"어선 1척 더",e:"🎣"},{n:"맞은편 선박",e:"⛴️"},{n:"안개 (시정 악화)",e:"🌫️"}];
 const LV=["상","상+","최상","최상+"];
 TG.forEach(c=>{c.on=false;const b=document.createElement("button");b.className="tg";b.innerHTML=`<span class="em">${c.e}</span>${c.n}<span class="sw"></span>`;
   b.onclick=()=>{c.on=!c.on;updMix(true);};c.el=b;$("#tgl").appendChild(b);});
@@ -579,10 +625,10 @@ updMix(false);
 
 /* 2-2 시험 */
 const HOLD=params.get("t")!=null;
-const render2=buildEnc($("#m22"),1200,372,"hes");
+const render2=buildEnc($("#m22"),1200,392,"hes");
 const st2={t:0,playing:false,done:false,last:0,raf:0,cap:{},auto:0};
 function upd2(t){render2(t);const c=lastAt(CAP2,t);setCap($("#cap22"),c,!!c.chip&&t<c.t+40,st2.cap);}
-function title2(){$("#t22").innerHTML=st2.done?"AI는 무사히 피했지만,<br><span class=\"w\">세 번 망설였어요</span>":"사람 항해사라면 <em>발견 즉시 크게</em> 피해요<br>AI는 어떻게 할까요?";
+function title2(){$("#t22").innerHTML=st2.done?"AI는 무사히 지나갔지만,<br><span class=\"w\">세 번 망설였어요</span>":"사람 항해사라면 <em>일찍 속도를 줄여요</em><br>AI는 어떻게 할까요?";
   if(!SHOT){const h=$("#t22");h.style.animation="none";void h.offsetWidth;h.style.animation="";}}
 function loop2(now){if(!st2.playing)return;const dt=Math.min(.1,(now-st2.last)/1000);st2.last=now;st2.t=Math.min(TEND,st2.t+dt*22);upd2(st2.t);
   if(st2.t>=TEND){st2.playing=false;st2.done=true;updCta();setTimeout(title2,400);return;}
@@ -594,12 +640,12 @@ function finish2(){pause2();st2.t=TEND;st2.done=true;upd2(TEND);title2();}
 upd2(0);title2();
 
 /* 4-1 오답노트 재현 */
-const render4=buildEnc($("#m41"),1200,332,"all");
+const render4=buildEnc($("#m41"),1200,368,"all");
 const st4={t:0,playing:false,last:0,raf:0,cap:{}};
 const scrub=$("#scrub");
 LOG.filter(e=>e.chip).forEach(e=>{const d=document.createElement("div");d.className="ev";d.style.left=(e.t/TEND*100)+"%";if(e.blue)d.style.background="#0b6bcb";if(e.gray)d.style.background="#a7b1bc";scrub.insertBefore(d,$("#knob"));});
 function upd4(t){st4.t=Math.max(0,Math.min(TEND,t));render4(st4.t);const p=st4.t/TEND*100;$("#fill4").style.width=p+"%";$("#knob").style.left=p+"%";
-  const c=lastAt(LOG,st4.t);setCap($("#cap41"),c,!!c.chip,st4.cap);}
+  const c=lastAt(LOG4,st4.t);setCap($("#cap41"),c,!!c.chip,st4.cap);}
 function loop4(now){if(!st4.playing)return;const dt=Math.min(.1,(now-st4.last)/1000);st4.last=now;upd4(st4.t+dt*24);if(st4.t>=TEND){st4.playing=false;return;}st4.raf=requestAnimationFrame(loop4);}
 function play4(){if(st4.t>=TEND)st4.t=0;st4.playing=true;st4.last=performance.now();st4.raf=requestAnimationFrame(loop4);}
 function pause4(){st4.playing=false;cancelAnimationFrame(st4.raf);}
@@ -628,7 +674,7 @@ function go(i){
     /* 2-1에서 [AI 시험 시작]으로 들어오면 제목을 읽을 틈을 두고 자동 출발 */
     if(prev>=0&&IDS[prev]==="2-1"&&!HOLD)st2.auto=setTimeout(()=>{if(IDS[cur]==="2-2")play2();},2400);}}
   if(id==="3-1"||id==="3-2")fillBars(scr);
-  if(id==="4-1"){if(SHOT)upd4(150.01);else{pause4();upd4(0);setTimeout(()=>{if(IDS[cur]==="4-1"&&!st4.playing&&st4.t===0)play4();},700);}}
+  if(id==="4-1"){if(SHOT)upd4(170.5);else{pause4();upd4(0);setTimeout(()=>{if(IDS[cur]==="4-1"&&!st4.playing&&st4.t===0)play4();},700);}}
   $("#barFill").style.width=(i/(IDS.length-1)*100)+"%";
   $("#bar").classList.toggle("hide",i===0);$("#back").classList.toggle("hide",i===0);
   history.replaceState(null,"","#"+id);
