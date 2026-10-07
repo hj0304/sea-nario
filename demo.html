@@ -361,6 +361,15 @@ svg text{font-family:var(--font)}
 .rc .mt{gap:10px}
 .rc .rb b{font-size:24px}
 .rv .who{width:auto;min-width:200px}
+
+.rc .mm{border-radius:12px;overflow:hidden;background:#e8f1fb}
+.rc .mm svg{display:block;width:100%;height:118px}
+.rc .ml{display:flex;gap:10px;padding:5px 10px;font-size:12px;font-weight:600;color:var(--gray);background:#fff;border-top:1px solid var(--line)}
+.rc .ml span{display:flex;align-items:center;gap:4px}
+.rc .ml i{display:inline-block;width:16px;border-top:2.5px dashed #e57373}.rc .ml i.n{border-top:3px solid #0b6bcb}
+.rc .ml span:last-child{margin-left:auto}
+.rc .t{font-size:23px}.rc .a{font-size:17px;color:var(--ink2)}
+.rc{gap:9px;padding:18px 22px}
 </style>
 </head>
 <body>
@@ -380,14 +389,14 @@ svg text{font-family:var(--font)}
 
   <!-- 2 상황 설정 -->
   <section class="scr" id="s1">
-    <h2 class="h1">이번 문제: <em id="nShip">4척</em>이 서로 영향을 주는 장면</h2>
-    <div class="sub">선박을 더하거나 값을 바꿔서 시험 장면을 직접 만들어요</div>
+    <h2 class="h1">직접 상황을 만들거나, <em>과거 실제 상황</em>을 불러와요</h2>
+    <div class="sub">선박을 더하고 값을 바꾸거나, 과거 AIS 기록 속 장면을 그대로 불러와요 · 지금 <b id="nShip">4척</b></div>
     <div class="vis">
       <div class="prob">
         <div class="card tbl">
           <div class="tr hd"><span>선박</span><span>선종</span><span>크기 (길이)</span><span class="r">속력</span><span class="r">방향</span><span></span></div>
           <div id="rows"></div>
-          <div class="tadd"><button id="addShip">+ 선박 추가</button><button class="ghost" id="resetShips">예시로 되돌리기</button><span class="hint">그림에서 배·깃발을 끌면 위치, 화살표 끝 ●을 끌면 방향·속력</span></div>
+          <div class="tadd"><button id="addShip">+ 선박 추가</button><button class="ghost" id="resetShips">과거 기록 불러오기 (예시)</button><span class="hint">그림에서 배·깃발을 끌면 위치, 화살표 끝 ●을 끌면 방향·속력</span></div>
         </div>
         <div class="card pic"><svg id="m1" preserveAspectRatio="xMidYMid meet"></svg><div class="mlg"><span>화살표 = 6분 동안 갈 거리</span><span><i style="background:#dc2626"></i>충돌 위험</span><span><i style="background:#f08a3c"></i>근접</span><span><i style="background:#6b7684"></i>그 외</span></div></div>
       </div>
@@ -445,9 +454,8 @@ svg text{font-family:var(--font)}
   <!-- 6 전략 방안 추천 -->
   <section class="scr" id="s5">
     <h2 class="h1" id="t5"></h2>
-    <div class="sub">다른 배가 움직일 수 있는 30가지 경우로 시험했어요</div>
+    <div class="sub" id="s5sub"></div>
     <div class="vis">
-      <div class="rcnow" id="rcnow"></div>
       <div class="rcs" id="rcs"></div>
       <div class="v2up" id="v2up"></div>
     </div>
@@ -724,7 +732,7 @@ function renderPic(){
   const svg=$("#m1"),[bw,bh]=size(svg,344,330),st=observed();
   $("#recNo").textContent="#"+recSeed;
   svg.textContent="";
-  if(!drag||!picVB){const boxes=[[dest,-30,-46,40,20]];ships.forEach(s=>{boxes.push([s,-34,-34,34,34]);boxes.push([tipOf(s),-40,-24,40,24]);});
+  if(!drag||!picVB){const boxes=[[dest,-30,-46,80,20]];ships.forEach(s=>{boxes.push([s,-34,-34,34,34]);boxes.push([tipOf(s),-40,-24,40,24]);});
     picVB=fitVB(boxes,bw,bh,[10,40,10,14]);}
   const vb=picVB,k=vb[2]/bw;setVB(svg,vb);seaGrid(svg,vb,k);north(svg,vb,k,20);
   /* 지금처럼 가면 부딪히는 배: 그 시점의 두 위치 */
@@ -774,9 +782,11 @@ function riskPills(svg,k,risks){
     const t=S("text",{x:0,y:4.6*k,"text-anchor":"middle","font-size":13*k,"font-weight":800,fill:"#fff"},g);t.textContent=txt;
     let w;try{w=t.getBBox().width+16*k;}catch(_){w=0;}if(!w)w=(txt.length*9+16)*k;const h=22*k;
     rect.setAttribute("x",-w/2);rect.setAttribute("y",-h/2);rect.setAttribute("width",w);rect.setAttribute("height",h);rect.setAttribute("rx",h/2);
-    const off=[[0,-24],[0,24],[w/k/2+14,0],[-(w/k/2+14),0],[w/k/2+10,-22],[-(w/k/2+10),-22],[w/k/2+10,22],[-(w/k/2+10),22],[0,-48],[0,48]];
-    const hit=p=>obst.some(o=>Math.abs(o.x-p.x)<w/2+o.r&&Math.abs(o.y-p.y)<h/2+o.r)||placed.some(q=>Math.abs(q.x-p.x)<(w+q.w)/2+4*k&&Math.abs(q.y-p.y)<(h+q.h)/2+4*k);
-    const p=off.map(([dx,dy])=>({x:c.x+dx*k,y:c.y+dy*k})).find(p=>!hit(p))||{x:c.x,y:c.y-24*k};
+    const hw=w/k/2,off=[[0,-24],[0,24],[hw+14,0],[-(hw+14),0],[hw+10,-22],[-(hw+10),-22],[hw+10,22],[-(hw+10),22],[0,-48],[0,48],[hw+10,-46],[-(hw+10),-46],[hw+10,46],[-(hw+10),46],[0,-72],[0,72]];
+    /* 겹치는 정도(가로·세로 침범량의 곱)를 더해 가장 덜 겹치는 자리 */
+    const ov=(ax,ay,aw,ah,bx,by,bw,bh)=>Math.max(0,(aw+bw)/2-Math.abs(ax-bx))*Math.max(0,(ah+bh)/2-Math.abs(ay-by));
+    const cost=p=>obst.reduce((t,o)=>t+ov(p.x,p.y,w,h,o.x,o.y,2*o.r,2*o.r),0)+placed.reduce((t,q)=>t+ov(p.x,p.y,w+8*k,h+8*k,q.x,q.y,q.w,q.h)*3,0);
+    let p=null,best=Infinity;off.forEach(([dx,dy],i)=>{const q={x:c.x+dx*k,y:c.y+dy*k},v=cost(q)+i*1e-6;if(v<best){best=v;p=q;}});
     placed.push({x:p.x,y:p.y,w,h});g.setAttribute("transform",`translate(${p.x} ${p.y})`);});
 }
 function svgPt(svg,e){const pt=svg.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;return pt.matrixTransform(svg.getScreenCTM().inverse());}
@@ -1042,7 +1052,7 @@ function simView(svg,hudEl,lgdEl,sc,runs,tEnd){
   const vb=fitVB(boxes,bw,bh,[300,34,30,50]),k=vb[2]/bw;svg.textContent="";setVB(svg,vb);seaGrid(svg,vb,k);north(svg,vb,k,34,78);
   const o0=sc.own;
   S("line",{x1:o0.x,y1:o0.y,x2:dest.x,y2:dest.y,stroke:COL,"stroke-width":2.4*k,"stroke-dasharray":`${2*k} ${8*k}`,"stroke-linecap":"round",opacity:.4},svg);
-  const mx=(o0.x+dest.x)/2,my=(o0.y+dest.y)/2,origL=S("text",Object.assign({x:mx,y:my-12*k,"text-anchor":"middle"},LBL(k,"#5b8fc7",16)),svg);origL.textContent="계획 항로";
+  const mx=o0.x+(dest.x-o0.x)*.78,my=o0.y+(dest.y-o0.y)*.78,origL=S("text",Object.assign({x:mx,y:my+22*k,"text-anchor":"middle"},LBL(k,"#5b8fc7",15)),svg);origL.textContent="계획 항로";
   flag(svg,k,dest,false);
   let hitG=null;const pm=sc.primary&&sc.eo.per[sc.primary];
   if(pm&&pm.min<SAFE){const h=L(sc.orig,pm.tMin);hitG=S("g",{transform:`translate(${h.x} ${h.y})`},svg);
@@ -1129,7 +1139,7 @@ function buildSim(){
   pl.render=simView($("#m3"),$("#hud3"),$("#lgd3"),sc,[v1],pl.tEnd);
   $("#rp3").textContent="기록 #"+recSeed+" 재생 · 다른 배 움직임은 실행 중에 드러나요";
   pl.caps=eventsFor(sc,sc.v1,nm,"모델은 다른 배가 어떻게 움직일지 모르는 채로 출발해요");endCap(pl,sc.v1);
-  pl.tPre=Pm?J(Pm,"을/를")+" 피한 뒤, 다른 배와는 어떻게 될까요?":"주변 배와 얼마나 떨어질까요?";
+  pl.tPre="이 모델, 목적지까지 안전하게 갈 수 있을까요?";
   pl.tDone=doneTitle(nm,sc.v1,Pm);
   pl.reset();
 }
@@ -1162,16 +1172,36 @@ function fillReport(){
 
 /* ---------- 6 개선 방향 추천 ---------- */
 const bar=r=>{const p=Math.round(r.rate*100);return`<div class="rb"><b>${r.ok}/${r.n}</b><span class="bar"><i class="${p>=80?"":p>=50?"mid":"low"}" style="width:${p}%"></i></span></div>`;};
-const shortTxt=st=>st.re?(st.period<1?"30초":st.period+"분")+"마다 다시 판단"+(st.dv?" · "+Math.abs(st.dv)+"노트 감속":"")+" · "+st.margin+"해리 안이면 회피"
-  :turnTxt(st.turn)+" → "+(st.hold||8)+"분 뒤 목적지로";
+/* 추천 카드 문구: 이 장면의 배 이름으로 */
+function recText(c,P,F){const st=c.st,per=st.period<1?"30초":st.period+"분",tn=turnTxt(st.turn);
+  if(c.kind==="한 번에")return{t:(F&&F!==P?P+"·"+F+"를":J(P||"다른 배","을/를"))+" 한 번에 크게 피하기",a:tn+"로 돌고, "+(st.hold||8)+"분 뒤 목적지로"};
+  if(st.dv)return{t:"속력을 줄이며 "+(F&&F!==P?J(F,"까지/까지"):"모든 배를")+" 살피기",a:Math.abs(st.dv)+"노트 줄이고 "+tn+", "+per+"마다 다시 확인"};
+  if(c.kind==="작게 + 재평가")return{t:"조금만 돌고 계속 살피기",a:tn+", "+per+"마다 다시 확인"};
+  return{t:(P?J(P,"을/를")+" 피한 뒤 ":"")+(F&&F!==P?J(F,"도/도"):"다른 배도")+" 다시 보기",a:tn+"로 피하고, "+per+"마다 모든 배 다시 확인"};}
+/* 작은 항로 그림: 다른 배가 지금처럼 그대로 갈 때 (실제 기록 아님) */
+function recMap(svg,st){
+  const sc=SC,W=WORLDS[0],[bw,bh]=size(svg,332,118),r=runOwn(sc.own,paramModel(st),sc.others,W.w),r1=runOn(sc.own,sc.others,sc.model.factory,W);
+  const e1=r1.ev.coll?nT(r1.ev.coll.t):r1.iArr>=0?r1.iArr+1:N,e2=r.iArr>=0?r.iArr+1:N,boxes=[[dest,-14,-30,14,8],[sc.own,-10,-10,10,10]];
+  r.track.slice(0,e2).forEach((p,i)=>{if(i%6===0)boxes.push([p,-8,-8,8,8]);});r1.track.slice(0,e1).forEach((p,i)=>{if(i%6===0)boxes.push([p,-8,-8,8,8]);});
+  sc.others.forEach(o=>boxes.push([o,-10,-10,10,10]));
+  const vb=fitVB(boxes,bw,bh,[6,6,6,6]),k=vb[2]/bw;svg.textContent="";setVB(svg,vb);seaGrid(svg,vb,k);
+  sc.others.forEach(o=>{vec(svg,k,o,o.hdg,o.spd,"#a7b1bc",6);dot(svg,k,o,o.id,"#8b95a1",8);});
+  S("polyline",{points:P(r1.track,e1),fill:"none",stroke:GHOST,"stroke-width":2.4*k,"stroke-dasharray":`${5*k} ${4*k}`,"stroke-linecap":"round"},svg);
+  if(r1.ev.coll){const p=L(r1.track,r1.ev.coll.t);S("path",{d:`M${-5*k} ${-5*k}L${5*k} ${5*k}M${5*k} ${-5*k}L${-5*k} ${5*k}`,stroke:"#dc2626","stroke-width":2.6*k,"stroke-linecap":"round",transform:`translate(${p.x} ${p.y})`},svg);}
+  S("polyline",{points:P(r.track,e2),fill:"none",stroke:COL,"stroke-width":3.2*k,"stroke-linecap":"round","stroke-linejoin":"round"},svg);
+  const g=S("g",{transform:`translate(${dest.x} ${dest.y})`},svg);S("line",{x1:0,y1:0,x2:0,y2:-16*k,stroke:"#191f28","stroke-width":2*k},g);S("path",{d:`M0 ${-16*k}L${10*k} ${-12*k}L0 ${-8*k}Z`,fill:"#16a34a"},g);
+  dot(svg,k,sc.own,"A",COL,8);
+}
 function renderRecs(){
-  const sc=SC,{base,cands}=REC;
-  $("#t5").innerHTML=REC.timeMode?"이렇게 바꾸면 <em>더 빨리 도착해요</em>":sc.v1.ev.coll?"이렇게 바꾸면 <em>충돌을 피해요</em>":"이렇게 바꾸면 <em>더 안전해요</em>";
-  $("#rcnow").innerHTML=`지금 <span class="stb" style="--sc:${COL}">v1</span><b>${base.ok}/${base.n}</b> 안전`+(REC.timeMode?` · 도착 +${f1(base.delay)}분`:"");
-  $("#rcs").innerHTML=cands.map((c,i)=>`<button class="rc${i===sel?" on":""}" data-i="${i}">
+  const sc=SC,{base,cands}=REC,P=sc.primary,F=(sc.v1.ev.coll&&sc.v1.ev.coll.id)||sc.v1.ev.fails[0]||null;
+  $("#t5").innerHTML=REC.timeMode?"이런 전략이 <em>더 빨리 도착했어요</em>":"이런 전략이 <em>더 안전했어요</em>";
+  $("#s5sub").textContent="다른 배가 움직일 수 있는 30가지 경우로 시험했어요 · 지금 모델은 "+base.ok+"/"+base.n+" 안전"+(REC.timeMode?" · 도착 +"+f1(base.delay)+"분":"");
+  $("#rcs").innerHTML=cands.map((c,i)=>{const tx=recText(c,P,F);return`<button class="rc${i===sel?" on":""}" data-i="${i}">
       <div class="top">${i===0?'<span class="best">추천</span>':""}</div>
-      <div class="t">${c.title}</div><div class="a">${shortTxt(c.st)}</div>
-      <div class="mt">${bar(c.r)}<span>도착 <b style="${c.r.delay>REVIEW?"color:var(--warn-ink)":""}">+${f1(c.r.delay)}분</b></span></div></button>`).join("");
+      <div class="t">${tx.t}</div><div class="a">${tx.a}</div>
+      <div class="mm"><svg data-i="${i}" preserveAspectRatio="xMidYMid meet"></svg><div class="ml"><span><i class="n"></i>이 전략</span><span><i></i>지금 모델</span><span>다른 배가 그대로 갈 때</span></div></div>
+      <div class="mt">${bar(c.r)}<span>도착 <b style="${c.r.delay>REVIEW?"color:var(--warn-ink)":""}">+${f1(c.r.delay)}분</b></span></div></button>`;}).join("");
+  $$("#rcs .mm svg").forEach(svg=>recMap(svg,cands[+svg.dataset.i].st));
   renderV2();
 }
 function renderV2(){
@@ -1195,7 +1225,7 @@ function buildRetest(){
   const f=sc.v1.ev.fails[0]||sc.v1.ev.worst,m=f&&r2.ev.per[f];
   pl.tPre=(useFile?J(name2,"으로/로"):"추천 전략으로")+" 같은 문제를 다시 풀어요";
   const saved=sc.v1.ev.delay-r2.ev.delay;
-  pl.tDone=r2.ev.verdict==="na"||r2.ev.fails.length?doneTitle("v2",r2,sc.primary):REC.timeMode&&saved>.1?"v2는 안전을 지키면서 <em>"+f1(saved)+"분 일찍 도착했어요</em>":"v2는 <em>"+J(f,"과/와")+" "+f1(m.min)+"해리</em>를 지켰어요";
+  pl.tDone=r2.ev.verdict==="na"||r2.ev.fails.length?doneTitle("v2",r2,sc.primary):REC.timeMode&&saved>.1?"v2는 안전을 지키면서 <em>"+f1(saved)+"분 일찍 도착했어요</em>":"v2는 "+J(f,"과/와")+" <em>"+f1(m.min)+"해리만큼의 거리</em>를 유지했어요";
   pl.reset();
   fillCompare();
 }
