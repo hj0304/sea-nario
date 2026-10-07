@@ -5,193 +5,250 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>씨나리오 데모</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
 <style>
 @font-face{font-family:"Pretendard Local";src:url("../../assets/PretendardVariable.ttf") format("truetype");font-weight:45 920;font-display:swap}
 :root{
   --blue:#0b6bcb;--blue-d:#0a5db0;--blue-soft:#e8f3ff;
   --ink:#191f28;--ink2:#4e5968;--gray:#8b95a1;--line:#e5e8eb;--card:#f3f5f8;
   --pass:#16a34a;--pass-soft:#e9f7ef;--warn:#f59e0b;--warn-ink:#b45309;--warn-soft:#fff6e5;--fail:#dc2626;--fail-soft:#fdecec;
+  --act:#ef6c3a;
   --font:"Pretendard Local","Pretendard Variable",Pretendard,"Malgun Gothic",system-ui,sans-serif;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%;overflow:hidden;background:#eef1f4;font-family:var(--font);color:var(--ink);-webkit-font-smoothing:antialiased}
 button{font-family:inherit;cursor:pointer}
 .num{font-variant-numeric:tabular-nums}
-svg text{font-family:var(--font)}
 #stage{position:absolute;left:50%;top:50%;width:1440px;height:900px;transform:translate(-50%,-50%) scale(var(--s,1));background:#fff;overflow:hidden}
 
 /* chrome */
 #bar{position:absolute;left:0;right:0;top:0;height:5px;background:#eef1f4;z-index:10;transition:opacity .3s}
 #barFill{display:block;height:100%;width:0;background:var(--blue);border-radius:0 3px 3px 0;transition:width .6s cubic-bezier(.3,.8,.3,1)}
-#back{position:absolute;left:28px;top:30px;width:52px;height:52px;border:0;border-radius:14px;background:transparent;display:grid;place-items:center;z-index:10;transition:background .2s,opacity .3s}
+#back{position:absolute;left:24px;top:22px;width:48px;height:48px;border:0;border-radius:14px;background:transparent;display:grid;place-items:center;z-index:10;transition:background .2s,opacity .3s}
 #back:hover{background:var(--card)}
-#note{position:absolute;right:32px;top:40px;font-size:13px;color:#b0b8c1;z-index:10;font-weight:500}
-#steps{position:absolute;left:50%;top:38px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:10;font-size:16px;font-weight:600;color:#b0b8c1;white-space:nowrap;transition:opacity .3s}
+#note{position:absolute;right:28px;top:34px;font-size:13px;color:#b0b8c1;z-index:10;font-weight:500}
+#steps{position:absolute;left:50%;top:32px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;z-index:10;font-size:16px;font-weight:600;color:#b0b8c1;white-space:nowrap;transition:opacity .3s}
 #steps span{transition:color .3s}
 #steps span.done{color:#8b95a1}
 #steps span.on{color:var(--blue);font-weight:700}
 #steps i{width:4px;height:4px;border-radius:50%;background:#d1d6db}
 .hide{opacity:0!important;pointer-events:none}
-#cta{position:absolute;left:50%;bottom:56px;transform:translateX(-50%);width:600px;height:80px;border:0;border-radius:22px;background:var(--blue);color:#fff;font-size:26px;font-weight:700;letter-spacing:-.01em;z-index:10;transition:background .25s,color .25s}
+#cta{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);width:520px;height:72px;border:0;border-radius:20px;background:var(--blue);color:#fff;font-size:24px;font-weight:700;letter-spacing:-.01em;z-index:10;transition:background .25s,color .25s}
 #cta:hover{background:var(--blue-d)}
 #cta.busy{background:var(--blue-soft);color:var(--blue);cursor:default}
 
 /* screens */
-.scr{position:absolute;inset:0;padding:104px 0 172px;display:flex;flex-direction:column;align-items:center;opacity:0;visibility:hidden;transform:translateX(56px);transition:opacity .45s ease,transform .55s cubic-bezier(.2,.8,.2,1),visibility 0s .55s}
+.scr{position:absolute;inset:0;padding:84px 30px 126px;display:flex;flex-direction:column;align-items:center;opacity:0;visibility:hidden;transform:translateX(56px);transition:opacity .45s ease,transform .55s cubic-bezier(.2,.8,.2,1),visibility 0s .55s}
 .scr.on{opacity:1;visibility:visible;transform:none;transition:opacity .45s ease,transform .55s cubic-bezier(.2,.8,.2,1),visibility 0s}
 .scr.past{transform:translateX(-56px)}
-.h1{margin:0;font-size:54px;line-height:1.3;font-weight:700;letter-spacing:-.03em;text-align:center}
+.h1{margin:0;font-size:38px;line-height:1.3;font-weight:700;letter-spacing:-.03em;text-align:center;white-space:nowrap}
 .h1 em{font-style:normal;color:var(--blue)}
-.h1 .f{color:var(--fail)}
-.sub{margin-top:16px;font-size:24px;line-height:1.4;color:var(--gray);font-weight:500;text-align:center;letter-spacing:-.01em}
-.vis{flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-top:28px;min-height:0}
-.scr.on .h1{animation:up .6s .05s both}
-.scr.on .sub{animation:up .6s .14s both}
-.scr.on .vis{animation:up .7s .22s both}
-@keyframes up{from{opacity:0;transform:translateY(18px)}}
-@keyframes pop{40%{transform:scale(1.18)}}
-.card{background:var(--card);border-radius:24px}
-.chip{display:inline-flex;align-items:center;height:44px;padding:0 18px;border-radius:999px;font-size:20px;font-weight:700;background:var(--blue-soft);color:var(--blue);white-space:nowrap}
+.h1 .f{color:var(--fail)}.h1 .p{color:var(--pass)}
+.sub{margin-top:8px;font-size:19px;line-height:1.4;color:var(--gray);font-weight:500;text-align:center;letter-spacing:-.01em}
+.vis{flex:1;width:100%;display:flex;align-items:stretch;justify-content:center;gap:20px;margin-top:20px;min-height:0}
+.scr.on .h1{animation:up .55s .05s both}
+.scr.on .sub{animation:up .55s .12s both}
+.scr.on .vis{animation:up .6s .18s both}
+@keyframes up{from{opacity:0;transform:translateY(16px)}}
+@keyframes pop{40%{transform:scale(1.15)}}
+.card{background:var(--card);border-radius:22px}
+.chip{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:999px;font-size:15px;font-weight:700;background:var(--blue-soft);color:var(--blue);white-space:nowrap}
 .chip.warn{background:var(--warn-soft);color:var(--warn-ink)}
 .chip.fail{background:var(--fail-soft);color:var(--fail)}
 .chip.pass{background:var(--pass-soft);color:var(--pass)}
-.chip.gray{background:#eef1f4;color:var(--ink2)}
-.mapbox{position:relative;width:1200px;border-radius:24px;overflow:hidden;background:#e8f1fb}
-.mapbox>svg{position:absolute;inset:0;width:100%;height:100%;display:block}
-.sb{display:inline-grid;place-items:center;width:40px;height:40px;border-radius:12px;font-size:21px;font-weight:800;color:#fff;background:#6b7684;flex:none}
+.chip.gray{background:#e9edf2;color:var(--ink2)}
+.sb{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;font-size:15px;font-weight:800;color:#fff;background:#6b7684;flex:none}
 .sb.own{background:var(--blue)}
+.pill{display:inline-flex;align-items:center;justify-content:center;height:34px;padding:0 14px;border-radius:10px;font-size:18px;font-weight:800;color:#fff;white-space:nowrap}
+.pill.pass{background:var(--pass)}.pill.fail{background:var(--fail)}.pill.review{background:var(--warn)}.pill.na{background:#a7b1bc}
+.prov{display:inline-flex;align-items:center;height:28px;padding:0 10px;border-radius:8px;font-size:14px;font-weight:700;background:var(--warn-soft);color:var(--warn-ink);white-space:nowrap}
+.s1c{--sc:#0b6bcb;--sc-soft:#e8f3ff}
+.s2c{--sc:#7c4dff;--sc-soft:#f0ebff}
+.v1c{--sc:#e05252;--sc-soft:#fdecec}
+.v2c{--sc:#0b6bcb;--sc-soft:#e8f3ff}
+.stb{display:inline-grid;place-items:center;min-width:28px;height:28px;padding:0 6px;border-radius:8px;font-size:15px;font-weight:800;color:#fff;background:var(--sc);flex:none}
+#toast{position:absolute;left:50%;top:78px;transform:translate(-50%,-16px);opacity:0;background:var(--ink);color:#fff;height:52px;padding:0 24px;border-radius:999px;font-size:19px;font-weight:600;display:flex;align-items:center;gap:10px;transition:all .45s;z-index:20;white-space:nowrap;pointer-events:none}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+a{color:inherit}
 
 /* 0 cover */
-#s0{justify-content:center;padding-bottom:120px}
+#s0{justify-content:center;padding-bottom:110px}
 .logo{width:104px;height:104px;border-radius:30px;background:var(--blue);display:grid;place-items:center;box-shadow:0 18px 40px -18px rgba(11,107,203,.7)}
-.cover-t{margin:36px 0 0;font-size:104px;line-height:1;font-weight:800;letter-spacing:-.045em}
-.cover-s{margin-top:28px;font-size:32px;font-weight:500;color:var(--ink2);letter-spacing:-.02em}
+.cover-t{margin:34px 0 0;font-size:104px;line-height:1;font-weight:800;letter-spacing:-.045em}
+.cover-s{margin-top:26px;font-size:32px;font-weight:500;color:var(--ink2);letter-spacing:-.02em;text-align:center}
 .cover-s b{color:var(--blue);font-weight:700}
+.cover-f{margin-top:26px;display:flex;gap:10px}
+.cover-f .chip{height:38px;font-size:18px;padding:0 16px}
 .scr.on .logo{animation:up .6s both}
 .scr.on .cover-t{animation:up .6s .1s both}
 .scr.on .cover-s{animation:up .6s .2s both}
+.scr.on .cover-f{animation:up .6s .3s both}
 
-.s1c{--sc:#0b6bcb;--sc-soft:#e8f3ff}
-.s2c{--sc:#7c4dff;--sc-soft:#f0ebff}
-.stb{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:10px;font-size:19px;font-weight:800;color:#fff;background:var(--sc);flex:none}
-.pill{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 16px;border-radius:12px;font-size:21px;font-weight:800;color:#fff;white-space:nowrap}
-.pill.pass{background:var(--pass)}.pill.fail{background:var(--fail)}.pill.warn{background:var(--warn)}.pill.na{background:#a7b1bc}
-.prov{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:9px;font-size:16px;font-weight:700;background:var(--warn-soft);color:var(--warn-ink)}
-#toast{position:absolute;left:50%;top:84px;transform:translate(-50%,-16px);opacity:0;background:var(--ink);color:#fff;height:56px;padding:0 26px;border-radius:999px;font-size:21px;font-weight:600;display:flex;align-items:center;gap:10px;transition:all .45s;z-index:20;white-space:nowrap;pointer-events:none}
-#toast.show{opacity:1;transform:translate(-50%,0)}
-
-/* 1 문제 카드 */
-#s1 .vis{margin-top:24px}
-.prob{display:flex;gap:24px;align-items:stretch}
-.tbl{width:820px;padding:6px 0}
-.tr{display:grid;grid-template-columns:240px 140px 160px 110px 100px;align-items:center;height:82px;padding:0 30px;font-size:24px;font-weight:600;color:var(--ink2);letter-spacing:-.02em;white-space:nowrap}
-.tr+.tr{border-top:1px solid var(--line)}
-.tr.hd{height:48px;font-size:18px;color:var(--gray);font-weight:600}
-.tr .nm{display:flex;align-items:center;gap:14px;color:var(--ink);font-weight:700}
-.tr .r{text-align:right}
-.tr.me .nm{color:var(--blue)}
-.pic{width:376px;padding:16px;display:flex}
-.pic svg{display:block;width:100%;height:100%;border-radius:16px}
-.conds{display:flex;gap:10px;margin-top:18px;flex-wrap:nowrap}
-.cond{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1.5px var(--line);font-size:18px;font-weight:600;color:var(--ink2);white-space:nowrap}
-.cond b{color:var(--gray);font-weight:600}
-.cond.rp{box-shadow:none;background:var(--blue-soft);color:var(--blue);font-weight:700}
-.cond.ex{box-shadow:none;background:var(--warn-soft);color:var(--warn-ink);font-weight:700}
-
-/* 2 판단 비교 */
-.cmp{display:flex;gap:24px}
-.sc{width:560px;padding:8px 0 10px;border-radius:24px;background:var(--card);position:relative;overflow:hidden}
-.sc::before{content:"";position:absolute;left:0;top:0;right:0;height:6px;background:var(--sc)}
-.sc .hd{display:flex;align-items:center;gap:14px;height:84px;padding:6px 30px 0;font-size:26px;font-weight:800;letter-spacing:-.02em}
-.sc .hd small{font-size:18px;font-weight:600;color:var(--gray);margin-left:auto}
-.sr{padding:16px 30px;border-top:1px solid var(--line)}
-.sr .k{font-size:18px;font-weight:600;color:var(--gray)}
-.sr .v{margin-top:6px;font-size:26px;font-weight:700;letter-spacing:-.02em;white-space:nowrap}
-.sr .v em{font-style:normal;color:var(--sc)}
-.sr .v.big{font-size:34px}
-.sr .pr{display:flex;align-items:center;gap:10px;margin-top:8px}
-.sr .pr .sb{width:38px;height:38px;font-size:19px}
-.sr .pr .ar{color:#c5ccd3;font-weight:600}
-.sr .pr .sb.dim{background:#d1d6db}
-.same{margin-top:22px;display:flex;align-items:center;gap:10px;font-size:20px;font-weight:600;color:var(--ink2)}
-.same .ic{width:30px;height:30px;border-radius:9px;background:var(--blue-soft);display:grid;place-items:center}
-.scr.on .sc.s1c{animation:up .55s .2s both}.scr.on .sc.s2c{animation:up .55s .45s both}.scr.on .same{animation:up .5s .8s both}
-
-/* 3 위험 변화 */
-#s3 .vis{margin-top:22px}
-#map3{height:452px}
-.cap{display:flex;align-items:center;justify-content:center;gap:14px;height:52px;margin-top:16px;font-size:27px;font-weight:600;letter-spacing:-.02em;white-space:nowrap}
-.cap .tm{color:var(--blue);font-weight:700;font-size:24px}
-.cap .tx{color:var(--ink)}
-.cap.fx{animation:capin .4s both}
-@keyframes capin{from{opacity:0;transform:translateY(8px)}}
-.cap .chip{transition:opacity .3s,transform .3s}
-.cap .chip.off{opacity:0;transform:scale(.8);width:0;padding:0;margin-left:-14px;overflow:hidden}
-.cap .chip:not(.off){animation:pop .5s}
-.hud{position:absolute;left:18px;top:18px;background:rgba(255,255,255,.95);border-radius:16px;padding:12px 16px 8px;box-shadow:0 6px 18px -10px rgba(25,31,40,.35);font-size:17px;font-weight:600;color:var(--ink2);z-index:2;width:272px}
-.hud .hh{font-size:14px;color:var(--gray);margin-bottom:4px;display:flex;align-items:center}
-.hud .hh span{margin-left:auto;display:flex;gap:6px}
-.hud .hh .stb{width:52px;height:22px;border-radius:7px;font-size:13px}
-.hud .hr{display:flex;align-items:center;gap:8px;height:34px}
-.hud .hr .sb{width:24px;height:24px;border-radius:7px;font-size:14px}
-.hud .hr .vv{margin-left:auto;display:flex;gap:6px}
-.hud .hr .vv b{width:52px;text-align:center;font-size:19px;color:var(--ink);font-variant-numeric:tabular-nums;border-radius:7px}
+/* 3D 뷰 공통 */
+.mapc{position:relative;flex:1;border-radius:22px;overflow:hidden;background:#eef5fc;min-height:0}
+.sea3d{position:absolute;inset:0}
+.sea3d canvas{display:block;position:absolute;left:0;top:0}
+.sea3d-labels{position:absolute!important;inset:0;pointer-events:none}
+.lbl>span{display:inline-block;transform:translateY(-12px);font:700 13px/1 var(--font);padding:5px 8px;border-radius:8px;background:rgba(255,255,255,.93);color:#4e5968;white-space:nowrap;box-shadow:0 2px 8px -3px rgba(25,31,40,.35);letter-spacing:-.01em}
+.lbl.tg>span{transform:translate(calc(50% + 16px),-4px)}
+.lbl.own>span{background:var(--c);color:#fff;transform:translate(calc(-50% - 16px),-4px)}
+.lbl.ghost>span{background:rgba(255,255,255,.95);color:var(--c);box-shadow:inset 0 0 0 1.5px var(--c)}
+.lbl.tg.hot>span{background:var(--fail);color:#fff}
+.lbl.warn>span{background:var(--fail);color:#fff;transform:translateY(20px);font-size:14px;padding:6px 9px}
+.lbl.hit>span{background:#fff;color:var(--fail);box-shadow:inset 0 0 0 1.5px var(--fail);transform:translateY(52px)}
+.ov{position:absolute;z-index:3}
+.camb{right:12px;top:12px;display:flex;gap:6px}
+.camb button,.lay button{height:34px;padding:0 12px;border:0;border-radius:10px;background:rgba(255,255,255,.92);font-size:14px;font-weight:700;color:var(--ink2);box-shadow:0 2px 8px -4px rgba(25,31,40,.35)}
+.camb button.on,.lay button.on{background:var(--ink);color:#fff}
+.lay{right:12px;top:52px;display:flex;gap:6px}
+.lay button.on{background:var(--act)}
+.tbar{left:12px;right:12px;bottom:12px;height:48px;display:flex;align-items:center;gap:12px;padding:0 14px 0 8px;background:rgba(255,255,255,.94);border-radius:14px;box-shadow:0 4px 14px -8px rgba(25,31,40,.4)}
+.tbar .pp{width:36px;height:36px;border:0;border-radius:10px;background:var(--ink);display:grid;place-items:center;flex:none}
+.tbar input{flex:1;accent-color:var(--blue);height:24px}
+.tbar .clk{font-size:15px;font-weight:700;color:var(--ink2);white-space:nowrap;min-width:150px;text-align:right}
+.tbar .clk b{color:var(--blue)}
+.scale{left:14px;bottom:70px;font-size:12px;font-weight:600;color:#7f8fa1;background:rgba(255,255,255,.8);padding:4px 8px;border-radius:7px}
+.hud{left:12px;top:12px;background:rgba(255,255,255,.95);border-radius:14px;padding:10px 14px 8px;box-shadow:0 6px 18px -10px rgba(25,31,40,.35);font-size:14px;font-weight:600;color:var(--ink2)}
+.hud .hh{font-size:12px;color:var(--gray);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.hud .hh .stb{min-width:44px;height:20px;border-radius:6px;font-size:12px;margin-left:auto}
+.hud .hh .stb+.stb{margin-left:0}
+.hud .hr{display:flex;align-items:center;gap:8px;height:28px}
+.hud .hr .sb{width:22px;height:22px;border-radius:6px;font-size:12px}
+.hud .hr .nm{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hud .hr .vv{margin-left:auto;display:flex;gap:6px;padding-left:10px}
+.hud .hr .vv b{width:44px;text-align:center;font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums;border-radius:6px;line-height:22px}
 .hud .hr .vv b.bad{color:#fff;background:var(--fail)}
-.hud .ft{font-size:13px;color:var(--gray);margin-top:2px}
-.lgd{position:absolute;right:18px;bottom:14px;display:flex;gap:16px;font-size:16px;font-weight:600;color:var(--ink2);background:rgba(255,255,255,.92);padding:8px 14px;border-radius:12px;z-index:2}
-.lgd span{display:flex;align-items:center;gap:7px}
-.lgd i{display:inline-block;width:24px;height:0;border-top:3px dashed #8b95a1}
-.lgd i.s1{border-top:4px solid #0b6bcb}.lgd i.s2{border-top:4px solid #7c4dff}
-.lgd i.z{width:15px;height:15px;border:2px dashed #8b95a1;border-radius:50%}
-.rptag{position:absolute;right:18px;top:16px;z-index:2;display:flex;gap:8px}
-.rptag span{height:30px;padding:0 12px;border-radius:9px;background:rgba(255,255,255,.92);font-size:15px;font-weight:700;color:var(--blue);display:inline-flex;align-items:center}
+.hud .ft{font-size:11px;color:var(--gray);margin-top:2px}
+.nogl{position:absolute;inset:0;display:grid;place-items:center;font-size:16px;color:var(--gray)}
 
-/* 4 결과 리포트 */
-#s4 .vis{margin-top:20px}
-.states{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:600;color:var(--gray);margin-bottom:16px}
-.states .st{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;border-radius:9px;background:var(--card)}
+/* 1 문제 선택 */
+.plist{width:500px;display:flex;flex-direction:column;gap:14px}
+.pc{all:unset;box-sizing:border-box;cursor:pointer;display:block;padding:16px 22px;border-radius:22px;background:var(--card);box-shadow:inset 0 0 0 2px transparent;transition:box-shadow .2s,background .2s}
+.pc:hover{background:#edf0f4}
+.pc.on{background:#fff;box-shadow:inset 0 0 0 2.5px var(--blue),0 10px 30px -18px rgba(11,107,203,.6)}
+.pc-top{display:flex;align-items:center;gap:8px}
+.pc-top .n{margin-left:auto;font-size:15px;font-weight:700;color:var(--gray)}
+.pc-t{margin-top:8px;font-size:25px;font-weight:800;letter-spacing:-.025em}
+.pc-k{margin-top:4px;font-size:17px;font-weight:600;color:var(--ink2)}
+.pc-m{margin-top:6px;font-size:15px;color:var(--gray);font-weight:600;line-height:1.5}
+.pc-r{margin-top:9px;display:flex;gap:8px;flex-wrap:wrap}
+.pc-src{margin-top:7px;font-size:13px;color:var(--gray);font-weight:600}
+.pc-src a{color:var(--blue);text-decoration:none}
+.pdet{width:840px;display:flex;flex-direction:column;gap:12px}
+.pdet .mapc{flex:1}
+.story{left:12px;top:12px;max-width:420px;background:rgba(255,255,255,.95);border-radius:14px;padding:10px 14px;font-size:15px;font-weight:600;line-height:1.45;color:var(--ink2);box-shadow:0 6px 18px -10px rgba(25,31,40,.35)}
+.story b{color:var(--act)}
+.shtab{background:var(--card);border-radius:18px;padding:4px 0}
+.shr{display:grid;grid-template-columns:236px 136px 70px 50px 1fr;align-items:center;height:42px;padding:0 18px;font-size:15px;font-weight:600;color:var(--ink2);white-space:nowrap;gap:8px}
+.shr+.shr{border-top:1px solid var(--line)}
+.shr.hd{height:30px;font-size:13px;color:var(--gray)}
+.shr .nm{display:flex;align-items:center;gap:10px;color:var(--ink);font-weight:700;overflow:hidden}
+.shr .nm small{font-size:12px;color:var(--gray);font-weight:600}
+.shr .rel{display:flex;gap:6px;align-items:center}
+.shr .rel .chip{height:26px;font-size:13px;padding:0 9px}
+.shr .rel .cp{font-size:13px;color:var(--gray)}
+
+/* 2 전략 설정·실행 */
+.panel{width:450px;display:flex;flex-direction:column;padding:10px 0 8px;overflow:hidden}
+.tabs{display:flex;gap:8px;padding:2px 12px 10px}
+.tab{flex:1;height:58px;border:0;border-radius:14px;background:#e9edf2;color:var(--gray);font-size:18px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;letter-spacing:-.02em;position:relative}
+.tab small{font-size:13px;font-weight:700;opacity:.85}
+.tab.on{background:#fff;color:var(--sc);box-shadow:inset 0 0 0 2px var(--sc)}
+.tab .stb{min-width:26px;height:26px}
+.ed .row{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:52px;padding:6px 18px;border-top:1px solid var(--line)}
+.ed .row .k{font-size:15px;color:var(--ink2);font-weight:700;white-space:nowrap}
+.ed .row .k small{display:block;font-size:12px;color:var(--gray);font-weight:600;margin-top:2px}
+.ed .row.chg .k::after{content:"수정됨";margin-left:6px;font-size:11px;font-weight:800;color:#fff;background:var(--sc);padding:2px 6px;border-radius:6px;vertical-align:2px}
+.seg{display:flex;background:#e3e8ee;border-radius:11px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;height:34px;padding:0 11px;border-radius:9px;font-size:14px;font-weight:700;color:var(--ink2);white-space:nowrap}
+.seg button.on{background:#fff;color:var(--sc);box-shadow:0 1px 4px rgba(25,31,40,.15)}
+.rng{display:flex;align-items:center;gap:10px}
+.rng input{width:150px;accent-color:var(--sc)}
+.rng .val{min-width:66px;text-align:right;font-size:16px;font-weight:800;color:var(--ink)}
+.tog{width:52px;height:30px;border-radius:999px;border:0;background:#cfd6de;position:relative;transition:background .2s}
+.tog::after{content:"";position:absolute;left:3px;top:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tog.on{background:var(--sc)}.tog.on::after{left:25px}
+.live{margin:8px 12px 0;padding:10px 14px;border-radius:14px;background:#fff}
+.live .lh{display:flex;align-items:center;font-size:13px;font-weight:700;color:var(--gray)}
+.live .lh span{margin-left:auto;font-weight:600}
+.live .lr{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.live .lr .chip{height:28px;font-size:14px}
+.live .dec{margin-top:8px;font-size:14px;font-weight:600;color:var(--ink2);line-height:1.45}
+.live .dec b{color:var(--sc)}
+.live .calc{font-style:normal;margin-left:8px;font-size:11px;font-weight:700;color:var(--pass);background:var(--pass-soft);padding:2px 6px;border-radius:6px}
+.pnote{margin:10px 18px 0;font-size:12.5px;font-weight:600;color:var(--gray);line-height:1.45}
+.mapcol{width:890px;display:flex;flex-direction:column;gap:10px}
+.cap{display:flex;align-items:center;justify-content:center;gap:12px;height:40px;font-size:21px;font-weight:600;letter-spacing:-.02em;white-space:nowrap}
+.cap .tm{color:var(--blue);font-weight:700;font-size:18px}
+.cap.fx{animation:capin .4s both}
+@keyframes capin{from{opacity:0;transform:translateY(6px)}}
+.cap .chip{transition:opacity .3s}
+.cap .chip.off{display:none}
+.cap .chip:not(.off){animation:pop .5s}
+
+/* 3 결과 리포트 */
+.repw{display:flex;flex-direction:column;align-items:center}
+.states{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--gray);margin-bottom:12px}
+.states .st{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:8px;background:var(--card)}
 .states .st i{width:10px;height:10px;border-radius:50%}
-.rep{display:grid;grid-template-columns:190px 500px 500px;width:1190px;border-radius:24px;background:var(--card);overflow:hidden}
-.rep>div{padding:14px 24px;border-top:1px solid var(--line);min-height:104px;display:flex;flex-direction:column;justify-content:center}
-.rep>.hc{min-height:72px;border-top:0;flex-direction:row;align-items:center;justify-content:flex-start;gap:12px;font-size:23px;font-weight:800;letter-spacing:-.02em}
+.rep{display:grid;grid-template-columns:190px 560px 560px;width:1310px;border-radius:22px;background:var(--card);overflow:hidden}
+.rep>div{padding:14px 22px;border-top:1px solid var(--line);min-height:118px;display:flex;flex-direction:column;justify-content:center}
+.rep>.hc{min-height:64px;border-top:0;flex-direction:row;align-items:center;justify-content:flex-start;gap:12px;font-size:21px;font-weight:800;letter-spacing:-.02em}
+.rep>.hc small{font-size:14px;color:var(--gray);font-weight:600}
 .rep>.hc .pill{margin-left:auto}
-.rep>.lay{font-size:21px;font-weight:700;color:var(--ink);justify-content:center}
-.rep>.lay small{display:block;font-size:15px;font-weight:600;color:var(--gray);margin-top:4px;line-height:1.35}
-.rep>.lay.l1{background:#fff7f7}
-.cl .m{font-size:23px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:10px;white-space:nowrap}
-.cl .d{font-size:17px;font-weight:600;color:var(--gray);margin-top:6px;white-space:nowrap}
-.cl .m.ng{color:var(--fail)}.cl .m.ok{color:var(--pass)}.cl .m.mu{color:var(--gray)}
-.cl .tag{font-size:14px;font-weight:700;height:26px;padding:0 9px;border-radius:8px;background:#fff;color:var(--gray);display:inline-flex;align-items:center}
-.rep .c1.l1{background:#fff3f3}
-.repnote{margin-top:14px;font-size:17px;font-weight:600;color:var(--gray)}
+.rep>.lay{font-size:19px;font-weight:700;color:var(--ink)}
+.rep>.lay small{display:block;font-size:13px;font-weight:600;color:var(--gray);margin-top:4px;line-height:1.35}
+.rep>.lay.l1,.rep .cl.l1.ng{background:#fff6f6}
+.cl .m{font-size:20px;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.cl .d{font-size:15px;font-weight:600;color:var(--gray);margin-top:5px;white-space:nowrap;line-height:1.45}
+.cl .m.ng{color:var(--fail)}.cl .m.ok{color:var(--pass)}.cl .m.mu{color:var(--gray)}.cl .m.wn{color:var(--warn-ink)}
+.cl .tag{font-size:12px;font-weight:700;height:22px;padding:0 8px;border-radius:7px;background:#fff;color:var(--gray);display:inline-flex;align-items:center}
+.repbtn{margin-top:14px;display:flex;gap:10px;align-items:center}
+.btn2{height:42px;padding:0 16px;border:0;border-radius:12px;background:var(--card);font-size:16px;font-weight:700;color:var(--ink2);display:inline-flex;align-items:center;gap:8px}
+.btn2:hover{background:#e7ebf0}
+.btn2.pri{background:var(--blue-soft);color:var(--blue)}
+.repnote{font-size:14px;font-weight:600;color:var(--gray);margin-left:8px}
 .scr.on .rep>div{animation:up .45s both}
-.scr.on .rep>.r2{animation-delay:.3s}.scr.on .rep>.r3{animation-delay:.55s}.scr.on .rep>.r4{animation-delay:.8s}
+.scr.on .rep>.r2{animation-delay:.25s}.scr.on .rep>.r3{animation-delay:.45s}.scr.on .rep>.r4{animation-delay:.65s}
 
-/* 5 오답 재시험 */
-#s5 .vis{margin-top:22px}
-.rt{display:flex;gap:24px;align-items:stretch}
-.rtc{width:760px;padding:6px 0 12px}
-.rtc .ch{display:flex;align-items:center;gap:8px;height:56px;padding:0 28px;font-size:16px;font-weight:600;color:var(--gray);white-space:nowrap}
-.rtc .ch b{color:var(--ink2);font-weight:700}
-.rv{display:flex;align-items:center;gap:16px;height:84px;margin:0 14px;padding:0 20px;border-radius:18px;background:#fff;font-size:24px;font-weight:700;white-space:nowrap}
-.rv .who{display:flex;align-items:center;gap:10px;width:200px}
-.rv .who small{font-size:16px;color:var(--gray);font-weight:600}
-.rv .d{font-size:20px;font-weight:600;color:var(--ink2)}
-.rv .d.ng{color:var(--fail)}
-.rarr{height:34px;display:grid;place-items:center}
-.dl{margin:14px 14px 0;padding:6px 20px;border-radius:18px;background:#fff}
-.dr{display:flex;align-items:center;gap:14px;height:60px;font-size:21px;font-weight:600;color:var(--ink);white-space:nowrap}
-.dr+.dr{border-top:1px solid var(--line)}
-.dr .ic{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;flex:none}
-.dr.ok .ic{background:var(--pass)}.dr.wn .ic{background:var(--warn)}
-.dr .k{width:72px;font-size:17px;color:var(--gray);font-weight:700}
-.rtm{width:404px;padding:16px;display:flex;flex-direction:column}
-.rtm svg{display:block;width:100%;flex:1;border-radius:16px}
-.rtm .lg{display:flex;gap:14px;justify-content:center;margin-top:10px;font-size:15px;font-weight:600;color:var(--ink2)}
-.rtm .lg span{display:flex;align-items:center;gap:6px}
-.rtm .lg i{display:inline-block;width:22px;border-top:3px dashed #e57373}
-.rtm .lg i.n{border-top:4px solid #0b6bcb}
-.scr.on .rv.v1{animation:up .5s .2s both}.scr.on .rarr{animation:up .5s .5s both}.scr.on .rv.v2{animation:up .5s .7s both}.scr.on .dl{animation:up .5s 1s both}
+/* 4 오답 재시험 */
+.rtl{width:450px;display:flex;flex-direction:column;gap:10px}
+.why{padding:12px 16px;border-radius:18px;background:#fff6f6}
+.why .wt{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:800}
+.why .wd{margin-top:6px;font-size:13.5px;font-weight:600;color:var(--ink2);line-height:1.5}
+.sug{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.sug button{height:32px;padding:0 11px;border:0;border-radius:9px;background:#fff;box-shadow:inset 0 0 0 1.5px #f3c1c1;font-size:13px;font-weight:700;color:var(--fail)}
+.sug button:hover{background:#fff0f0}
+.sug button.used{background:var(--fail);color:#fff;box-shadow:none}
+.rtl .panel{width:auto;flex:1;padding-top:4px}
+.rtl .ed .row{min-height:44px;padding:4px 16px}
+.rtl .ed .row .k small{display:none}
+.rtl .live{margin-top:6px;padding:8px 12px}
+.rtl .live .lh{display:none}
+.rtr{width:850px;display:flex;flex-direction:column;gap:10px}
+.rres{display:flex;align-items:center;gap:12px;height:62px;padding:0 18px;border-radius:18px;background:var(--card);font-size:17px;font-weight:700;white-space:nowrap}
+.rres .arr{color:#b0b8c1}
+.rres .imp{font-size:15px;font-weight:600;color:var(--ink2);margin-left:6px;overflow:hidden;text-overflow:ellipsis}
+.rres .reg{margin-left:auto;display:flex;gap:6px;align-items:center;font-size:13px;color:var(--gray)}
+.rres .reg .chip{height:26px;font-size:13px;padding:0 9px}
+
+/* modal */
+#modal{position:absolute;inset:0;z-index:40;background:rgba(25,31,40,.35);display:none;align-items:center;justify-content:center}
+#modal.show{display:flex}
+#modal .box{width:1040px;height:700px;background:#fff;border-radius:24px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 80px -30px rgba(0,0,0,.5)}
+#modal .mh{display:flex;align-items:center;gap:12px;height:68px;padding:0 24px;border-bottom:1px solid var(--line);font-size:22px;font-weight:800}
+#modal .mh small{font-size:14px;color:var(--gray);font-weight:600}
+#modal .mh button{margin-left:auto;border:0;background:var(--card);width:40px;height:40px;border-radius:12px;font-size:20px}
+#modal .mb{flex:1;overflow:auto;padding:18px 24px;font-size:15px}
+#modal pre{margin:0;font:500 13.5px/1.55 ui-monospace,Consolas,monospace;color:#273445;white-space:pre-wrap}
+#modal pre .k{color:#0a5db0}#modal pre .s{color:#16794a}#modal pre .n{color:#b45309}
+.lg{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.lg h4{margin:0 0 8px;font-size:17px;display:flex;align-items:center;gap:8px}
+.lg ol{margin:0;padding:0;list-style:none}
+.lg li{padding:10px 12px;border-radius:12px;background:var(--card);margin-bottom:8px;font-size:14px;line-height:1.5;color:var(--ink2);font-weight:600}
+.lg li b{color:var(--ink)}
+.lg li .t{color:var(--blue);font-weight:800;margin-right:6px}
+.lg li .sm{display:block;font-size:12.5px;color:var(--gray);margin-top:2px}
 
 /* loop overlay */
 #loopFx{position:absolute;inset:0;z-index:30;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;opacity:0;visibility:hidden;transition:opacity .35s,visibility 0s .35s}
@@ -201,129 +258,90 @@ svg text{font-family:var(--font)}
 #loopFx.show .arc{animation:arc 1s .1s cubic-bezier(.5,0,.3,1) forwards}
 @keyframes arc{to{stroke-dashoffset:0}}
 #loopFx .lt{font-size:44px;font-weight:700;letter-spacing:-.03em}
-
 .shot *,.shot *::before,.shot *::after{transition:none!important;animation:none!important}
 </style>
 </head>
 <body>
 <div id="stage">
   <div id="bar"><i id="barFill"></i></div>
-  <button id="back" aria-label="뒤로"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4e5968" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
-  <div id="steps"><span>문제 카드</span><i></i><span>판단 비교</span><i></i><span>위험 변화</span><i></i><span>결과 리포트</span><i></i><span>오답 재시험</span></div>
-  <div id="note">예시 데이터 · 실제 수치 아님</div>
-  <div id="toast">↺ 이번 기록이 다음 문제 세트와 회귀검증 이력에 들어갔어요</div>
+  <button id="back" aria-label="뒤로"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4e5968" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div id="steps"><span>문제 선택</span><i></i><span>전략 설정·실행</span><i></i><span>결과 리포트</span><i></i><span>오답 재시험</span></div>
+  <div id="note">실제 사고 재구성 · 판정은 데모용 잠정값</div>
+  <div id="toast">↺ 수정 이력이 회귀검증 기록에 저장됐어요</div>
 
   <!-- 0 표지 -->
   <section class="scr" id="s0">
     <div class="logo"><svg width="60" height="60" viewBox="0 0 40 40"><path d="M6 24c4.7-3.5 9.3-3.5 14 0s9.3 3.5 14 0" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M6 15c4.7-3.5 9.3-3.5 14 0s9.3 3.5 14 0" stroke="#9fcbf5" stroke-width="3.4" fill="none" stroke-linecap="round"/></svg></div>
     <h1 class="cover-t">씨나리오</h1>
     <div class="cover-s">한 배를 피한 AI가, <b>다른 배의 위험</b>까지 낮췄는지 시험해요</div>
+    <div class="cover-f"><span class="chip gray" id="coverN">실제 사고 문제 2개</span><span class="chip gray">전략을 바꾸면 바로 다시 계산</span><span class="chip gray">3D 재현</span></div>
   </section>
 
-  <!-- 1 문제 카드 -->
+  <!-- 1 문제 선택 -->
   <section class="scr" id="s1">
-    <h2 class="h1">이번 문제: <em>4척</em>이 서로 영향을 주는 장면</h2>
-    <div class="sub">한 배를 피하면 다른 배와의 위험이 바뀌는 순간만 문제로 만들어요</div>
+    <h2 class="h1">실제 사고를 <em>시험 문제</em>로 만들었어요</h2>
+    <div class="sub">조사보고서의 위치·침로·속력으로 장면을 다시 만들고, AI가 사고 선박 자리에서 판단해요</div>
     <div class="vis">
-      <div class="prob">
-        <div class="card tbl">
-          <div class="tr hd"><span>선박</span><span>선종</span><span>크기</span><span class="r">속력</span><span class="r">방향</span></div>
-          <div class="tr me"><span class="nm"><span class="sb own">A</span>자선<small style="font-size:17px;color:var(--gray);font-weight:600">시험 대상</small></span><span>화물선</span><span class="num">210m × 32m</span><span class="r num">13노트</span><span class="r num">072°</span></div>
-          <div class="tr"><span class="nm"><span class="sb">B</span>B</span><span>어선</span><span class="num">22m</span><span class="r num">8노트</span><span class="r num">340°</span></div>
-          <div class="tr"><span class="nm"><span class="sb">C</span>C</span><span>예인선</span><span class="num">30m</span><span class="r num">6노트</span><span class="r num">260°</span></div>
-          <div class="tr"><span class="nm"><span class="sb">D</span>D</span><span>화물선</span><span class="num">180m</span><span class="r num">11노트</span><span class="r num">240°</span></div>
+      <div class="plist" id="plist"></div>
+      <div class="pdet">
+        <div class="mapc" id="slot1">
+          <div class="ov story" id="story1"></div>
+          <div class="ov camb" data-cam></div>
+          <div class="ov tbar" data-tbar></div>
         </div>
-        <div class="card pic"><svg id="m1" preserveAspectRatio="xMidYMid meet"></svg></div>
-      </div>
-      <div class="conds">
-        <span class="cond"><b>출처</b>AIS 동적정보 항적 (예시 장면)</span>
-        <span class="cond"><b>관계</b>B 횡단 · C·D 근접</span>
-        <span class="cond"><b>안전영역</b>0.5해리</span>
-        <span class="cond rp">타선 고정 Replay</span>
-        <span class="cond ex">예시 데이터</span>
+        <div class="shtab" id="ships1"></div>
       </div>
     </div>
   </section>
 
-  <!-- 2 판단 비교 -->
+  <!-- 2 전략 설정·실행 -->
   <section class="scr" id="s2">
-    <h2 class="h1">같은 상황에서 두 전략은 다르게 움직여요</h2>
+    <h2 class="h1" id="t2">AI 전략을 바꾸면, <em>예상 항적</em>이 바로 바뀌어요</h2>
     <div class="vis">
-      <div class="cmp">
-        <div class="sc s1c">
-          <div class="hd"><span class="stb">1</span>단순 기준 전략<small>가장 위험한 배만 봐요</small></div>
-          <div class="sr"><div class="k">보는 위험</div><div class="pr"><span class="sb" style="background:var(--fail)">B</span><span class="ar">만</span><span class="sb dim">C</span><span class="sb dim">D</span></div></div>
-          <div class="sr"><div class="k">선택한 행동</div><div class="v big"><em>우현 30°</em> · 13노트 유지</div></div>
-          <div class="sr"><div class="k">이유</div><div class="v">B와 횡단, 자선이 피항선</div></div>
+      <div class="card panel" id="ed2"></div>
+      <div class="mapcol">
+        <div class="mapc" id="slot2">
+          <div class="ov hud" id="hud2"></div>
+          <div class="ov camb" data-cam></div>
+          <div class="ov lay"><button id="actBtn">실제 사고 항적</button></div>
+          <div class="ov scale">격자 1칸 = 1해리 · 선박 크기 6배 확대</div>
+          <div class="ov tbar" data-tbar></div>
         </div>
-        <div class="sc s2c">
-          <div class="hd"><span class="stb">2</span>다선박 고려 전략<small>회피 뒤 관계까지 봐요</small></div>
-          <div class="sr"><div class="k">보는 위험</div><div class="pr"><span class="sb" style="background:var(--fail)">B</span><span class="ar">→</span><span class="sb" style="background:#f08a3c">C</span><span class="ar">→</span><span class="sb" style="background:#a7b1bc">D</span></div></div>
-          <div class="sr"><div class="k">선택한 행동</div><div class="v big"><em>10노트 감속</em> + 우현 15°</div></div>
-          <div class="sr"><div class="k">이유</div><div class="v">B를 피하면서 C·D와도 여유 확보</div></div>
-        </div>
+        <div class="cap" id="cap2"><span class="tm num"></span><span class="tx"></span><span class="chip off"></span></div>
       </div>
-      <div class="same"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0b6bcb" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16M4 7h16M4 17h16"/></svg></span>같은 초기 조건 · 같은 주변 선박 움직임(타선 고정 Replay) · 같은 선회·감속 제약</div>
     </div>
   </section>
 
-  <!-- 3 위험 변화 -->
+  <!-- 3 결과 리포트 -->
   <section class="scr" id="s3">
-    <h2 class="h1" id="t3"></h2>
-    <div class="vis">
-      <div class="mapbox" id="map3"><svg id="m3" preserveAspectRatio="xMidYMid meet"></svg>
-        <div class="hud" id="hud"><div class="hh">최소 거리 (해리)<span><span class="stb s1c">전략1</span><span class="stb s2c">전략2</span></span></div></div>
-        <div class="rptag"><span>타선 고정 Replay</span></div>
-        <div class="lgd"><span><i class="s1"></i>전략 1</span><span><i class="s2"></i>전략 2</span><span><i></i>주변 배 (기록 항적)</span><span><i class="z"></i>안전영역 0.5해리</span></div>
-      </div>
-      <div class="cap" id="cap3"><span class="tm num"></span><span class="tx"></span><span class="chip off"></span></div>
-    </div>
-  </section>
-
-  <!-- 4 결과 리포트 -->
-  <section class="scr" id="s4">
-    <h2 class="h1">안전 판정과 행동 진단을 나눠서 봐요</h2>
-    <div class="vis">
+    <h2 class="h1" id="t3">안전 판정과 행동 진단을 나눠서 봐요</h2>
+    <div class="vis"><div class="repw">
       <div class="states">결과 상태
         <span class="st"><i style="background:var(--pass)"></i>통과</span><span class="st"><i style="background:var(--warn)"></i>검토 필요</span><span class="st"><i style="background:var(--fail)"></i>실패</span><span class="st"><i style="background:#a7b1bc"></i>판정 불가</span>
         <span class="prov" style="margin-left:10px">잠정 판정 · 전문가 검토 전</span>
+        <span class="repnote" id="repmeta"></span>
       </div>
-      <div class="rep">
-        <div class="hc"></div>
-        <div class="hc s1c"><span class="stb">1</span>단순 기준 전략<span class="pill fail">실패</span></div>
-        <div class="hc s2c"><span class="stb">2</span>다선박 고려 전략<span class="pill pass">통과</span></div>
-
-        <div class="lay l1 r2">① 안전성<small>위반이 확인되면 실패</small></div>
-        <div class="cl c1 l1 r2"><div class="m ng">2차 충돌위험 · 대상 C</div><div class="d" id="ev1"></div></div>
-        <div class="cl r2"><div class="m ok">필수 조건 충족</div><div class="d" id="ev2"></div></div>
-
-        <div class="lay r3">② 행동 진단<small>안전 판정과 따로 기록</small></div>
-        <div class="cl r3"><div class="m">늦은 재평가 <span class="tag">진단값</span></div><div class="d">B 회피 뒤 C와의 관계를 다시 따지지 않음</div></div>
-        <div class="cl r3"><div class="m">반복 조정 1회 <span class="tag">진단값</span></div><div class="d">상황 변화에 따른 조정 → 검토 후보 아님</div></div>
-
-        <div class="lay r4">③ 운항 효율<small>통과한 결과끼리만 비교</small></div>
-        <div class="cl r4"><div class="m mu">비교 제외</div><div class="d">안전을 점수로 상쇄하지 않아요</div></div>
-        <div class="cl r4"><div class="m">우회 +0.4해리 · 시간 +2.8분</div><div class="d">같은 문제의 다른 통과 결과와 비교</div></div>
-      </div>
-    </div>
+      <div class="rep" id="rep"></div>
+      <div class="repbtn"><button class="btn2" id="logBtn">판단 기록 보기</button><button class="btn2" id="jsonBtn">성적표 데이터(JSON)</button><span class="repnote">모든 수치는 이 화면에서 시뮬레이션으로 계산한 값이에요</span></div>
+    </div></div>
   </section>
 
-  <!-- 5 오답 재시험 -->
-  <section class="scr" id="s5">
-    <h2 class="h1">전략 1을 고쳐서, 같은 문제로 다시 시험해요</h2>
+  <!-- 4 오답 재시험 -->
+  <section class="scr" id="s4">
+    <h2 class="h1" id="t4"></h2>
     <div class="vis">
-      <div class="rt">
-        <div class="card rtc">
-          <div class="ch">기록 <b>S-0412</b> · 평가 기준 <b>v0.3</b> · 동역학 가정 <b>v0.1</b> · 타선 고정 Replay<span class="prov" style="margin-left:auto">잠정 판정</span></div>
-          <div class="rv v1 s1c"><span class="who"><span class="stb">1</span>전략 1 <small>v1</small></span><span class="pill fail">실패</span><span class="d ng" id="rv1"></span></div>
-          <div class="rarr"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b0b8c1" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15M6 13l6 6 6-6"/></svg></div>
-          <div class="rv v2 s1c"><span class="who"><span class="stb">1′</span>전략 1′ <small>v2</small></span><span class="pill warn">검토 필요</span><span class="d">B 회피 뒤 C를 다시 평가해 좌현 복귀 + 감속</span></div>
-          <div class="dl">
-            <div class="dr ok"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><span class="k">개선</span><span id="imp"></span></div>
-            <div class="dr wn"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round"><path d="M12 6v8M12 18.5v.3"/></svg></span><span class="k">남은 것</span>시간 증가 +6.4분 · 기준 범위 초과 → 검토 사유</div>
-          </div>
+      <div class="rtl">
+        <div class="why" id="why4"></div>
+        <div class="card panel" id="ed4"></div>
+      </div>
+      <div class="rtr">
+        <div class="mapc" id="slot4">
+          <div class="ov hud" id="hud4"></div>
+          <div class="ov camb" data-cam></div>
+          <div class="ov scale">격자 1칸 = 1해리 · 선박 크기 6배 확대</div>
+          <div class="ov tbar" data-tbar></div>
         </div>
-        <div class="card rtm"><svg id="m5" preserveAspectRatio="xMidYMid meet"></svg><div class="lg"><span><i></i>전략 1 (v1)</span><span><i class="n"></i>전략 1′ (v2)</span></div></div>
+        <div class="rres" id="res4"></div>
       </div>
     </div>
   </section>
@@ -334,281 +352,1280 @@ svg text{font-family:var(--font)}
     <svg viewBox="0 0 160 160"><circle cx="80" cy="80" r="66" fill="none" stroke="#e8f3ff" stroke-width="12"/><path class="arc" d="M80 14a66 66 0 1 1-66 66" fill="none" stroke="#0b6bcb" stroke-width="12" stroke-linecap="round"/></svg>
     <div class="lt">다음 문제로 가요</div>
   </div>
+  <div id="modal"><div class="box"><div class="mh"><span id="mt"></span><small id="ms"></small><button id="mx" aria-label="닫기">✕</button></div><div class="mb" id="mb"></div></div></div>
 </div>
 
 <script>
-(function(){
-"use strict";
-const $=s=>document.querySelector(s),$$=s=>Array.from(document.querySelectorAll(s));
-const NS="http://www.w3.org/2000/svg";
-function S(tag,attrs,parent){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
-const params=new URLSearchParams(location.search);
-const SHOT=params.get("shot")==="1";
-if(SHOT)document.documentElement.classList.add("shot");
+/* =====================================================================
+   씨나리오 시험 엔진 (데모용)
+   - 단위: 위치 해리(x 동쪽, y 북쪽), 시간 분, 속력 노트, 방위 진방위(도)
+   - 타선은 기록 항적을 그대로 재생(타선 고정 Replay). 자선만 시험 대상 전략으로 움직임
+   - 자선 동역학: 최대 선회율·가감속 한계를 둔 1차 모델(동역학 가정 v0.1)
+   - 평가 기준 v0.3: 안전성(충돌·안전영역·2차 충돌위험·항법 검토) / 행동 진단 / 운항 효율
+   ===================================================================== */
+var Engine = (function () {
+  "use strict";
+  var DEG = Math.PI / 180;
+  var RULES_VERSION = "v0.3", DYN_VERSION = "v0.1";
+  function n180(a) { return ((a % 360) + 540) % 360 - 180; }
+  function n360(a) { return ((a % 360) + 360) % 360; }
+  function vel(h, s) { return [Math.sin(h * DEG) * s / 60, Math.cos(h * DEG) * s / 60]; }
+  function bearing(ax, ay, bx, by) { return n360(Math.atan2(bx - ax, by - ay) / DEG); }
 
-/* fit stage */
-function fit(){const s=Math.min(innerWidth/1440,innerHeight/900);$("#stage").style.setProperty("--s",s);}
-addEventListener("resize",fit);fit();
+  /* ---------- 타선 항적: 구간(legs) → 시각별 점 ---------- */
+  // spec: {x0,y0,legs:[{t,course,speed}]}  (t 분, 해당 시각부터 그 침로·속력)
+  function buildTrack(spec, dt, tEnd) {
+    if (spec.pts) return buildFromPts(spec, dt, tEnd);
+    var pts = [], x = spec.x0, y = spec.y0, legs = spec.legs.slice().sort(function (a, b) { return a.t - b.t; });
+    var N = Math.round(tEnd / dt);
+    for (var i = 0; i <= N; i++) {
+      var t = i * dt, L = legs[0];
+      for (var j = 0; j < legs.length; j++) if (t >= legs[j].t - 1e-9) L = legs[j];
+      pts.push({ t: t, x: x, y: y, h: L.course, s: L.speed });
+      var v = vel(L.course, L.speed); x += v[0] * dt; y += v[1] * dt;
+    }
+    return pts;
+  }
+  // spec: {pts:[[t,x,y],...], pre:{course,speed}, post:{course,speed}}
+  // 기록 점 사이는 선형 보간, 기록 앞뒤는 주어진 침로·속력으로 직선 연장
+  function buildFromPts(spec, dt, tEnd) {
+    var P = spec.pts, n = P.length, out = [], N = Math.round(tEnd / dt);
+    function pos(t) {
+      if (spec.until != null && t > spec.until) t = spec.until;
+      if (t <= P[0][0]) { var v = vel(spec.pre.course, spec.pre.speed), d = P[0][0] - t; return [P[0][1] - v[0] * d, P[0][2] - v[1] * d, spec.pre.course, spec.pre.speed]; }
+      if (t >= P[n - 1][0]) { var w = vel(spec.post.course, spec.post.speed), e = t - P[n - 1][0]; return [P[n - 1][1] + w[0] * e, P[n - 1][2] + w[1] * e, spec.post.course, spec.post.speed]; }
+      for (var i = 1; i < n; i++) if (t <= P[i][0]) {
+        var a = P[i - 1], b = P[i], u = (t - a[0]) / (b[0] - a[0]), dx = b[1] - a[1], dy = b[2] - a[2];
+        return [a[1] + dx * u, a[2] + dy * u, n360(Math.atan2(dx, dy) / DEG), Math.hypot(dx, dy) / (b[0] - a[0]) * 60];
+      }
+    }
+    for (var k = 0; k <= N; k++) { var t = k * dt, p = pos(t); out.push({ t: t, x: p[0], y: p[1], h: p[2], s: p[3] }); }
+    // 선수방향은 앞뒤 구간을 섞어 부드럽게 (ARPA 위치 흔들림 완화)
+    var H = out.map(function (p) { return p.h; });
+    for (var j = 0; j < out.length; j++) {
+      var sx = 0, sy = 0;
+      for (var q = Math.max(0, j - 10); q <= Math.min(out.length - 1, j + 10); q++) { sx += Math.sin(H[q] * DEG); sy += Math.cos(H[q] * DEG); }
+      out[j].h = n360(Math.atan2(sx, sy) / DEG);
+    }
+    return out;
+  }
+  function at(arr, t, dt) {
+    var f = t / dt, i = Math.max(0, Math.min(arr.length - 2, Math.floor(f))), u = Math.max(0, Math.min(1, f - i));
+    var p = arr[i], q = arr[i + 1];
+    return { x: p.x + (q.x - p.x) * u, y: p.y + (q.y - p.y) * u, h: p.h + n180(q.h - p.h) * u, s: p.s + (q.s - p.s) * u };
+  }
 
-/* ---------- 4척 조우 시뮬레이션 (단위: 해리, 분 · 예시값) ----------
-   자선 A: 화물선 13kn 072°. 선회율 15°/분, 감속 2kn/분 제약 (가정)
-   전략 1 (단순 기준): 0.5분부터 우현 30°(102°), 13kn 유지
-   전략 2 (다선박 고려): 0.5분부터 10kn 감속 + 우현 15°(087°)
-   전략 1′ (재시험): 전략 1과 같이 출발 → 9분(B 통과 뒤) C를 재평가해 080°·9kn
-   B 어선 8kn 340°: 우현에서 횡단 (자선이 피항선) — 원래 항로라면 11분에 충돌
-   C 예인선 6kn 260°: 원래 항로라면 1.7해리 → 전략 1에선 0.2해리까지 접근
-   D 화물선 11kn 240°: 좌현 전방에서 거의 마주 옴
-   주변 배는 기록 항적 그대로 재생 (타선 고정 Replay) */
-const VIEWROT=18,DEG=Math.PI/180,DT=0.05,TEND=20,H0=72,SAFE=0.5;
-const dir=h=>[Math.sin(h*DEG),-Math.cos(h*DEG)];
-const PLAN={orig:[],s1:[[0.5,102,13]],s2:[[0.5,87,10]],s1p:[[0.5,102,13],[9,80,9]]};
-const SIM=(function(){
-  function runOwn(plan){const a=[];let x=0,y=0,h=H0,s=13;
-    for(let i=0;i<=Math.round(TEND/DT);i++){const t=i*DT;a.push({x,y,h});
-      let th=H0,ts=13;plan.forEach(p=>{if(t>=p[0]){th=p[1];ts=p[2];}});
-      h+=Math.max(-15*DT,Math.min(15*DT,th-h));s+=Math.max(-2*DT,Math.min(2*DT,ts-s));
-      const [ux,uy]=dir(h);x+=ux*s/60*DT;y+=uy*s/60*DT;}return a;}
-  const R={};for(const k in PLAN)R[k]=runOwn(PLAN[k]);
-  const line=(p0,h,s)=>{const [ux,uy]=dir(h);const a=[];for(let i=0;i<=Math.round(TEND/DT);i++){const t=i*DT;a.push({x:p0[0]+ux*s/60*t,y:p0[1]+uy*s/60*t,h});}return a;};
-  const hitP=R.orig[Math.round(11/DT)],ub=dir(340);
-  R.B=line([hitP.x-ub[0]*8*11/60,hitP.y-ub[1]*8*11/60],340,8);
-  const a=R.s1[Math.round(16.5/DT)],uc=dir(260),nc=dir(102+90);
-  R.C=line([a.x+nc[0]*.2-uc[0]*6/60*16.5,a.y+nc[1]*.2-uc[1]*6/60*16.5],260,6);
-  const o7=R.orig[Math.round(7/DT)],ud=dir(240),nd=dir(H0-90);
-  R.D=line([o7.x+nd[0]*.8-ud[0]*11/60*7,o7.y+nd[1]*.8-ud[1]*11/60*7],240,11);
-  /* 화면 표시용 회전: 자선 원래 침로(072°)가 화면 오른쪽을 향하도록 (거리·관계는 그대로) */
-  const RT=VIEWROT*DEG,cr=Math.cos(RT),sr=Math.sin(RT);
-  Object.values(R).forEach(arr=>arr.forEach(p=>{const x=p.x*cr-p.y*sr,y=p.x*sr+p.y*cr;p.x=x;p.y=y;p.h+=VIEWROT;}));
-  const N=R.orig.length;
-  function L(arr,t){t=Math.max(0,Math.min(TEND,t));const f=t/DT,i=Math.min(Math.floor(f),N-2),u=f-i,p=arr[i],q=arr[i+1];return{x:p.x+(q.x-p.x)*u,y:p.y+(q.y-p.y)*u,h:p.h+(q.h-p.h)*u};}
-  const dist=(p,q)=>Math.hypot(p.x-q.x,p.y-q.y);
-  /* 전략별·선박별 거리 시계열과 지표 */
-  const M={};["s1","s2","s1p"].forEach(k=>{M[k]={};["B","C","D"].forEach(sh=>{let mn=9,tm=0,tin=-1;const d=[];
-    for(let i=0;i<N;i++){const v=dist(R[k][i],R[sh][i]);d.push(v);if(v<mn){mn=v;tm=i*DT;}if(tin<0&&v<SAFE)tin=i*DT;}M[k][sh]={d,min:mn,tMin:tm,tIn:tin};});});
-  return{R,L,M,hit:hitP,N};
+  /* ---------- CPA / 조우 관계 ---------- */
+  function cpa(p, v, q, w) {
+    var rx = q.x - p.x, ry = q.y - p.y, vx = w[0] - v[0], vy = w[1] - v[1], vv = vx * vx + vy * vy;
+    var t = vv < 1e-12 ? 0 : -(rx * vx + ry * vy) / vv;
+    return { tcpa: t, dcpa: Math.hypot(rx + vx * t, ry + vy * t), range: Math.hypot(rx, ry) };
+  }
+  // own/tgt: {x,y,h,s}. 자선 기준 COLREG 관계
+  function encounter(own, tgt) {
+    var beta = n180(bearing(own.x, own.y, tgt.x, tgt.y) - own.h);   // 자선 선수 기준 타선 방향
+    var alpha = n180(bearing(tgt.x, tgt.y, own.x, own.y) - tgt.h);  // 타선 선수 기준 자선 방향
+    var r;
+    if (Math.abs(beta) <= 6 && Math.abs(alpha) <= 6) r = { type: "headon", label: "마주침", role: "give", rule: "14조" };
+    else if (Math.abs(alpha) > 112.5 && own.s > tgt.s) r = { type: "overtaking", label: "추월", role: "give", rule: "13조" };
+    else if (Math.abs(beta) > 112.5 && tgt.s > own.s) r = { type: "overtaken", label: "피추월", role: "stand", rule: "13·17조" };
+    else if (beta > 0) r = { type: "crossing", label: "횡단", role: "give", rule: "15조" };
+    else r = { type: "crossing", label: "횡단", role: "stand", rule: "17조" };
+    r.beta = beta; r.alpha = alpha; r.roleLabel = r.role === "give" ? "피항선" : "유지선";
+    return r;
+  }
+
+  /* ---------- 전략(시험 대상 회피 판단 모델) ---------- */
+  // scope: "one"(가장 급한 1척) | "all"(위험한 모든 선박)
+  // trigger: 회피 시작 TCPA(분), dcpa: 목표 통과 거리(해리)
+  // method: "turn" | "speed" | "both", side: "stbd" | "any", reeval: 0|1|3 (분), resume: bool
+  var PRESETS = {
+    s1: { scope: "one", trigger: 10, dcpa: 0.8, method: "turn", side: "stbd", reeval: 0, resume: true },
+    s2: { scope: "all", trigger: 10, dcpa: 0.8, method: "both", side: "stbd", reeval: 1, resume: true }
+  };
+  var HORIZON = 20, PRED_DT = 0.25, STANDON_T = 4; // 유지선이면 TCPA 4분 전까지는 침로·속력 유지 (COLREG 17조, 가정값)
+
+  function predictMin(state, cmd, targets, dyn, horizon) {
+    // 자선을 cmd(침로·속력)로 동역학 따라 예측, 타선은 현재 침로·속력 직진 가정 → 대상별 최소 거리
+    var x = state.x, y = state.y, h = state.h, s = state.s, res = targets.map(function () { return 9; });
+    var steps = Math.round(horizon / PRED_DT);
+    for (var k = 1; k <= steps; k++) {
+      var dh = n180(cmd.course - h); h += Math.max(-dyn.turn * PRED_DT, Math.min(dyn.turn * PRED_DT, dh));
+      var ds = cmd.speed - s; s += Math.max(-dyn.decel * PRED_DT, Math.min(dyn.accel * PRED_DT, ds));
+      var v = vel(h, s); x += v[0] * PRED_DT; y += v[1] * PRED_DT;
+      var tt = k * PRED_DT;
+      for (var j = 0; j < targets.length; j++) {
+        var T = targets[j], d = Math.hypot(T.x + T.v[0] * tt - x, T.y + T.v[1] * tt - y);
+        if (d < res[j]) res[j] = d;
+      }
+    }
+    return res;
+  }
+
+  function candidates(st, base) {
+    var offs = [], spds = [];
+    if (st.method !== "speed") { for (var o = 0; o <= 90; o += 5) { offs.push(o); if (st.side === "any" && o > 0) offs.push(-o); } }
+    else offs.push(0);
+    if (st.method !== "turn") { [1, 0.85, 0.7, 0.55, 0.4, 0.25].forEach(function (f) { spds.push(base.speed * f); }); }
+    else spds.push(base.speed);
+    var out = [];
+    offs.forEach(function (o) { spds.forEach(function (sp) { out.push({ off: o, course: n360(base.course + o), speed: sp }); }); });
+    return out;
+  }
+  function cost(c, base) { return Math.abs(c.off) / 10 + (base.speed - c.speed) / base.speed * 6 + (c.off < 0 ? 4 : 0); }
+
+  function simulate(sc, st, opts) {
+    opts = opts || {};
+    var dt = sc.dt, N = Math.round(sc.tEnd / dt), o = sc.own, dyn = o.dyn;
+    var base = { course: o.course, speed: o.speed };
+    var x = o.x0, y = o.y0, h = o.course, s = o.speed, cmd = { course: o.course, speed: o.speed, off: 0 };
+    var own = [], log = [], engaged = false, avoiding = false, nextEval = Infinity, focus = null, lastFocus = null;
+    var switches = 0, adjusts = 0, noSolution = false, nextCheck = 0, resumeHold = 0;
+    var tg = sc.targets;
+
+    function perceive(t) {
+      return tg.map(function (T) { var p = at(T.track, t, dt); return { id: T.id, x: p.x, y: p.y, h: p.h, s: p.s, v: vel(p.h, p.s) }; });
+    }
+    function threatsNow(t, P) {
+      var v = vel(h, s), me = { x: x, y: y, h: h, s: s };
+      return P.map(function (T) {
+        var c = cpa(me, v, T, T.v); c.id = T.id; c.T = T; c.enc = encounter(me, T); return c;
+      });
+    }
+    function decide(t, why) {
+      var P = perceive(t), C = threatsNow(t, P);
+      var thr = C.filter(function (c) { return c.tcpa > 0 && c.tcpa <= HORIZON && c.dcpa < st.dcpa && (c.enc.role === "give" || c.tcpa <= STANDON_T); });
+      var consider;
+      if (st.scope === "one") {
+        thr.sort(function (a, b) { return a.tcpa - b.tcpa; });
+        consider = thr.length ? [thr[0]] : (focus ? C.filter(function (c) { return c.id === focus; }) : []);
+        if (thr.length) { if (lastFocus && lastFocus !== thr[0].id) switches++; focus = lastFocus = thr[0].id; }
+      } else {
+        consider = C.filter(function (c) { return c.range < 8 && (c.tcpa > -2); });
+      }
+      var tlist = consider.map(function (c) { return c.T; });
+      var best = null, bestMin = -1, fallback = null;
+      var me = { x: x, y: y, h: h, s: s };
+      // 재평가: 지금 계획이 여전히 목표 거리를 지키면 바꾸지 않음 (작은 변침 반복 방지, COLREG 8조)
+      if (why === "reeval") {
+        var keep = tlist.length ? Math.min.apply(null, predictMin(me, cmd, tlist, dyn, HORIZON)) : 9;
+        if (keep >= st.dcpa) {
+          log.push({ t: t, why: why, changed: false, feasible: true, seen: C.map(function (c) { return { id: c.id, dcpa: c.dcpa, tcpa: c.tcpa, enc: c.enc.label + "·" + c.enc.roleLabel, rule: c.enc.rule }; }),
+            consider: consider.map(function (c) { return c.id; }), course: cmd.course, speed: cmd.speed, off: cmd.off, predMin: keep });
+          return;
+        }
+      }
+      candidates(st, base).forEach(function (cd) {
+        var m = tlist.length ? Math.min.apply(null, predictMin(me, cd, tlist, dyn, HORIZON)) : 9;
+        cd.minD = m; cd.cost = cost(cd, base);
+        if (m >= st.dcpa) { if (!best || cd.cost < best.cost) best = cd; }
+        if (m > bestMin + 1e-6 || (Math.abs(m - bestMin) < 1e-6 && fallback && cd.cost < fallback.cost)) { bestMin = m; fallback = cd; }
+      });
+      var feasible = !!best; if (!best) { best = fallback; noSolution = true; }
+      var changed = Math.abs(n180(best.course - cmd.course)) > 0.5 || Math.abs(best.speed - cmd.speed) > 0.05;
+      if (changed) adjusts++;
+      cmd = { course: best.course, speed: best.speed, off: best.off };
+      avoiding = Math.abs(best.off) > 0.5 || best.speed < base.speed - 0.05;
+      log.push({
+        t: t, why: why, changed: changed, feasible: feasible,
+        seen: C.map(function (c) { return { id: c.id, dcpa: c.dcpa, tcpa: c.tcpa, enc: c.enc.label + "·" + c.enc.roleLabel, rule: c.enc.rule }; }),
+        consider: consider.map(function (c) { return c.id; }),
+        course: best.course, speed: best.speed, off: best.off, predMin: best.minD
+      });
+    }
+    function tryResume(t) {
+      var P = perceive(t), C = threatsNow(t, P);
+      var scopeIds = st.scope === "one" ? [focus] : C.map(function (c) { return c.id; });
+      var passed = C.every(function (c) { return scopeIds.indexOf(c.id) < 0 || c.tcpa <= 0 || c.dcpa >= st.dcpa; });
+      if (!passed) return false;
+      var tl = C.filter(function (c) { return scopeIds.indexOf(c.id) >= 0 && c.range < 8; }).map(function (c) { return c.T; });
+      var me = { x: x, y: y, h: h, s: s };
+      var back = { course: base.course, speed: base.speed, off: 0 };
+      var m = tl.length ? Math.min.apply(null, predictMin(me, back, tl, dyn, HORIZON)) : 9;
+      if (m < st.dcpa) return false;
+      cmd = back; avoiding = false; adjusts++;
+      log.push({ t: t, why: "resume", changed: true, feasible: true, seen: [], consider: scopeIds.filter(Boolean), course: base.course, speed: base.speed, off: 0, predMin: m });
+      return true;
+    }
+
+    for (var i = 0; i <= N; i++) {
+      var t = i * dt;
+      if (st && t >= nextCheck - 1e-9) {
+        nextCheck = t + 0.25;
+        if (!engaged) {
+          var C0 = threatsNow(t, perceive(t));
+          if (C0.some(function (c) { return c.tcpa > 0 && c.tcpa <= st.trigger && c.dcpa < st.dcpa && (c.enc.role === "give" || c.tcpa <= STANDON_T); })) {
+            engaged = true; decide(t, "trigger"); nextEval = st.reeval ? t + st.reeval : Infinity;
+          }
+        } else if (t >= nextEval - 1e-9) {
+          nextEval = t + st.reeval;
+          if (!(st.resume && avoiding && tryResume(t))) decide(t, "reeval");
+        } else if (st.resume && avoiding && t >= resumeHold) {
+          if (!tryResume(t)) resumeHold = t + 0.5;
+        }
+      }
+      own.push({ t: t, x: x, y: y, h: h, s: s });
+      var dh = n180(cmd.course - h); h = n360(h + Math.max(-dyn.turn * dt, Math.min(dyn.turn * dt, dh)));
+      var ds = cmd.speed - s; s += Math.max(-dyn.decel * dt, Math.min(dyn.accel * dt, ds));
+      var v = vel(h, s); x += v[0] * dt; y += v[1] * dt;
+    }
+    return { own: own, log: log, switches: switches, adjusts: adjusts, noSolution: noSolution, params: st };
+  }
+
+  // 기록 항적(실제 사고 등)을 자선 항적으로 쓰는 경우
+  function replayRun(sc, spec) { return { own: buildTrack(spec, sc.dt, sc.tEnd), log: [], switches: 0, adjusts: 0, noSolution: false, params: null }; }
+
+  /* ---------- 채점 ---------- */
+  function distances(sc, run) {
+    var out = {};
+    sc.targets.forEach(function (T) {
+      var d = [], mn = 99, tMin = 0, tIn = -1, ownAtMin = null;
+      for (var i = 0; i < run.own.length; i++) {
+        var p = run.own[i], q = T.track[i], v = Math.hypot(p.x - q.x, p.y - q.y);
+        d.push(v); if (v < mn) { mn = v; tMin = p.t; ownAtMin = i; }
+        if (tIn < 0 && v < sc.safe) tIn = p.t;
+      }
+      out[T.id] = { d: d, min: mn, tMin: tMin, tIn: tIn, iMin: ownAtMin };
+    });
+    return out;
+  }
+  function collideDist(sc, T) { return (sc.own.len + T.len) / 2 / 1852; }
+
+  function evaluate(sc, run, baseDist) {
+    var D = distances(sc, run), o0 = run.own[0];
+    var safety = [], reviews = [], diag = {}, eff = null;
+    sc.targets.forEach(function (T) {
+      var m = D[T.id], primary = baseDist ? baseDist[T.id].min < sc.safe : true;
+      // 타선 기록이 없는 구간(역산·연장)에서 생긴 근접은 판정하지 않음 → 판정 불가
+      var tv = m.tIn >= 0 ? m.tIn : m.tMin, rec = T.rec || [0, sc.tEnd], unv = tv < rec[0] - 1e-9 || tv > rec[1] + 1e-9;
+      if (m.min < collideDist(sc, T)) safety.push({ id: T.id, kind: "collision", secondary: !primary, min: m.min, tMin: m.tMin, tIn: m.tIn, unverified: unv });
+      else if (m.min < sc.safe) safety.push({ id: T.id, kind: "domain", secondary: !primary, min: m.min, tMin: m.tMin, tIn: m.tIn, unverified: unv });
+      // 항법 검토(검토 필요 사유): 피항선인데 상대 선수 쪽을 가로질러 근접 통과
+      var q0 = T.track[0], enc0 = encounter({ x: o0.x, y: o0.y, h: o0.h, s: o0.s }, q0);
+      if (enc0.role === "give") {
+        var prevLat = null;
+        for (var i = 0; i < run.own.length; i++) {
+          var p = run.own[i], q = T.track[i], hu = [Math.sin(q.h * DEG), Math.cos(q.h * DEG)];
+          var rx = p.x - q.x, ry = p.y - q.y, lat = rx * hu[1] - ry * hu[0], along = rx * hu[0] + ry * hu[1];
+          if (prevLat != null && (lat > 0) !== (prevLat > 0) && along > 0 && along < 1.0) {
+            reviews.push({ id: T.id, rule: enc0.rule, at: p.t, text: "피항선인데 " + T.name + " 선수 " + along.toFixed(2) + "해리 앞을 가로지름" });
+            break;
+          }
+          prevLat = lat;
+        }
+      }
+    });
+    // 첫 행동이 좌현 변침이고 마주침·우현 횡단 상대가 있으면 검토
+    var first = run.log.filter(function (l) { return l.changed; })[0];
+    if (first && first.off < 0) reviews.push({ id: null, rule: "14·15조", text: "첫 회피가 좌현 변침" });
+    if (run.noSolution) reviews.push({ id: null, rule: "운항 한계", text: "모든 선박을 동시에 만족하는 해가 없음 → 사람 개입 필요" });
+
+    // 행동 진단 (안전 판정과 별도)
+    var firstT = first ? first.t : null, firstTcpa = null;
+    if (first) { var mins = first.seen.filter(function (s) { return first.consider.indexOf(s.id) >= 0 && s.tcpa > 0; }).map(function (s) { return s.tcpa; }); firstTcpa = mins.length ? Math.min.apply(null, mins) : null; }
+    var maxOff = 0, minSp = sc.own.speed;
+    run.own.forEach(function (p) { maxOff = Math.max(maxOff, Math.abs(n180(p.h - sc.own.course))); minSp = Math.min(minSp, p.s); });
+    diag = {
+      firstT: firstT, firstTcpa: firstTcpa, adjusts: run.adjusts, switches: run.switches,
+      reeval: run.params ? run.params.reeval : null, scope: run.params ? run.params.scope : null,
+      maxTurn: maxOff, minSpeed: minSp, noSolution: run.noSolution,
+      lateReassess: !!(run.params && run.params.scope === "one" && !run.params.reeval)
+    };
+    // 운항 효율 (안전 만족 결과끼리만 비교)
+    var u0 = [Math.sin(sc.own.course * DEG), Math.cos(sc.own.course * DEG)], last = run.own[run.own.length - 1];
+    var prog = (last.x - o0.x) * u0[0] + (last.y - o0.y) * u0[1]; // 원래 침로 방향으로 진행한 거리(해리)
+    var baseProg = sc.own.speed / 60 * sc.tEnd, loss = Math.max(0, baseProg - prog);
+    var xt = 0, xtEnd = 0, path = 0;
+    run.own.forEach(function (p, i) {
+      var c = Math.abs((p.x - o0.x) * u0[1] - (p.y - o0.y) * u0[0]); xt = Math.max(xt, c);
+      if (i) path += Math.hypot(p.x - run.own[i - 1].x, p.y - run.own[i - 1].y);
+    });
+    xtEnd = Math.abs((last.x - o0.x) * u0[1] - (last.y - o0.y) * u0[0]);
+    eff = { delayMin: loss / sc.own.speed * 60, lossNm: loss, maxXte: xt, endXte: xtEnd, path: path };
+
+    var verified = safety.filter(function (v) { return !v.unverified; });
+    var status = verified.length ? "fail" : safety.length ? "na" : reviews.length ? "review" : "pass";
+    safety.sort(function (a, b) { return (a.unverified ? 1 : 0) - (b.unverified ? 1 : 0); });
+    return { status: status, safety: safety, reviews: reviews, diag: diag, eff: eff, dist: D };
+  }
+
+  var STATUS = { pass: "통과", review: "검토 필요", fail: "실패", na: "판정 불가" };
+
+  // 실패 원인 → 수정 제안 (오답노트)
+  function suggest(sc, ev, params) {
+    var out = [], sec = ev.safety.filter(function (s) { return s.secondary; });
+    var ahead = ev.reviews.filter(function (r) { return /선수 쪽/.test(r.text); });
+    var port = ev.reviews.some(function (r) { return /좌현/.test(r.text); });
+    if (params.scope === "one" && (sec.length || ahead.length)) out.push({ key: "scope", value: "all", label: "판단 대상을 위험한 모든 선박으로",
+      why: sec.length ? "피한 뒤 " + sec.map(function (s) { return name(sc, s.id); }).join("·") + "와의 관계를 보지 않았어요" : "피항 대상 선박의 선수 쪽을 가로질렀어요" });
+    if (!params.reeval && (ev.safety.length || ev.reviews.length)) out.push({ key: "reeval", value: 1, label: "1분마다 위험 재평가", why: "회피 뒤 위험을 다시 계산하지 않았어요" });
+    if (params.method === "turn") out.push({ key: "method", value: "both", label: "변침과 감속을 함께", why: "변침만으로는 모든 배와 거리를 벌리기 어려워요" });
+    if (params.method === "speed") out.push({ key: "method", value: "both", label: "감속만 말고 변침도", why: "멈춰 서면 다른 배의 진로에 남아요" });
+    if (port && params.side === "any") out.push({ key: "side", value: "stbd", label: "우현 변침만 허용", why: "COLREG 14·15조는 우현 변침을 요구해요" });
+    if (ev.safety.some(function (s) { return !s.secondary; }) && params.trigger < 14) out.push({ key: "trigger", value: 14, label: "회피를 더 일찍 (TCPA 14분)", why: "피하려던 배와도 충분히 떨어지지 못했어요" });
+    return out;
+  }
+  function name(sc, id) { for (var i = 0; i < sc.targets.length; i++) if (sc.targets[i].id === id) return sc.targets[i].name; return id; }
+
+  function prepare(sc) {
+    if (sc._ready) return sc;
+    if (sc.own.x0 == null && sc.actual) { var a0 = buildTrack(sc.actual, sc.dt, sc.dt)[0]; sc.own.x0 = a0.x; sc.own.y0 = a0.y; }
+    sc.targets.forEach(function (T) { T.track = buildTrack(T.spec, sc.dt, sc.tEnd); });
+    sc.baseline = simulate(sc, null);
+    sc.baseDist = distances(sc, sc.baseline);
+    if (sc.actual) { sc.actualRun = replayRun(sc, sc.actual); sc.actualEval = evaluate(sc, sc.actualRun, sc.baseDist); }
+    // 시작 시점 관계
+    var o = { x: sc.own.x0, y: sc.own.y0, h: sc.own.course, s: sc.own.speed };
+    sc.targets.forEach(function (T) {
+      var q = T.track[0]; T.enc = encounter(o, q); var c = cpa(o, vel(o.h, o.s), q, vel(q.h, q.s)); T.cpa0 = c;
+      T.primary = sc.baseDist[T.id].min < sc.safe;
+    });
+    sc._ready = true; return sc;
+  }
+  function run(sc, params) { prepare(sc); var r = simulate(sc, params); r.ev = evaluate(sc, r, sc.baseDist); return r; }
+
+  return {
+    DEG: DEG, n180: n180, n360: n360, vel: vel, at: at, cpa: cpa, encounter: encounter, buildTrack: buildTrack,
+    PRESETS: PRESETS, prepare: prepare, run: run, simulate: simulate, evaluate: evaluate, suggest: suggest, name: name,
+    STATUS: STATUS, RULES_VERSION: RULES_VERSION, DYN_VERSION: DYN_VERSION, collideDist: collideDist
+  };
 })();
-const SIM_M=SIM.M;
-const f1=v=>v.toFixed(1);
+if (typeof module !== "undefined") module.exports = Engine;
 
-/* 재생 시간(초) → 시뮬레이션 시간(분): B 통과까지는 빠르게, C 접근은 천천히 */
-const C1=SIM_M.s1.C,TSTOP=Math.min(TEND,C1.tMin);
-const DUR=11,KF=[[0,0],[4.5,12],[10.4,TSTOP],[DUR,TSTOP]];
-function simT(a){a=Math.max(0,Math.min(DUR,a));for(let i=1;i<KF.length;i++){const p=KF[i-1],q=KF[i];if(a<=q[0])return p[1]+(q[1]-p[1])*(a-p[0])/(q[0]-p[0]);}return TSTOP;}
-const bPass=Math.max(SIM_M.s1.B.tMin,SIM_M.s2.B.tMin)+0.3;
-const CAP=[
-  {t:-1,txt:"같은 순간에서 두 전략을 함께 출발시켜요"},
-  {t:0,txt:"전략 1은 우현 30°, 전략 2는 감속 + 우현 15°"},
-  {t:bPass,txt:"두 전략 모두 B와는 안전하게 지나갔어요",chip:"B 최소 "+f1(SIM_M.s1.B.min)+" · "+f1(SIM_M.s2.B.min)+"해리",cls:"pass"},
-  {t:bPass+1.2,txt:"그런데 전략 1은 C와 점점 가까워져요",chip:"C와 DCPA 감소",cls:"warn"},
-  {t:C1.tIn,txt:"전략 1: C가 안전영역 안으로 들어왔어요",chip:"2차 충돌위험 · C",cls:"fail"}
+</script>
+<script>
+/* JTSB 2017tk0009e 표 1·2·4·5 → 지역 좌표(해리). t=분(01:10:00 기준), 원점=충돌 위치 N34°31.3′ E139°04.3′ */
+var FITZ_PTS={"ACX":[[5.017,-4.4532,-1.2817],[6.117,-4.1182,-1.2617],[7.117,-3.8133,-1.2467],[8.017,-3.5456,-1.2083],[9.017,-3.2599,-1.12],[10.033,-2.9771,-1.0167],[11.033,-2.6901,-0.9183],[11.833,-2.4594,-0.835],[12.417,-2.2877,-0.7717],[13.033,-2.1147,-0.7117],[14.017,-1.8291,-0.6133],[14.917,-1.5654,-0.5167],[15.133,-1.5078,-0.495],[16.017,-1.2523,-0.4017],[16.917,-0.9873,-0.31],[17.333,-0.8706,-0.27],[17.917,-0.699,-0.205],[18.333,-0.5836,-0.1633],[18.717,-0.4737,-0.1233],[19.333,-0.2952,-0.0583]],"FITZ":[[5.2,1.343,5.0083],[7.2,1.2441,4.3633],[9.2,1.1466,3.7267],[10.2,1.1027,3.4067],[11.2,1.0601,3.0717],[12.2,0.9846,2.7667],[13.2,0.9461,2.4333],[14.2,0.8747,2.125],[15.2,0.7786,1.825],[16.2,0.6674,1.51],[17.2,0.5616,1.1983],[18.2,0.4408,0.8617],[19.2,0.3351,0.58],[20.2,0.2238,0.2533],[20.45,0.195,0.18]],"WAN":[[-3.617,-6.7877,0.6533],[1.383,-5.4419,0.5933],[2.383,-5.1714,0.5817],[3.383,-4.8995,0.57],[4.383,-4.6263,0.5583],[5.383,-4.3571,0.5483],[6.383,-4.0825,0.5383],[7.383,-3.7996,0.5267],[8.483,-3.503,0.5167],[9.483,-3.2352,0.515],[10.483,-2.9606,0.535],[11.283,-2.7505,0.5633],[12.367,-2.4539,0.6183],[13.567,-2.1408,0.6967],[14.783,-1.8222,0.7867],[15.783,-1.5558,0.8617],[16.767,-1.2949,0.9333],[18.283,-0.8926,1.0433],[19.167,-0.6523,1.1083],[19.667,-0.5149,1.1467],[20.667,-0.2582,1.2217]],"EVO":[[15.65,-2.6928,-4.04],[16.65,-2.4127,-3.8733],[17.65,-2.1312,-3.705],[18.65,-1.8552,-3.535],[19.65,-1.5833,-3.37],[20.25,-1.4116,-3.265],[20.65,-1.3059,-3.2],[20.95,-1.2166,-3.1467],[22.05,-0.9132,-2.9683]]};
+
+/* JTSB MA2014-12 부록 표 1·2·5·6 → 지역 좌표(해리). t=분(12:12:30 기준), 원점=충돌 위치 약 N35°26.0′ E139°46.2′ */
+var SAKURA_PTS={"PUTERI":[[-7.567,3.1247,2.18],[-5.467,2.7296,1.8333],[-2.967,2.2285,1.4117],[-2.467,2.1334,1.3283],[-1.467,1.9297,1.1583],[-0.467,1.7219,0.9883],[0.533,1.5006,0.8417],[1.533,1.2697,0.705],[2.533,1.0375,0.57],[3.533,0.8053,0.4367],[4.533,0.5758,0.3067],[5.533,0.349,0.1717]],"SAKURA":[[-0.55,0.0638,-1.335],[0.45,0.0475,-1.1633],[1.45,0.0122,-0.9733],[2.45,-0.0244,-0.7733],[2.933,-0.0407,-0.68],[3.45,-0.0462,-0.5817],[4.45,-0.0475,-0.3983],[5.45,-0.0489,-0.2267],[6.45,-0.0489,-0.0917],[6.933,-0.0475,-0.0367]],"E":[[-0.45,-1.0823,-0.9717],[0.533,-0.8976,-0.875],[1.533,-0.7184,-0.8],[2.533,-0.55,-0.7967],[3.533,-0.3925,-0.7733],[4.55,-0.2417,-0.6867],[5.55,-0.0923,-0.5717]],"F":[[-2.533,1.6187,1.7717],[-1.533,1.4327,1.6017],[-0.533,1.2371,1.4617],[0.467,1.0321,1.3233],[1.467,0.8229,1.1833],[2.467,0.6125,1.0417],[3.567,0.3843,0.8867],[4.467,0.1847,0.755],[5.467,-0.0272,0.62],[5.967,-0.1344,0.5567],[6.483,-0.2458,0.4917],[6.967,-0.349,0.4233]]};
+
+/* 문제은행: 실제 사고 재구성 문제 */
+var SCENARIOS = [
+  {
+    id: "fitz", code: "P-2017-0617", no: 1,
+    title: "이즈반도 앞 야간 4척 횡단",
+    accident: "USS Fitzgerald – ACX Crystal 충돌",
+    date: "2017.6.17", clock0: "01:10:00", collide: "01:30:34",
+    place: "일본 이즈반도 이로자키 등대 113°, 12.3해리",
+    cond: "야간 · 시정 약 10해리",
+    outcome: "충돌 · 7명 사망",
+    sources: [
+      { label: "JTSB 2017tk0009e", url: "https://jtsb.mlit.go.jp/eng-mar_report/2019/2017tk0009e.pdf" },
+      { label: "NTSB MAR-20/02", url: "https://www.ntsb.gov/investigations/AccidentReports/Reports/MAR2002.pdf" }
+    ],
+    story: "자선(구축함)은 우현의 컨테이너선 3척 모두에 <b>피항선</b>이었어요. 침로를 10°만 바꾸고 직진해 Wan Hai 266 앞을 지난 뒤 <b>ACX Crystal과 충돌</b>했어요.",
+    why: "한 척을 피하면 다른 두 척과의 거리가 바뀌는 장면",
+    dt: 0.05, tEnd: 24, safe: 0.5,
+    own: { name: "자선", role: "사고 당시 USS Fitzgerald", type: "warship", kind: "구축함", len: 154, beam: 20, course: 189, speed: 19.5, dyn: { turn: 45, accel: 1.5, decel: 3 } },
+    actual: { pts: FITZ_PTS.FITZ, pre: { course: 189.1, speed: 19.46 }, post: { course: 200, speed: 19.9 }, until: 20.57 },
+    actualLabel: "실제 항적 · USS Fitzgerald",
+    targets: [
+      { id: "B", name: "ACX Crystal", kind: "컨테이너선", type: "container", len: 223, beam: 30, rec: [5.02, 20.45], spec: { pts: FITZ_PTS.ACX, pre: { course: 87.6, speed: 18.4 }, post: { course: 69.5, speed: 18.4 } } },
+      { id: "C", name: "Wan Hai 266", kind: "컨테이너선", type: "container", len: 198, beam: 28, rec: [0, 20.67], spec: { pts: FITZ_PTS.WAN, pre: { course: 92, speed: 16.1 }, post: { course: 73.5, speed: 16.6 } } },
+      { id: "D", name: "Maersk Evora", kind: "컨테이너선", type: "container", len: 366, beam: 48, rec: [15.65, 22.05], spec: { pts: FITZ_PTS.EVO, pre: { course: 58.9, speed: 19.5 }, post: { course: 59.6, speed: 19.5 } } }
+    ],
+    approx: [
+      "타선 3척: JTSB 보고서 AIS 표(초 단위 위치)를 그대로 재생",
+      "자선 실제 항적: Wan Hai 266 레이더(ARPA) 기록, 01:15 이전은 보고서 침로·속력으로 역산",
+      "Maersk Evora 01:25:39 이전은 보고서 침로·속력으로 역산(가장 불확실)",
+      "ACX Crystal의 충돌 직전 우현 변침(01:29:13~)은 자선에 대한 반응이라 제외하고 직진 연장",
+      "Wan Hai 266·Maersk Evora 크기는 선박 DB 값, 자선 선회·감속 성능은 가정"
+    ]
+  },
+  {
+    id: "sakura", code: "P-2013-0110", no: 2,
+    title: "도쿄만 4척 교차",
+    accident: "SAKURA HARMONY – PUTERI NILAM SATU 충돌",
+    date: "2013.1.10", clock0: "12:12:30", collide: "12:19:27",
+    place: "일본 도쿄만 기사라즈항 앞 (요코하마 동쪽)",
+    cond: "주간 · 시정 5해리 이상",
+    outcome: "충돌 · LNG선 좌현 중앙에 충돌",
+    sources: [
+      { label: "JTSB MA2014-12", url: "https://jtsb.mlit.go.jp/eng-mar_report/2014/2013tk0001e.pdf" }
+    ],
+    story: "자선(LPG선)은 우현의 LNG선·컨테이너선에 <b>피항선</b>이었어요. 좌현의 화물선과 우현 앞 컨테이너선에 길을 비켜 주려 침로를 바꾸다 <b>LNG선 앞을 가로질러 충돌</b>했어요.",
+    why: "두 척에 길을 비켜 주다 세 번째 배 앞으로 들어간 장면",
+    dt: 0.05, tEnd: 11, safe: 0.3,
+    presets: { s1: { method: "speed" } },
+    own: { name: "자선", role: "사고 당시 SAKURA HARMONY", type: "lpg", kind: "LPG선", len: 96, beam: 15, course: 350, speed: 11.5, dyn: { turn: 40, accel: 1, decel: 2.5 } },
+    actual: { pts: SAKURA_PTS.SAKURA, pre: { course: 1, speed: 9.8 }, post: { course: 351, speed: 6.3 }, until: 6.95 },
+    actualLabel: "실제 항적 · SAKURA HARMONY",
+    targets: [
+      { id: "B", name: "Puteri Nilam Satu", kind: "LNG선", type: "lpg", len: 276, beam: 43, rec: [-7.6, 7.53], spec: { pts: SAKURA_PTS.PUTERI, pre: { course: 225, speed: 14.7 }, post: { course: 240, speed: 15.4 } } },
+      { id: "C", name: "컨테이너선", kind: "컨테이너선", type: "container", len: 200, beam: 30, rec: [-2.53, 6.97], spec: { pts: SAKURA_PTS.F, pre: { course: 233, speed: 14.8 }, post: { course: 236, speed: 15.3 } } },
+      { id: "D", name: "내항 화물선", kind: "화물선", type: "cargo", len: 80, beam: 13, rec: [-0.45, 5.55], spec: { pts: SAKURA_PTS.E, pre: { course: 61.7, speed: 12.6 }, post: { course: 50, speed: 11.6 } } }
+    ],
+    approx: [
+      "4척 모두 JTSB 보고서 부록 AIS 표(30~60초 간격)를 그대로 재생, 표 오타 3곳 보정",
+      "LNG선의 충돌 직전 우현 전타(12:18 이후)는 자선에 대한 반응이라 제외하고 직진 연장",
+      "LNG선을 호위한 예인선 2척은 단순화를 위해 제외",
+      "컨테이너선·화물선은 보고서에 이름·길이가 없어 길이는 가정값, 자선 선회·감속 성능도 가정"
+    ]
+  }
 ];
-function lastAt(list,t){let c=list[0];list.forEach(e=>{if(t>=e.t)c=e;});return c;}
-function setCap(el,c,state){
-  if(state.cur===c)return;
-  const tx=el.querySelector(".tx"),ch=el.querySelector(".chip");
-  tx.textContent=c.txt;
-  if(c.chip){ch.textContent=c.chip;ch.className="chip "+(c.cls||"");}else ch.className="chip off";
-  if(!SHOT){el.classList.remove("fx");void el.offsetWidth;el.classList.add("fx");}
-  state.cur=c;
+
+</script>
+<script>
+/* =====================================================================
+   씨나리오 데모 앱: 문제 선택 → 전략 설정·실행 → 결과 리포트 → 오답 재시험
+   모든 결과는 Engine으로 이 페이지에서 계산한다 (하드코딩된 판정 없음)
+   ===================================================================== */
+(function () {
+"use strict";
+var $ = function (s, r) { return (r || document).querySelector(s); };
+var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+var QS = new URLSearchParams(location.search), SHOT = QS.get("shot") === "1";
+if (SHOT) document.documentElement.classList.add("shot");
+var SC = 1, view = null;
+function fit() { SC = Math.min(innerWidth / 1440, innerHeight / 900); $("#stage").style.setProperty("--s", SC); if (view && view.resize) view.resize(); }
+addEventListener("resize", fit); fit();
+
+var E = Engine, BANK = SCENARIOS;
+BANK.forEach(E.prepare);
+var COL = { s1: "#0b6bcb", s2: "#7c4dff", v1: "#e05252", v2: "#0b6bcb", act: "#ef6c3a" };
+var NM = { s1: "전략 1", s2: "전략 2" };
+var S = { pi: 0, params: null, tab: "s1", runs: null, showAct: false, done2: false, rt: null, hist: [] };
+function sc() { return BANK[S.pi]; }
+// 문제마다 개발팀이 먼저 시험해 볼 전략 기본값 (없으면 공통 기본값)
+function preset(k) { return Object.assign({}, E.PRESETS[k], (sc().presets || {})[k] || {}); }
+function resetParams() { S.params = { s1: preset("s1"), s2: preset("s2") }; }
+function subn(p) { return (p.scope === "one" ? "가장 급한 1척" : "모든 배") + " · " + { turn: "변침", speed: "감속", both: "변침+감속" }[p.method]; }
+var qp = QS.get("p"); if (qp) BANK.forEach(function (b, i) { if (b.id === qp) S.pi = i; });
+resetParams();
+function f1(v) { return (+v).toFixed(1); }
+function f2(v) { return (+v).toFixed(2); }
+function p3(v) { return String(Math.round(E.n360(v)) % 360).padStart(3, "0"); }
+function clk(t, s) { s = s || sc(); var p = s.clock0.split(":").map(Number), x = Math.round(p[0] * 3600 + p[1] * 60 + (p[2] || 0) + t * 60); x = ((x % 86400) + 86400) % 86400; return [x / 3600 | 0, (x / 60 | 0) % 60, x % 60].map(function (v) { return String(v).padStart(2, "0"); }).join(":"); }
+function tn(id, s) { return E.name(s || sc(), id); }
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+// 받침에 맞는 조사 (영문·숫자 끝도 처리)
+function jong(w) {
+  var c = String(w).trim().slice(-1), code = c.charCodeAt(0);
+  if (code >= 0xAC00 && code <= 0xD7A3) { var j = (code - 0xAC00) % 28; return j === 0 ? 0 : (j === 8 ? 2 : 1); }
+  if (/[0-9]/.test(c)) return { "0": 1, "1": 2, "2": 0, "3": 1, "4": 0, "5": 0, "6": 1, "7": 2, "8": 2, "9": 0 }[c];
+  if (/[lL]/.test(c)) return 2; if (/[mnkptbdgMNKPTBDG]/.test(c)) return 1; return 0;
+}
+function J(w, a, b) { return w + (jong(w) ? a : b); }
+var ST = { pass: "통과", review: "검토 필요", fail: "실패", na: "판정 불가" };
+function pill(st) { return '<span class="pill ' + st + '">' + ST[st] + "</span>"; }
+var ICON = {
+  play: '<svg width="16" height="16" viewBox="0 0 24 24"><path d="M7 4.5v15l12.5-7.5z" fill="#fff"/></svg>',
+  pause: '<svg width="16" height="16" viewBox="0 0 24 24"><path d="M7 4h3.5v16H7zM13.5 4H17v16h-3.5z" fill="#fff"/></svg>',
+  replay: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v4.5h4.5"/></svg>'
+};
+
+/* ---------------- 2D 대체 뷰 (3D 라이브러리를 못 불러올 때) ---------------- */
+function FlatView() {
+  this.kind = "2d"; this.el = document.createElement("div"); this.el.className = "sea3d";
+  this.cv = document.createElement("canvas"); this.el.appendChild(this.cv); this.t = 0;
+  var self = this; if (window.ResizeObserver) new ResizeObserver(function () { self.resize(); }).observe(this.el);
+}
+FlatView.prototype.mount = function (c) { if (this.el.parentNode !== c) c.appendChild(this.el); this.resize(); };
+FlatView.prototype.resize = function () {
+  var w = this.el.clientWidth, h = this.el.clientHeight; if (!w || !h) return;
+  var pr = Math.min(2.5, (window.devicePixelRatio || 1) * SC); this.cv.width = w * pr; this.cv.height = h * pr;
+  this.cv.style.width = w + "px"; this.cv.style.height = h + "px"; this.pr = pr; this.w = w; this.h = h; this.draw();
+};
+FlatView.prototype.setData = function (d) {
+  this.data = d; var x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+  d.targets.map(function (t) { return t.track; }).concat(d.owns.map(function (o) { return o.track; })).forEach(function (tr) { tr.forEach(function (p) { x0 = Math.min(x0, p.x); x1 = Math.max(x1, p.x); y0 = Math.min(y0, p.y); y1 = Math.max(y1, p.y); }); });
+  this.b = [x0 - .6, y0 - .6, x1 + .6, y1 + .6]; this.draw();
+};
+FlatView.prototype.setTime = function (t) { this.t = t; this.draw(); };
+FlatView.prototype.cam = function () {};
+FlatView.prototype.draw = function () {
+  var d = this.data, c = this.cv.getContext("2d"); if (!d || !this.w) return;
+  var pr = this.pr, w = this.w, h = this.h, b = this.b, k = Math.min(w / (b[2] - b[0]), h / (b[3] - b[1]));
+  var ox = (w - (b[2] - b[0]) * k) / 2, oy = (h - (b[3] - b[1]) * k) / 2;
+  function X(x) { return ox + (x - b[0]) * k; } function Y(y) { return h - oy - (y - b[1]) * k; }
+  c.setTransform(pr, 0, 0, pr, 0, 0); c.fillStyle = "#e3eefa"; c.fillRect(0, 0, w, h);
+  c.strokeStyle = "#cbdcf0"; c.lineWidth = 1;
+  for (var gx = Math.floor(b[0]); gx <= b[2]; gx++) { c.beginPath(); c.moveTo(X(gx), 0); c.lineTo(X(gx), h); c.stroke(); }
+  for (var gy = Math.floor(b[1]); gy <= b[3]; gy++) { c.beginPath(); c.moveTo(0, Y(gy)); c.lineTo(w, Y(gy)); c.stroke(); }
+  var dt = d.dt, t = this.t, n = Math.max(1, Math.min(d.targets[0].track.length - 1, Math.round(t / dt)));
+  function line(tr, upto, col, wd, dash) { c.save(); c.strokeStyle = col; c.lineWidth = wd; c.setLineDash(dash || []); c.beginPath(); for (var i = 0; i <= upto && i < tr.length; i++) { var p = tr[i]; if (i) c.lineTo(X(p.x), Y(p.y)); else c.moveTo(X(p.x), Y(p.y)); } c.stroke(); c.restore(); }
+  function ship(p, col, txt) { c.save(); c.translate(X(p.x), Y(p.y)); c.rotate(p.h * Math.PI / 180); c.fillStyle = col; c.beginPath(); c.moveTo(0, -12); c.lineTo(7, 8); c.lineTo(-7, 8); c.closePath(); c.fill(); c.restore();
+    c.font = "700 13px Pretendard Variable, Malgun Gothic, sans-serif"; c.fillStyle = col; c.fillText(txt, X(p.x) + 12, Y(p.y) - 10); }
+  d.targets.forEach(function (T) { line(T.track, T.track.length, "#a7b1bc", 2, [6, 6]); });
+  d.owns.forEach(function (O) { if (O.planned !== false) line(O.track, O.track.length, O.color + "66", 2, [6, 6]); line(O.track, n, O.color, O.ghost ? 2.5 : 4, O.ghost ? [7, 6] : []); });
+  var tp = d.targets.map(function (T) { return T.track[n]; });
+  d.owns.forEach(function (O) {
+    var p = O.track[n], bad = false;
+    tp.forEach(function (q) { if (Math.hypot(p.x - q.x, p.y - q.y) < d.safe) bad = true; });
+    if (!O.ghost) { c.beginPath(); c.arc(X(p.x), Y(p.y), d.safe * k, 0, 7); c.strokeStyle = bad ? "#dc2626" : O.color; c.setLineDash([5, 4]); c.stroke(); c.setLineDash([]); }
+    ship(p, O.color, O.label);
+  });
+  d.targets.forEach(function (T, i) { ship(tp[i], "#6b7684", T.name); });
+  (d.markers || []).forEach(function (M) { if (M.until != null && t >= M.until) return; c.strokeStyle = "#dc2626"; c.lineWidth = 3; c.beginPath(); c.moveTo(X(M.x) - 7, Y(M.y) - 7); c.lineTo(X(M.x) + 7, Y(M.y) + 7); c.moveTo(X(M.x) + 7, Y(M.y) - 7); c.lineTo(X(M.x) - 7, Y(M.y) + 7); c.stroke(); });
+};
+
+/* ---------------- 재생기 ---------------- */
+var PL = { t: 0, dur: 1, playing: false, rate: 2, frame: null, end: null, raf: 0, last: 0, tb: null };
+PL.loop = function (now) {
+  if (!PL.playing) return; var dt = Math.min(.1, (now - PL.last) / 1000); PL.last = now;
+  PL.t = Math.min(PL.dur, PL.t + dt * PL.rate); PL.render();
+  if (PL.t >= PL.dur) { PL.playing = false; PL.ui(); if (PL.end) PL.end(); return; }
+  PL.raf = requestAnimationFrame(PL.loop);
+};
+PL.play = function () { if (PL.playing) return; if (PL.t >= PL.dur - 1e-6) PL.t = 0; PL.playing = true; PL.last = performance.now(); cancelAnimationFrame(PL.raf); PL.raf = requestAnimationFrame(PL.loop); PL.ui(); };
+PL.pause = function () { PL.playing = false; cancelAnimationFrame(PL.raf); PL.ui(); };
+PL.seek = function (t) { PL.t = Math.max(0, Math.min(PL.dur, t)); PL.render(); PL.ui(); };
+PL.render = function () { if (view) view.setTime(PL.t); if (PL.frame) PL.frame(PL.t); if (PL.tb) { PL.tb.range.value = Math.round(PL.t / PL.dur * 1000); PL.tb.clk.innerHTML = "<b>" + clk(PL.t) + "</b> · +" + f1(PL.t) + "분"; } };
+PL.ui = function () { if (PL.tb) PL.tb.pp.innerHTML = PL.playing ? ICON.pause : PL.t >= PL.dur - 1e-6 ? ICON.replay : ICON.play; if (PL.onUi) PL.onUi(); };
+PL.bind = function (slot, opt) {
+  PL.pause(); var tb = $("[data-tbar]", slot);
+  if (!tb._b) {
+    tb.innerHTML = '<button class="pp" aria-label="재생/정지"></button><input type="range" min="0" max="1000" value="0" aria-label="시간"><span class="clk num"></span>';
+    tb._b = { pp: $(".pp", tb), range: $("input", tb), clk: $(".clk", tb) };
+    tb._b.pp.onclick = function () { this.blur(); if (PL.playing) PL.pause(); else if (PL.onPlay) PL.onPlay(); else PL.play(); };
+    tb._b.range.oninput = function () { PL.pause(); PL.seek(this.value / 1000 * PL.dur); if (PL.onScrub) PL.onScrub(); };
+  }
+  PL.tb = tb._b; PL.dur = sc().tEnd; PL.frame = opt.frame || null; PL.end = opt.end || null; PL.onPlay = opt.onPlay || null; PL.onScrub = opt.onScrub || null; PL.onUi = opt.onUi || null;
+};
+
+/* ---------------- 카메라 버튼 ---------------- */
+function camButtons(slot, chaseKey) {
+  var box = $("[data-cam]", slot); if (!view || view.kind !== "3d") { box.style.display = "none"; return; }
+  box.innerHTML = '<button data-m="oblique">비스듬히</button><button data-m="top">위에서</button><button data-m="chase">자선 따라가기</button>';
+  $$("button", box).forEach(function (b) {
+    b.onclick = function () { b.blur(); view.chaseKey = chaseKey; view.cam(b.dataset.m); mark(); };
+  });
+  function mark() { $$("button", box).forEach(function (x) { x.classList.toggle("on", x.dataset.m === view.mode); }); }
+  view.onUser = mark; mark();
 }
 
-/* 배 모양 (px 단위 × k) */
-const HULL=(s)=>`M0 ${-26*s}C${9*s} ${-16*s} ${9*s} ${-10*s} ${9*s} ${-4*s}L${9*s} ${22*s}L${-9*s} ${22*s}L${-9*s} ${-4*s}C${-9*s} ${-10*s} ${-9*s} ${-16*s} 0 ${-26*s}Z`;
-const FISH=(s)=>`M0 ${-14*s}L${7*s} ${-3*s}L${6*s} ${11*s}L${-6*s} ${11*s}L${-7*s} ${-3*s}Z`;
-const TUG=(s)=>`M0 ${-13*s}C${9*s} ${-11*s} ${10*s} ${-4*s} ${10*s} ${2*s}L${9*s} ${12*s}L${-9*s} ${12*s}L${-10*s} ${2*s}C${-10*s} ${-4*s} ${-9*s} ${-11*s} 0 ${-13*s}Z`;
-const SHIPS=[
-  {key:"B",name:"B 어선",path:FISH,sz:1,fill:"#6b7684",off:[14,-14]},
-  {key:"C",name:"C 예인선",path:TUG,sz:.9,fill:"#6b7684",off:[16,30]},
-  {key:"D",name:"D 화물선",path:HULL,sz:.78,fill:"#8b95a1",off:[20,-16]}
+/* ---------------- 뷰 데이터 ---------------- */
+function tgData(s) { return s.targets.map(function (T) { return { id: T.id, name: T.id + " · " + T.name, type: T.type, len: T.len, beam: T.beam, track: T.track }; }); }
+function ownData(key, label, color, run, extra) { var o = sc().own; return Object.assign({ key: key, label: label, color: color, type: o.type, len: o.len, beam: o.beam, track: run.own }, extra || {}); }
+function actualMarker() { var a = sc().actualRun.own, p = a[a.length - 1]; return { x: p.x, y: p.y, text: "실제 충돌 " + sc().collide }; }
+// 화면 맞춤: 후반부 자선 항적 + 그때 자선 3해리 안에 있던 타선
+function focusBox(d, wide) {
+  if (wide) {
+    var bb = [1e9, 1e9, -1e9, -1e9], tr = d.owns[0].track, m = tr.length;
+    var ad = function (p) { bb[0] = Math.min(bb[0], p.x); bb[1] = Math.min(bb[1], p.y); bb[2] = Math.max(bb[2], p.x); bb[3] = Math.max(bb[3], p.y); };
+    for (var w = Math.round(m * .25); w < m; w += 4) { ad(tr[w]); d.targets.forEach(function (t) { var q = t.track[w]; if (Math.hypot(q.x - tr[w].x, q.y - tr[w].y) < 3) ad(q); }); }
+    return { x0: bb[0] - .4, y0: bb[1] - .4, x1: bb[2] + .4, y1: bb[3] + .4 };
+  }
+  var owns = d.owns.filter(function (o) { return !o.ghost; }); if (!owns.length) owns = d.owns;
+  // 자선과 다른 배가 2해리 안으로 가까워지는 구간만 사용 (없으면 후반부 전체)
+  var n = owns[0].track.length, b = [1e9, 1e9, -1e9, -1e9], hit = false;
+  function add(p) { b[0] = Math.min(b[0], p.x); b[1] = Math.min(b[1], p.y); b[2] = Math.max(b[2], p.x); b[3] = Math.max(b[3], p.y); }
+  for (var i = Math.round(n * .3); i < n; i += 3) owns.forEach(function (o) { var p = o.track[i]; d.targets.forEach(function (t) { var q = t.track[i]; if (Math.hypot(q.x - p.x, q.y - p.y) < 2) { add(p); add(q); hit = true; } }); });
+  if (!hit) for (var k = Math.round(n * .4); k < n; k += 4) owns.forEach(function (o) { add(o.track[k]); });
+  return { x0: b[0] - .4, y0: b[1] - .4, x1: b[2] + .4, y1: b[3] + .4 };
+}
+function setView(d, keep) { view.keepCam = !!keep; d.dt = sc().dt; d.safe = sc().safe; d.box = focusBox(d, d.wide); view.setData(d); view.keepCam = false; }
+
+/* ================= 1 문제 선택 ================= */
+function renderList() {
+  $("#plist").innerHTML = BANK.map(function (b, i) {
+    return '<button class="pc' + (i === S.pi ? " on" : "") + '" data-i="' + i + '"><div class="pc-top"><span class="chip">문제 ' + b.no + '</span><span class="chip gray">실제 사고 재구성</span><span class="n">' + (b.targets.length + 1) + "척</span></div>" +
+      '<div class="pc-t">' + esc(b.title) + '</div><div class="pc-k">' + esc(b.accident) + "</div>" +
+      '<div class="pc-m">' + esc(b.date) + " " + esc(b.collide.slice(0, 5)) + " · " + esc(b.place) + "<br>" + esc(b.cond) + "</div>" +
+      '<div class="pc-r"><span class="chip fail">실제 결과: ' + esc(b.outcome) + '</span><span class="chip gray">' + esc(b.why) + "</span></div>" +
+      '<div class="pc-src">출처 ' + b.sources.map(function (s) { return '<a href="' + s.url + '" target="_blank" rel="noopener">' + esc(s.label) + "</a>"; }).join(" · ") + "</div></button>";
+  }).join("");
+  $$("#plist .pc").forEach(function (el) { el.onclick = function (e) { if (e.target.tagName === "A") return; el.blur(); selectProblem(+el.dataset.i); }; });
+  $("#coverN").textContent = "실제 사고 문제 " + BANK.length + "개";
+}
+function selectProblem(i) {
+  if (i !== S.pi) { S.pi = i; S.runs = null; S.done2 = false; S.rt = null; resetParams(); }
+  renderList(); renderShips(); if (IDS[cur] === "1") enter1();
+}
+function renderShips() {
+  var s = sc(), o = s.own;
+  var rows = '<div class="shr hd"><span>선박</span><span>선종 · 길이</span><span>속력</span><span>침로</span><span>자선 기준 COLREG 관계 · ' + clk(0).slice(0, 5) + " 기준 자동 계산</span></div>";
+  rows += '<div class="shr"><span class="nm"><span class="sb own">A</span>자선 <small>AI 시험 대상</small></span><span>' + o.kind + " " + o.len + 'm</span><span class="num">' + f1(o.speed) + '노트</span><span class="num">' + p3(o.course) + '°</span><span class="rel"><span class="chip">AI가 판단할 자리</span></span></div>';
+  s.targets.forEach(function (T) {
+    var q = T.track[0];
+    rows += '<div class="shr"><span class="nm"><span class="sb">' + T.id + "</span>" + esc(T.name) + "</span><span>" + T.kind + " " + T.len + 'm</span><span class="num">' + f1(q.s) + '노트</span><span class="num">' + p3(q.h) + '°</span><span class="rel"><span class="chip ' + (T.enc.role === "give" ? "warn" : "gray") + '">' + T.enc.label + " · " + T.enc.roleLabel + " " + T.enc.rule + '</span><span class="cp num">DCPA ' + f2(T.cpa0.dcpa) + " · TCPA " + f1(T.cpa0.tcpa) + "분</span></span></div>";
+  });
+  $("#ships1").innerHTML = rows;
+  $("#story1").innerHTML = s.story;
+}
+function enter1() {
+  var s = sc(); view.mount($("#slot1")); camButtons($("#slot1"), "act");
+  setView({ targets: tgData(s), owns: [ownData("act", s.actualLabel, COL.act, s.actualRun, { planned: false })], markers: [actualMarker()], wide: true });
+  PL.bind($("#slot1"), {});
+  if (SHOT) PL.seek(QS.get("t") != null ? +QS.get("t") : s.tEnd); else { PL.seek(0); setTimeout(function () { if (IDS[cur] === "1") PL.play(); }, 700); }
+}
+
+/* ================= 전략 편집기 ================= */
+var CTRL = [
+  { k: "scope", label: "판단 대상", type: "seg", opts: [["one", "가장 급한 1척"], ["all", "위험한 모든 배"]] },
+  { k: "method", label: "회피 수단", type: "seg", opts: [["turn", "변침"], ["speed", "감속"], ["both", "변침+감속"]] },
+  { k: "side", label: "변침 방향", sub: "COLREG 14·15조", type: "seg", opts: [["stbd", "우현만"], ["any", "좌·우현"]] },
+  { k: "trigger", label: "회피 시작", sub: "충돌까지 남은 시간(TCPA)", type: "rng", min: 4, max: 20, step: 1, fmt: function (v) { return v + "분 전"; } },
+  { k: "dcpa", label: "목표 통과 거리", sub: "각 배와의 최소 거리(DCPA)", type: "rng", min: .3, max: 1.5, step: .1, fmt: function (v) { return f1(v) + "해리"; } },
+  { k: "reeval", label: "위험 재평가", sub: "회피를 시작한 뒤 다시 계산", type: "seg", opts: [[0, "안 함"], [3, "3분마다"], [1, "1분마다"]] },
+  { k: "resume", label: "위험이 지나면 원침로 복귀", type: "tog" }
 ];
-const STR=[{key:"s1",col:"#0b6bcb",name:"전략 1",zone:"rgba(11,107,203,.07)"},{key:"s2",col:"#7c4dff",name:"전략 2",zone:"rgba(124,77,255,.06)"}];
-function LBL(k,fill,size){return{"font-size":(size||19)*k,"font-weight":700,fill,"paint-order":"stroke",stroke:"#fff","stroke-width":5*k,"stroke-linejoin":"round"};}
-function seaGrid(svg,vb,k){
-  S("rect",{x:vb[0]-5,y:vb[1]-5,width:vb[2]+10,height:vb[3]+10,fill:"#e8f1fb"},svg);
-  const g=S("g",{stroke:"#d6e6f6","stroke-width":1.2*k},svg);
-  for(let x=Math.floor(vb[0]);x<=vb[0]+vb[2]+1;x++)S("line",{x1:x,y1:vb[1]-1,x2:x,y2:vb[1]+vb[3]+1},g);
-  for(let y=Math.floor(vb[1]);y<=vb[1]+vb[3]+1;y++)S("line",{x1:vb[0]-1,y1:y,x2:vb[0]+vb[2]+1,y2:y},g);
+function buildEditor(box, o) {
+  // o: {tabs:bool, get:()=>params, set:(k,v)=>void, base:()=>params|null, cls:()=>"s1c"}
+  var html = "";
+  if (o.tabs) html += '<div class="tabs">' + ["s1", "s2"].map(function (k) { return '<button class="tab ' + k + 'c" data-k="' + k + '"><span class="stb">' + k.slice(1) + "</span>" + NM[k] + " <small></small></button>"; }).join("") + "</div>";
+  html += '<div class="ed">' + CTRL.map(function (c) {
+    var ctl = "";
+    if (c.type === "seg") ctl = '<div class="seg">' + c.opts.map(function (x) { return '<button data-v="' + x[0] + '">' + x[1] + "</button>"; }).join("") + "</div>";
+    else if (c.type === "rng") ctl = '<div class="rng"><input type="range" min="' + c.min + '" max="' + c.max + '" step="' + c.step + '"><span class="val num"></span></div>';
+    else ctl = '<button class="tog" aria-label="' + c.label + '"></button>';
+    return '<div class="row" data-k="' + c.k + '"><span class="k">' + c.label + (c.sub ? "<small>" + c.sub + "</small>" : "") + "</span>" + ctl + "</div>";
+  }).join("") + "</div>" + '<div class="live"></div>' + (o.tabs ? '<div class="pnote">데모용 회피 알고리즘이에요. 실제 서비스에서는 개발사 AI가 같은 자리에서 판단을 보내요</div>' : "");
+  box.innerHTML = html;
+  if (o.tabs) $$(".tab", box).forEach(function (b) { b.onclick = function () { b.blur(); o.onTab(b.dataset.k); }; });
+  CTRL.forEach(function (c) {
+    var row = $('.row[data-k="' + c.k + '"]', box);
+    if (c.type === "seg") $$("button", row).forEach(function (b) { b.onclick = function () { b.blur(); var v = b.dataset.v; o.set(c.k, isNaN(+v) ? v : +v); }; });
+    else if (c.type === "rng") { var r = $("input", row); r.oninput = function () { $(".val", row).textContent = c.fmt(+r.value); o.set(c.k, +(+r.value).toFixed(2)); }; }
+    else $(".tog", row).onclick = function () { this.blur(); o.set(c.k, !o.get()[c.k]); };
+  });
+  box._sync = function () {
+    var p = o.get(), base = o.base ? o.base() : null; box.className = box.className.replace(/\b[sv][12]c\b/g, "").trim() + " " + o.cls();
+    if (o.tabs) $$(".tab", box).forEach(function (b) { b.classList.toggle("on", b.dataset.k === S.tab); $("small", b).textContent = subn(S.params[b.dataset.k]); });
+    CTRL.forEach(function (c) {
+      var row = $('.row[data-k="' + c.k + '"]', box), v = p[c.k];
+      if (c.type === "seg") $$("button", row).forEach(function (b) { b.classList.toggle("on", String(b.dataset.v) === String(v)); });
+      else if (c.type === "rng") { var r = $("input", row); if (document.activeElement !== r) r.value = v; $(".val", row).textContent = c.fmt(v); }
+      else $(".tog", row).classList.toggle("on", !!v);
+      row.classList.toggle("chg", !!base && String(base[c.k]) !== String(v));
+    });
+  };
+  box._sync();
 }
-function fitVB(boxes,bw,bh,pd){
-  let k=.01,vb;
-  for(let it=0;it<5;it++){let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
-    boxes.forEach(([p,l,t,r,b])=>{x0=Math.min(x0,p.x+l*k);y0=Math.min(y0,p.y+t*k);x1=Math.max(x1,p.x+r*k);y1=Math.max(y1,p.y+b*k);});
-    x0-=pd[0]*k;y0-=pd[1]*k;x1+=pd[2]*k;y1+=pd[3]*k;let w=x1-x0,h=y1-y0;const cx=(x0+x1)/2,cy=(y0+y1)/2;
-    const asp=bw/bh;if(w/h<asp)w=h*asp;else h=w/asp;vb=[cx-w/2,cy-h/2,w,h];k=w/bw;}
-  return vb;
+function actTxt(l) {
+  var o = sc().own, off = Math.round(E.n180(l.course - o.course)), parts = [];
+  if (Math.abs(off) >= 1) parts.push((off > 0 ? "우현 " : "좌현 ") + Math.abs(off) + "° 변침(" + p3(l.course) + "°)");
+  if (l.speed < o.speed - .05) parts.push(f1(l.speed) + "노트로 감속");
+  if (!parts.length) parts.push("침로·속력 유지");
+  return parts.join(" + ");
 }
-const P=(arr,n)=>arr.slice(0,n).map(p=>p.x.toFixed(4)+","+p.y.toFixed(4)).join(" ");
-const nT=t=>Math.min(SIM.N,Math.round(t/DT)+1);
-function ownShip(svg,k,col,sz){const g=S("g",{},svg);
-  S("path",{d:HULL(k*(sz||.8)),fill:col,stroke:"#fff","stroke-width":2.2*k,"stroke-linejoin":"round"},g);
-  S("rect",{x:-4.5*k,y:7*k,width:9*k,height:6*k,rx:2*k,fill:"#fff","fill-opacity":.85},g);return g;}
+function liveHtml(run, label) {
+  var s = sc(), first = run.log.filter(function (l) { return l.changed; })[0];
+  if (!first) return '<div class="lh">AI 판단</div><div class="dec">회피가 필요하다고 판단한 순간이 없어요 (침로·속력 유지)</div>';
+  var mins = first.seen.filter(function (x) { return first.consider.indexOf(x.id) >= 0 && x.tcpa > 0; }).map(function (x) { return x.tcpa; });
+  var chips = s.targets.map(function (T) { var on = first.consider.indexOf(T.id) >= 0; return '<span class="sb" style="background:' + (on ? "var(--fail)" : "#d1d6db") + '">' + T.id + "</span>"; }).join("");
+  return '<div class="lh">AI가 처음 고른 행동' + (calcMs != null ? '<i class="calc">다시 계산 ' + Math.max(1, Math.round(calcMs)) + "ms</i>" : "") + '<span class="num">' + clk(first.t) + (mins.length ? " · TCPA " + f1(Math.min.apply(null, mins)) + "분" : "") + "</span></div>" +
+    '<div class="lr" style="align-items:center;gap:6px"><span style="font-size:13px;font-weight:700;color:var(--gray);margin-right:4px">보는 배</span>' + chips +
+    '<span style="font-size:13px;font-weight:600;color:var(--gray);margin-left:6px">' + (first.consider.length === 1 ? esc(tn(first.consider[0])) + "만" : first.consider.length + "척 함께") + "</span></div>" +
+    '<div class="dec">선택: <b>' + actTxt(first) + "</b>" + (first.feasible ? "" : ' <span class="chip warn" style="height:24px;font-size:12px">모두 만족하는 해 없음</span>') + "</div>";
+}
 
-/* ---------- 3 위험 변화 지도: 두 전략을 같은 지도에 ---------- */
-function buildSim(svg,bw,bh){
-  const R=SIM.R,stop=nT(TSTOP),boxes=[];
-  ["s1","s2"].forEach(k=>R[k].slice(0,stop).forEach(p=>boxes.push([p,-58,-58,58,58])));
-  R.orig.slice(0,stop).forEach(p=>boxes.push([p,-20,-20,20,20]));
-  SHIPS.forEach(s=>R[s.key].slice(0,stop).forEach(p=>boxes.push([p,-20,-30,110,40])));
-  const vb=fitVB(boxes,bw,bh,[300,12,30,50]);svg.setAttribute("viewBox",vb.map(v=>v.toFixed(4)).join(" "));
-  const k=vb[2]/bw;
-  seaGrid(svg,vb,k);
-  /* 원래 항로 + 그대로 가면 B와 충돌 */
-  const o0=R.orig[0],oE=R.orig[SIM.N-1];
-  S("line",{x1:o0.x,y1:o0.y,x2:oE.x,y2:oE.y,stroke:"#0b6bcb","stroke-width":2.4*k,"stroke-dasharray":`${2*k} ${8*k}`,"stroke-linecap":"round",opacity:.4},svg);
-  const origL=S("text",Object.assign({x:oE.x-4*k,y:oE.y-14*k,"text-anchor":"end"},LBL(k,"#5b8fc7",16)),svg);origL.textContent="원래 항로";
-  const hitG=S("g",{transform:`translate(${SIM.hit.x} ${SIM.hit.y})`},svg);
-  S("circle",{r:20*k,fill:"rgba(220,38,38,.08)",stroke:"#dc2626","stroke-width":2.2*k,"stroke-dasharray":`${5*k} ${4*k}`},hitG);
-  S("path",{d:`M${-7*k} ${-7*k}L${7*k} ${7*k}M${7*k} ${-7*k}L${-7*k} ${7*k}`,stroke:"#dc2626","stroke-width":3.4*k,"stroke-linecap":"round"},hitG);
-  const hitL=S("text",Object.assign({x:0,y:-30*k,"text-anchor":"middle"},LBL(k,"#dc2626",17)),hitG);hitL.textContent="그대로 가면 B와 충돌";
-  /* 주변 배 기록 항적 (점선) */
-  SHIPS.forEach(s=>S("polyline",{points:P(R[s.key],stop),fill:"none",stroke:"#a7b1bc","stroke-width":2.4*k,"stroke-dasharray":`${6*k} ${6*k}`,"stroke-linecap":"round"},svg));
-  /* 전략별: 계획 항로(옅게) + 지나온 항적 + 안전영역 */
-  STR.forEach(s=>{S("polyline",{points:P(R[s.key],stop),fill:"none",stroke:s.col,"stroke-width":2.4*k,"stroke-dasharray":`${6*k} ${6*k}`,"stroke-linecap":"round",opacity:.3},svg);});
-  STR.forEach(s=>{s.trk=S("polyline",{fill:"none",stroke:s.col,"stroke-width":4.5*k,"stroke-linecap":"round","stroke-linejoin":"round",opacity:.92},svg);
-    s.zoneEl=S("circle",{r:SAFE,"stroke-width":2.2*k,"stroke-dasharray":`${6*k} ${5*k}`},svg);});
-  const cl=S("line",{stroke:"#dc2626","stroke-width":2.6*k,"stroke-linecap":"round"},svg);
-  const clT=S("text",LBL(k,"#dc2626",21),svg);
-  SHIPS.forEach(s=>{s.g=S("g",{},svg);s.hull=S("path",{d:s.path(k*s.sz),fill:s.fill,stroke:"#fff","stroke-width":2*k,"stroke-linejoin":"round"},s.g);
-    s.lab=S("text",LBL(k,"#4e5968"),svg);s.lab.textContent=s.name;});
-  STR.forEach(s=>{s.ship=ownShip(svg,k,s.col);s.lab=S("text",Object.assign({"text-anchor":"middle"},LBL(k,s.col,19)),svg);s.lab.textContent=s.name;});
-  /* HUD: 선박별 최소 거리 (지금까지) */
-  const hud=$("#hud"),cells={};
-  [["B","B 어선"],["C","C 예인선"],["D","D 화물선"]].forEach(([key,nm])=>{const r=document.createElement("div");r.className="hr";
-    r.innerHTML=`<span class="sb">${key}</span>${nm}<span class="vv"><b></b><b></b></span>`;hud.appendChild(r);const b=r.querySelectorAll("b");cells[key]=[b[0],b[1]];});
-  const ft=document.createElement("div");ft.className="ft";ft.textContent="빨간 칸 = 안전영역 침범";hud.appendChild(ft);
-  return function render(t){
-    const n=Math.min(SIM.N-1,Math.floor(t/DT)),o={};
-    STR.forEach(s=>{const p=SIM.L(R[s.key],t);o[s.key]=p;
-      s.trk.setAttribute("points",P(R[s.key],n+1)+" "+p.x.toFixed(4)+","+p.y.toFixed(4));
-      s.ship.setAttribute("transform",`translate(${p.x} ${p.y}) rotate(${p.h})`);});
-    const pc=SIM.L(R.C,t),d1C=Math.hypot(o.s1.x-pc.x,o.s1.y-pc.y),bad=d1C<SAFE;
-    STR.forEach(s=>{const p=o[s.key],red=s.key==="s1"&&bad;
-      s.zoneEl.setAttribute("cx",p.x);s.zoneEl.setAttribute("cy",p.y);
-      s.zoneEl.setAttribute("fill",red?"rgba(220,38,38,.12)":s.zone);s.zoneEl.setAttribute("stroke",red?"#dc2626":s.col);s.zoneEl.setAttribute("stroke-opacity",red?1:.5);});
-    /* 두 자선 라벨: 겹치지 않게 위/아래로 */
-    STR.forEach(s=>{const p=o[s.key];if(s.key==="s2"){s.lab.setAttribute("text-anchor","middle");s.lab.setAttribute("x",p.x);s.lab.setAttribute("y",p.y-28*k);}else{s.lab.setAttribute("text-anchor","end");s.lab.setAttribute("x",p.x-26*k);s.lab.setAttribute("y",p.y+8*k);}});
-    SHIPS.forEach(s=>{const p=SIM.L(R[s.key],t);s.g.setAttribute("transform",`translate(${p.x} ${p.y}) rotate(${p.h})`);
-      const red=s.key==="C"&&bad;s.hull.setAttribute("fill",red?"#dc2626":s.fill);s.lab.setAttribute("fill",red?"#dc2626":"#4e5968");
-      s.lab.setAttribute("x",p.x+s.off[0]*k);s.lab.setAttribute("y",p.y+s.off[1]*k);});
-    if(bad){cl.setAttribute("x1",o.s1.x);cl.setAttribute("y1",o.s1.y);cl.setAttribute("x2",pc.x);cl.setAttribute("y2",pc.y);cl.style.opacity=1;
-      clT.textContent="C와 "+f1(d1C)+"해리";clT.setAttribute("x",o.s1.x+SAFE+12*k);clT.setAttribute("y",o.s1.y+7*k);clT.style.opacity=1;}
-    else{cl.style.opacity=0;clT.style.opacity=0;}
-    hitG.style.opacity=t<2.5?1:t<4?.25:0;
-    ["B","C","D"].forEach(sh=>{["s1","s2"].forEach((k2,j)=>{const d=SIM_M[k2][sh].d;let m=9;for(let i=0;i<=n;i++)m=Math.min(m,d[i]);
-      const c=cells[sh][j];c.textContent=f1(m);c.classList.toggle("bad",m<SAFE);});});
+/* ================= 2 전략 설정·실행 ================= */
+function ensureRuns() { if (!S.runs) S.runs = { s1: E.run(sc(), S.params.s1), s2: E.run(sc(), S.params.s2) }; }
+function view2Data() {
+  var s = sc(), owns = [ownData("s1", NM.s1, COL.s1, S.runs.s1), ownData("s2", NM.s2, COL.s2, S.runs.s2)], mk = [];
+  if (S.showAct) { owns.unshift(ownData("act", "실제 항적", COL.act, s.actualRun, { ghost: true, planned: false })); mk.push(actualMarker()); }
+  return { targets: tgData(s), owns: owns, markers: mk };
+}
+var ed2Opts = {
+  tabs: true, get: function () { return S.params[S.tab]; }, cls: function () { return S.tab + "c"; },
+  base: function () { return preset(S.tab); },
+  onTab: function (k) { S.tab = k; $("#ed2")._sync(); live2(); },
+  set: function (k, v) { S.params[S.tab][k] = v; $("#ed2")._sync(); schedule2(); }
+};
+var pend2 = 0;
+var calcMs = null;
+function schedule2() { if (pend2) return; pend2 = setTimeout(function () { pend2 = 0; var t0 = performance.now(); S.runs[S.tab] = E.run(sc(), S.params[S.tab]); calcMs = performance.now() - t0; S.done2 = false; setView(view2Data(), true); PL.pause(); PL.seek(0); live2(); hud2Build(); title2(); updCta(); }, 30); }
+function live2() { var b = $("#ed2 .live"); b.innerHTML = liveHtml(S.runs[S.tab], NM[S.tab]); b.className = "live " + S.tab + "c"; }
+function hudBuild(el, cols) {
+  var s = sc();
+  el.innerHTML = '<div class="hh">최소 거리 (해리, 지금까지)' + cols.map(function (c) { return '<span class="stb ' + c.cls + '">' + c.short + "</span>"; }).join("") + "</div>" +
+    s.targets.map(function (T) { return '<div class="hr" data-id="' + T.id + '"><span class="sb">' + T.id + '</span><span class="nm">' + esc(T.name) + '</span><span class="vv">' + cols.map(function () { return "<b></b>"; }).join("") + "</span></div>"; }).join("") +
+    '<div class="ft">빨간 칸 = 안전영역(' + s.safe + "해리) 침범</div>";
+  el._cols = cols;
+}
+function hudUpdate(el, t) {
+  var s = sc(), n = Math.min(s.targets[0].track.length - 1, Math.floor(t / s.dt));
+  s.targets.forEach(function (T) {
+    var cells = $$('.hr[data-id="' + T.id + '"] b', el);
+    el._cols.forEach(function (c, j) { var d = c.run.ev.dist[T.id].d, m = 99; for (var i = 0; i <= n; i++) if (d[i] < m) m = d[i]; cells[j].textContent = f2(m); cells[j].classList.toggle("bad", m < s.safe); });
+  });
+}
+function hud2Build() { hudBuild($("#hud2"), [{ cls: "s1c", short: "전략1", run: S.runs.s1 }, { cls: "s2c", short: "전략2", run: S.runs.s2 }]); hudUpdate($("#hud2"), PL.t); }
+function events(list) {
+  var s = sc(), ev = [];
+  list.forEach(function (it) {
+    var r = it.run, fc = r.log.filter(function (l) { return l.changed; })[0];
+    if (fc) ev.push({ t: fc.t, txt: it.label + ": " + (fc.consider.length === 1 ? tn(fc.consider[0]) + "만 보고 " : fc.consider.length + "척을 함께 보고 ") + actTxt(fc) });
+    var rs = r.log.filter(function (l) { return l.why === "resume"; })[0];
+    if (rs) ev.push({ t: rs.t, txt: it.label + ": 위험이 지나 원침로(" + p3(s.own.course) + "°)로 복귀" });
+    r.ev.safety.forEach(function (v) {
+      ev.push({ t: v.tIn >= 0 ? v.tIn : v.tMin, txt: it.label + ": 안전영역에 " + tn(v.id) + " 진입", chip: v.kind === "collision" ? "충돌" : v.secondary ? "2차 충돌위험" : "피하려던 배와 근접", cls: "fail" });
+    });
+  });
+  s.targets.filter(function (T) { return T.primary; }).forEach(function (T) {
+    if (list.every(function (it) { return it.run.ev.dist[T.id].min >= s.safe; })) {
+      var t = Math.max.apply(null, list.map(function (it) { return it.run.ev.dist[T.id].tMin; })) + .2;
+      ev.push({ t: t, txt: (list.length > 1 ? "모두 " : "") + J(T.name, "과는", "와는") + " 안전하게 지나갔어요", chip: list.map(function (it) { return f2(it.run.ev.dist[T.id].min); }).join(" · ") + "해리", cls: "pass" });
+    }
+  });
+  ev.sort(function (a, b) { return a.t - b.t; }); return ev;
+}
+function capUpdate(el, evs, t, idle) {
+  var c = idle ? { txt: el._idle, t: -1 } : { txt: el._idle, t: -1 };
+  if (!idle) evs.forEach(function (e) { if (t >= e.t) c = e; });
+  if (el._cur === c.txt + (c.chip || "")) return; el._cur = c.txt + (c.chip || "");
+  $(".tm", el).textContent = c.t >= 0 ? clk(c.t).slice(0, 5) : ""; $(".tx", el).textContent = c.txt;
+  var ch = $(".chip", el); if (c.chip) { ch.textContent = c.chip; ch.className = "chip " + (c.cls || ""); } else ch.className = "chip off";
+  if (!SHOT) { el.classList.remove("fx"); void el.offsetWidth; el.classList.add("fx"); }
+}
+function title2() {
+  var h = $("#t2");
+  if (!S.done2) { h.innerHTML = "AI 전략을 바꾸면, <em>예상 항적</em>이 바로 바뀌어요"; return; }
+  var s = sc(), hit = null;
+  ["s1", "s2"].forEach(function (k) { if (!hit) { var v = S.runs[k].ev.safety.filter(function (x) { return x.secondary; })[0]; if (v) hit = { k: k, v: v }; } });
+  if (hit) { var r = S.runs[hit.k], fc = r.log.filter(function (l) { return l.changed; })[0]; var who = fc && fc.consider.length === 1 ? tn(fc.consider[0]) + " 회피 뒤, " : "";
+    h.innerHTML = NM[hit.k] + "은 " + esc(who) + '<span class="f">' + esc(tn(hit.v.id)) + "에 " + f2(hit.v.min) + "해리</span>까지 다가갔어요"; return; }
+  var rv = null;
+  ["s1", "s2"].forEach(function (k) { if (!rv && S.runs[k].ev.reviews.length && S.runs[k].ev.status === "review") rv = { k: k, r: S.runs[k].ev.reviews[0] }; });
+  if (rv) { h.innerHTML = NM[rv.k] + '은 거리는 지켰지만, <span style="color:var(--warn-ink)">' + esc(rv.r.text.replace("피항선인데 ", "")) + "</span>"; return; }
+  h.innerHTML = NM.s1 + " " + ST[S.runs.s1.ev.status] + " · " + NM.s2 + " " + ST[S.runs.s2.ev.status];
+}
+function enter2() {
+  ensureRuns(); var s = sc();
+  view.mount($("#slot2")); camButtons($("#slot2"), "s1");
+  buildEditor($("#ed2"), ed2Opts); live2();
+  setView(view2Data()); hud2Build();
+  var cap = $("#cap2"); cap._idle = "같은 순간에서 두 전략을 함께 출발시켜요"; cap._cur = null;
+  var evs = events([{ label: NM.s1, run: S.runs.s1 }, { label: NM.s2, run: S.runs.s2 }]);
+  PL.bind($("#slot2"), {
+    frame: function (t) { hudUpdate($("#hud2"), t); capUpdate(cap, evs, t, t <= 0 && !PL.playing); },
+    end: function () { S.done2 = true; title2(); updCta(); },
+    onPlay: function () { evs = events([{ label: NM.s1, run: S.runs.s1 }, { label: NM.s2, run: S.runs.s2 }]); PL.play(); },
+    onScrub: function () { evs = events([{ label: NM.s1, run: S.runs.s1 }, { label: NM.s2, run: S.runs.s2 }]); },
+    onUi: updCta
+  });
+  PL._evs2 = function () { evs = events([{ label: NM.s1, run: S.runs.s1 }, { label: NM.s2, run: S.runs.s2 }]); };
+  $("#actBtn").classList.toggle("on", S.showAct);
+  $("#actBtn").onclick = function () { this.blur(); S.showAct = !S.showAct; this.classList.toggle("on", S.showAct); setView(view2Data(), true); view.setTime(PL.t); };
+  if (SHOT) { S.done2 = QS.get("t") == null; PL.seek(QS.get("t") != null ? +QS.get("t") : s.tEnd); }
+  else PL.seek(S.done2 ? s.tEnd : 0);
+  title2();
+}
+function run2() { PL._evs2 && PL._evs2(); PL.seek(0); PL.play(); }
+
+/* ================= 3 결과 리포트 ================= */
+var KIND = { collision: "충돌", domain: "안전영역 침범" };
+function safetyCell(ev) {
+  var s = sc();
+  if (ev.status === "na") {
+    var u = ev.safety[0];
+    return '<div class="cl r2"><div class="m mu">판정 불가 · ' + esc(tn(u.id)) + '</div><div class="d">' + clk(u.tIn >= 0 ? u.tIn : u.tMin) + " 근접(최소 " + f2(u.min) + "해리)은 보고서 기록이 없는<br>역산·연장 구간이라 판정하지 않아요 → 데이터 보강 후 재시험</div></div>";
+  }
+  if (ev.safety.length) {
+    var v = ev.safety[0], name = v.kind === "collision" ? "충돌" : v.secondary ? "2차 충돌위험" : "안전영역 침범";
+    return '<div class="cl l1 ng r2"><div class="m ng">' + name + " · " + esc(tn(v.id)) + '</div><div class="d">' + (v.tIn >= 0 ? clk(v.tIn) + " 안전영역 진입 · " : "") + "최소 " + f2(v.min) + "해리 (" + clk(v.tMin) + ")" +
+      (v.secondary ? "<br>원래 침로였다면 위험하지 않던 배 → 회피 때문에 생긴 위험" : "") + (ev.safety.length > 1 ? "<br>그 밖에 " + (ev.safety.length - 1) + "척 더" : "") +
+      (ev.reviews.length ? '<br><span style="color:var(--warn-ink)">항법 검토: ' + ev.reviews.map(function (r) { return esc(r.text) + " (" + r.rule + ")"; }).join(" · ") + "</span>" : "") + "</div></div>";
+  }
+  var mins = s.targets.map(function (T) { return T.name + " " + f2(ev.dist[T.id].min); }).join(" · ");
+  if (ev.reviews.length) return '<div class="cl r2"><div class="m wn">안전 조건 충족 · 항법 검토</div><div class="d">' + ev.reviews.map(function (r) { return esc(r.text) + " (" + r.rule + ")"; }).join("<br>") + "<br>최소 거리 " + mins + "해리</div></div>";
+  return '<div class="cl r2"><div class="m ok">필수 조건 충족</div><div class="d">최소 거리 ' + mins + "해리<br>충돌 · 안전영역 · 2차 충돌위험 · 항법 검토 모두 이상 없음</div></div>";
+}
+function diagCell(ev, run) {
+  var d = ev.diag, first = d.firstT != null ? clk(d.firstT) + (d.firstTcpa != null ? " · TCPA " + f1(d.firstTcpa) + "분" : "") : "회피 안 함";
+  var flags = [];
+  if (d.lateReassess) flags.push("회피 뒤 재평가 없음");
+  if (d.adjusts >= 4) flags.push("조정 반복 " + d.adjusts + "회");
+  if (d.switches) flags.push("판단 대상 교체 " + d.switches + "회");
+  if (d.noSolution) flags.push("해 없음 → 사람 개입 필요");
+  return '<div class="cl r3"><div class="m">회피 시작 ' + first + ' <span class="tag">진단값</span></div><div class="d">조정 ' + d.adjusts + "회 · 재평가 " + (d.reeval ? d.reeval + "분마다" : "안 함") + " · 최대 변침 " + Math.round(d.maxTurn) + "° · 최저 " + f1(d.minSpeed) + "노트" +
+    (flags.length ? '<br><span style="color:var(--warn-ink)">' + flags.join(" · ") + "</span>" : "<br>안전 판정과 별도로 기록") + "</div></div>";
+}
+function effCell(ev) {
+  if (ev.status === "fail") return '<div class="cl r4"><div class="m mu">비교 제외</div><div class="d">안전을 효율 점수로 상쇄하지 않아요</div></div>';
+  return '<div class="cl r4"><div class="m">진행 손실 ' + f2(ev.eff.lossNm) + "해리 (≈" + f1(ev.eff.delayMin) + '분)</div><div class="d">최대 항로 이탈 ' + f1(ev.eff.maxXte) + "해리 · 같은 문제의 다른 통과 결과와 비교</div></div>";
+}
+function enter3() {
+  ensureRuns(); var s = sc(), R = S.runs;
+  $("#repmeta").textContent = s.code + " · 평가 기준 " + E.RULES_VERSION + " · 동역학 가정 " + E.DYN_VERSION + " · 안전영역 " + s.safe + "해리";
+  var h = '<div class="hc"></div>';
+  ["s1", "s2"].forEach(function (k) { h += '<div class="hc ' + k + 'c"><span class="stb">' + k.slice(1) + "</span>" + NM[k] + " <small>" + subn(S.params[k]) + "</small>" + pill(R[k].ev.status) + "</div>"; });
+  var anyFail = R.s1.ev.status === "fail" || R.s2.ev.status === "fail";
+  h += '<div class="lay r2' + (anyFail ? " l1" : "") + '">① 안전성<small>충돌·안전영역·2차 충돌위험<br>위반이 확인되면 실패</small></div>' + safetyCell(R.s1.ev) + safetyCell(R.s2.ev);
+  h += '<div class="lay r3">② 행동 진단<small>회피 시점·조정·재평가<br>안전 판정과 따로 기록</small></div>' + diagCell(R.s1.ev, R.s1) + diagCell(R.s2.ev, R.s2);
+  h += '<div class="lay r4">③ 운항 효율<small>안전을 지킨 결과끼리만 비교</small></div>' + effCell(R.s1.ev) + effCell(R.s2.ev);
+  $("#rep").innerHTML = h;
+  var fk = ["s1", "s2"].filter(function (k) { return R[k].ev.status === "fail"; }), rk = ["s1", "s2"].filter(function (k) { return R[k].ev.status === "review" || R[k].ev.status === "na"; });
+  $("#t3").innerHTML = fk.length ? NM[fk[0]] + '은 <span class="f">실패</span>, 이유와 근거를 남겨요' : rk.length ? NM[rk[0]] + '은 <span style="color:var(--warn-ink)">' + ST[R[rk[0]].ev.status] + "</span>, 전문가가 볼 근거를 남겨요" : "안전 판정과 행동 진단을 나눠서 봐요";
+}
+
+/* ---------------- 판단 기록 · JSON ---------------- */
+function logItems(run) {
+  var o = sc().own, why = { trigger: "회피 시작", reeval: "재평가", resume: "원침로 복귀" };
+  var items = run.log.filter(function (l) { return l.changed || l.why === "trigger"; });
+  if (!items.length) return "<li>회피 판단 없음</li>";
+  return items.map(function (l) {
+    var seen = l.seen.filter(function (x) { return l.consider.indexOf(x.id) >= 0; }).map(function (x) { return esc(tn(x.id)) + " DCPA " + f2(x.dcpa) + " · TCPA " + f1(x.tcpa) + "분 (" + x.enc + " " + x.rule + ")"; });
+    return '<li><span class="t num">' + clk(l.t) + "</span><b>" + why[l.why] + "</b> → " + actTxt(l) + '<span class="sm">' + (seen.length ? "본 배: " + seen.join(" / ") : "본 배: " + l.consider.map(function (i) { return esc(tn(i)); }).join(", ")) +
+      " · 예측 최소 거리 " + f2(l.predMin) + "해리" + (l.feasible ? "" : " · 목표를 만족하는 해 없음") + "</span></li>";
+  }).join("");
+}
+function reportJSON(label, run) {
+  var s = sc(), ev = run.ev, code = { pass: "PASS", review: "REVIEW", fail: "FAIL", na: "N/A" };
+  var mins = {}; s.targets.forEach(function (T) { mins[T.name] = +f2(ev.dist[T.id].min); });
+  return {
+    schema: "sea-nario.report/0.1",
+    problem: { id: s.code, title: s.title, based_on: s.accident, sources: s.sources.map(function (x) { return x.label; }), ships: s.targets.length + 1, window: s.clock0 + "–" + clk(s.tEnd), safe_zone_nm: s.safe, replay: "target-fixed" },
+    model_under_test: { name: label, params: run.params },
+    rules: E.RULES_VERSION, dynamics: E.DYN_VERSION, provisional: true,
+    result: code[ev.status],
+    safety: { violations: ev.safety.map(function (v) { return { ship: tn(v.id), type: v.kind === "collision" ? "collision" : v.secondary ? "secondary_risk" : "safe_zone", min_nm: +f2(v.min), at: clk(v.tMin), entered: v.tIn >= 0 ? clk(v.tIn) : null }; }), reviews: ev.reviews.map(function (r) { return { rule: r.rule, note: r.text }; }), min_distance_nm: mins },
+    diagnostics: { first_action: ev.diag.firstT != null ? clk(ev.diag.firstT) : null, tcpa_at_first_action_min: ev.diag.firstTcpa != null ? +f1(ev.diag.firstTcpa) : null, adjustments: ev.diag.adjusts, target_switches: ev.diag.switches, reassessment_min: ev.diag.reeval || null, max_course_change_deg: Math.round(ev.diag.maxTurn), min_speed_kn: +f1(ev.diag.minSpeed), no_solution: ev.diag.noSolution },
+    efficiency: ev.status === "fail" ? null : { progress_loss_nm: +f2(ev.eff.lossNm), delay_min: +f1(ev.eff.delayMin), max_cross_track_nm: +f2(ev.eff.maxXte) },
+    decision_log: run.log.filter(function (l) { return l.changed || l.why === "trigger"; }).map(function (l) {
+      return { time: clk(l.t), event: l.why, considered: l.consider.map(function (i) { return tn(i); }), observed: l.seen.map(function (x) { return { ship: tn(x.id), dcpa_nm: +f2(x.dcpa), tcpa_min: +f1(x.tcpa), relation: x.enc + " " + x.rule }; }), action: { course_deg: Math.round(l.course), speed_kn: +f1(l.speed) }, predicted_min_nm: +f2(l.predMin) };
+    })
   };
 }
-
-/* ---------- 1 작은 배치 그림 (시작 시점) ---------- */
-function buildPic(svg,bw,bh){
-  const R=SIM.R,pts=[["A",R.s1[0]],["B",R.B[0]],["C",R.C[0]],["D",R.D[0]]];
-  const boxes=pts.map(([,p])=>[p,-50,-50,50,50]);
-  const vb=fitVB(boxes,bw,bh,[10,10,10,10]);svg.setAttribute("viewBox",vb.map(v=>v.toFixed(4)).join(" "));const k=vb[2]/bw;
-  seaGrid(svg,vb,k);
-  const arrow=(p,h,sp,col)=>{const [ux,uy]=dir(h),L=sp/60*6;const x2=p.x+ux*L,y2=p.y+uy*L;
-    S("line",{x1:p.x,y1:p.y,x2,y2,stroke:col,"stroke-width":3*k,"stroke-dasharray":`${6*k} ${5*k}`,"stroke-linecap":"round"},svg);
-    S("path",{d:`M0 ${-9*k}L${7*k} ${5*k}L${-7*k} ${5*k}Z`,fill:col,transform:`translate(${x2} ${y2}) rotate(${h})`},svg);};
-  arrow(pts[0][1],pts[0][1].h,13,"#0b6bcb");arrow(pts[1][1],pts[1][1].h,8,"#8b95a1");arrow(pts[2][1],pts[2][1].h,6,"#8b95a1");arrow(pts[3][1],pts[3][1].h,11,"#8b95a1");
-  pts.forEach(([l,p])=>{const own=l==="A";
-    S("circle",{cx:p.x,cy:p.y,r:(own?20:17)*k,fill:own?"#0b6bcb":"#6b7684",stroke:"#fff","stroke-width":3*k},svg);
-    const tx=S("text",{x:p.x,y:p.y+7*k,"text-anchor":"middle","font-size":(own?20:18)*k,"font-weight":800,fill:"#fff"},svg);tx.textContent=l;});
-  const lb=S("text",Object.assign({x:pts[0][1].x,y:pts[0][1].y+44*k,"text-anchor":"middle"},LBL(k,"#0b6bcb",17)),svg);lb.textContent="자선";
+function hl(json) {
+  return esc(json).replace(/(&quot;[^&]*?&quot;)(\s*:)?|\b(-?\d+(?:\.\d+)?)\b|\b(true|false|null)\b/g, function (m, str, colon, num, kw) {
+    if (str) return colon ? '<span class="k">' + str + "</span>" + colon : '<span class="s">' + str + "</span>";
+    if (num) return '<span class="n">' + num + "</span>"; return '<span class="n">' + kw + "</span>";
+  });
 }
+function modal(title, sub, html) { $("#mt").textContent = title; $("#ms").textContent = sub; $("#mb").innerHTML = html; $("#modal").classList.add("show"); }
+$("#mx").onclick = function () { $("#modal").classList.remove("show"); };
+$("#modal").onclick = function (e) { if (e.target.id === "modal") $("#modal").classList.remove("show"); };
+$("#logBtn").onclick = function () {
+  this.blur(); ensureRuns();
+  modal("판단 기록", sc().code + " · 회피 판단이 바뀐 순간만 표시", '<div class="lg">' + ["s1", "s2"].map(function (k) { return '<div class="' + k + 'c"><h4><span class="stb">' + k.slice(1) + "</span>" + NM[k] + " · " + subn(S.params[k]) + "</h4><ol>" + logItems(S.runs[k]) + "</ol></div>"; }).join("") + "</div>");
+};
+$("#jsonBtn").onclick = function () {
+  this.blur(); ensureRuns();
+  var j = { s1: reportJSON(NM.s1 + " · " + subn(S.params.s1), S.runs.s1), s2: reportJSON(NM.s2 + " · " + subn(S.params.s2), S.runs.s2) };
+  modal("성적표 데이터", "어느 시험장에서든 같은 형식으로 남기는 결과 (예시 스키마 v0.1)", "<pre>" + hl(JSON.stringify([j.s1, j.s2], null, 2)) + "</pre>");
+};
 
-/* ---------- 5 재시험 비교 그림: 전략 1 vs 전략 1′ ---------- */
-function buildRetest(svg,bw,bh){
-  const R=SIM.R,stop=nT(TSTOP),boxes=[];
-  const a0=nT(6),tp0=SIM_M.s1p.C.tMin;R.s1.slice(a0,stop).forEach(p=>boxes.push([p,-130,-40,40,70]));R.s1p.slice(a0,nT(tp0)).forEach(p=>boxes.push([p,-40,-50,40,40]));
-  R.C.slice(nT(12),nT(Math.max(TSTOP,tp0))).forEach(p=>boxes.push([p,-20,-20,100,44]));
-  const vb=fitVB(boxes,bw,bh,[8,8,8,8]);svg.setAttribute("viewBox",vb.map(v=>v.toFixed(4)).join(" "));const k=vb[2]/bw;
-  seaGrid(svg,vb,k);
-  S("polyline",{points:P(R.C,stop),fill:"none",stroke:"#a7b1bc","stroke-width":2.4*k,"stroke-dasharray":`${6*k} ${6*k}`},svg);
-  S("polyline",{points:P(R.s1,stop),fill:"none",stroke:"#e57373","stroke-width":3.4*k,"stroke-dasharray":`${7*k} ${6*k}`,"stroke-linecap":"round"},svg);
-  const t1=SIM_M.s1.C.tMin,tp=SIM_M.s1p.C.tMin;
-  const p1=SIM.L(R.s1,t1),c1=SIM.L(R.C,t1);
-  S("circle",{cx:p1.x,cy:p1.y,r:SAFE,fill:"rgba(220,38,38,.08)",stroke:"#dc2626","stroke-width":2*k,"stroke-dasharray":`${5*k} ${4*k}`},svg);
-  S("line",{x1:p1.x,y1:p1.y,x2:c1.x,y2:c1.y,stroke:"#dc2626","stroke-width":2.4*k},svg);
-  const g1=ownShip(svg,k,"#e57373",.7);g1.setAttribute("transform",`translate(${p1.x} ${p1.y}) rotate(${p1.h})`);
-  const l1=S("text",Object.assign({x:p1.x-SAFE-8*k,y:p1.y+6*k,"text-anchor":"end"},LBL(k,"#dc2626",18)),svg);l1.textContent="v1 · C와 "+f1(SIM_M.s1.C.min)+"해리";
-  S("polyline",{points:P(R.s1p,nT(tp)),fill:"none",stroke:"#0b6bcb","stroke-width":4*k,"stroke-linecap":"round","stroke-linejoin":"round"},svg);
-  const pp=SIM.L(R.s1p,tp);const g2=ownShip(svg,k,"#0b6bcb",.7);g2.setAttribute("transform",`translate(${pp.x} ${pp.y}) rotate(${pp.h})`);
-  const l2=S("text",Object.assign({x:pp.x,y:pp.y-24*k,"text-anchor":"middle"},LBL(k,"#0b6bcb",18)),svg);l2.textContent="v2 · C와 "+f1(SIM_M.s1p.C.min)+"해리";
-  const cc=SIM.L(R.C,t1);const cg=S("path",{d:TUG(k*.8),fill:"#6b7684",stroke:"#fff","stroke-width":2*k,transform:`translate(${cc.x} ${cc.y}) rotate(${cc.h})`},svg);
-  const cl=S("text",Object.assign({x:cc.x+14*k,y:cc.y+34*k},LBL(k,"#4e5968",16)),svg);cl.textContent="C 예인선";
+/* ================= 4 오답 재시험 ================= */
+function initRt() {
+  ensureRuns(); var R = S.runs;
+  var fk = ["s1", "s2"].filter(function (k) { return R[k].ev.status === "fail"; })[0] || ["s1", "s2"].filter(function (k) { return R[k].ev.status !== "pass"; })[0] || "s1";
+  S.rt = { pi: S.pi, from: fk, v1: Object.assign({}, S.params[fk]), v2: Object.assign({}, S.params[fk]), r1: R[fk], done: false, reg: null };
+  S.rt.r2 = E.run(sc(), S.rt.v2);
 }
+var ed4Opts = {
+  tabs: false, get: function () { return S.rt.v2; }, cls: function () { return "v2c"; }, base: function () { return S.rt.v1; },
+  set: function (k, v) { S.rt.v2[k] = v; $("#ed4")._sync(); schedule4(); }
+};
+var pend4 = 0;
+function schedule4() { if (pend4) return; pend4 = setTimeout(function () { pend4 = 0; var t0 = performance.now(); S.rt.r2 = E.run(sc(), S.rt.v2); calcMs = performance.now() - t0; S.rt.done = false; S.rt.reg = null; setView(view4Data(), true); PL.pause(); PL.seek(0); live4(); hud4Build(); why4(); res4(); title4(); updCta(); }, 30); }
+function view4Data() {
+  var s = sc(), rt = S.rt;
+  return { targets: tgData(s), owns: [ownData("v1", NM[rt.from] + " v1 · " + ST[rt.r1.ev.status], COL.v1, rt.r1, { ghost: true, planned: false }), ownData("v2", "수정 v2", COL.v2, rt.r2)], markers: [] };
+}
+function live4() { var b = $("#ed4 .live"); b.innerHTML = liveHtml(S.rt.r2, "v2"); b.className = "live v2c"; }
+function hud4Build() { hudBuild($("#hud4"), [{ cls: "v1c", short: "v1", run: S.rt.r1 }, { cls: "v2c", short: "v2", run: S.rt.r2 }]); hudUpdate($("#hud4"), PL.t); }
+function suggestions() {
+  var s = sc(), rt = S.rt, sg = E.suggest(s, rt.r1.ev, rt.v1);
+  // 실제로 통과하는 제안을 앞으로 (시험은 숨기지 않고 화면에서 직접 다시 돌려 확인)
+  sg.forEach(function (g) { var p = Object.assign({}, rt.v1); p[g.key] = g.value; g.ok = E.run(s, p).ev.status === "pass"; });
+  sg.sort(function (a, b) { return (b.ok ? 1 : 0) - (a.ok ? 1 : 0); });
+  return sg;
+}
+function why4() {
+  var rt = S.rt, ev = rt.r1.ev, v = ev.safety[0], fc = rt.r1.log.filter(function (l) { return l.changed; })[0];
+  var head = '<div class="wt">' + pill(ev.status) + " " + NM[rt.from] + " v1 " + (v ? "· " + (v.kind === "collision" ? "충돌" : v.secondary ? "2차 충돌위험" : "안전영역 침범") + " · " + esc(tn(v.id)) + " " + f2(v.min) + "해리" : ev.reviews.length ? "· 항법 검토 " + esc(ev.reviews[0].rule) : "") + "</div>";
+  var body = fc ? (fc.consider.length === 1 ? esc(J(tn(fc.consider[0]), "만", "만")) + " 보고 " + actTxt(fc) + "했어요. " : fc.consider.length + "척을 함께 보고 " + actTxt(fc) + "했어요. ") : "";
+  if (v && v.secondary) body += "회피한 뒤 " + esc(J(tn(v.id), "과의", "와의")) + " 관계를 다시 계산하지 않았어요.";
+  else if (!v && ev.reviews.length) body += "거리는 지켰지만 " + esc(ev.reviews[0].text.replace("피항선인데 ", "피항선으로서 ")) + "었어요.";
+  else if (v && ev.reviews.length) body += ev.reviews.map(function (r) { return esc(r.text); }).join(" · ");
+  var sg = suggestions();
+  rt.sg = sg;
+  var chips = sg.map(function (g, i) { var used = String(rt.v2[g.key]) === String(g.value); return '<button data-i="' + i + '" class="' + (used ? "used" : "") + '" title="' + esc(g.why) + '">' + (used ? "✓ " : "+ ") + esc(g.label) + "</button>"; }).join("");
+  $("#why4").innerHTML = head + '<div class="wd">' + body + "</div>" + (chips ? '<div class="sug">' + chips + "</div>" : "");
+  $$("#why4 .sug button").forEach(function (b) { b.onclick = function () { b.blur(); var g = rt.sg[+b.dataset.i]; ed4Opts.set(g.key, String(rt.v2[g.key]) === String(g.value) ? rt.v1[g.key] : g.value); }; });
+}
+function res4() {
+  var rt = S.rt, s = sc(), r1 = rt.r1.ev;
+  var h = '<span class="stb v1c">v1</span>' + pill(r1.status) + '<span class="arr">→</span><span class="stb v2c">v2</span>';
+  if (!rt.done) { $("#res4").innerHTML = h + '<span class="imp">고친 전략을 같은 문제·같은 조건(타선 고정 Replay)으로 다시 실행해요</span>'; return; }
+  var r2 = rt.r2.ev; h += pill(r2.status);
+  var key = (r1.safety[0] || {}).id;
+  if (key) h += '<span class="imp">' + esc(tn(key)) + " 최소 " + f2(r1.dist[key].min) + " → <b>" + f2(r2.dist[key].min) + "해리</b></span>";
+  if (rt.reg) h += '<span class="reg">' + (rt.reg.some(function (g) { return g.st === "fail"; }) ? '<b style="color:var(--fail)">다른 문제도 함께 고쳐요</b>' : "") + "회귀검증" + rt.reg.map(function (g) { return '<span class="chip ' + (g.st === "pass" ? "pass" : g.st === "fail" ? "fail" : "warn") + '">문제 ' + g.no + " " + ST[g.st] + "</span>"; }).join("") + "</span>";
+  $("#res4").innerHTML = h;
+}
+function title4() {
+  var rt = S.rt, h = $("#t4");
+  if (!rt.done) { h.innerHTML = (rt.r1.ev.status === "fail" ? "실패한 " : ST[rt.r1.ev.status] + " 판정을 받은 ") + NM[rt.from] + "을 고쳐서, <em>같은 문제</em>로 다시 시험해요"; return; }
+  var st = rt.r2.ev.status;
+  var regFail = rt.reg && rt.reg.some(function (g) { return g.st === "fail"; });
+  if (st === "pass" && regFail) { h.innerHTML = '이 문제는 <span class="p">통과</span>, 하지만 <span class="f">다른 문제에서 실패</span>했어요'; return; }
+  h.innerHTML = st === "pass" ? '수정한 전략은 <span class="p">통과</span>했어요' : st === "review" ? '안전은 지켰지만 <span style="color:var(--warn-ink)">검토 필요</span>예요' : '아직 <span class="f">실패</span> — 다른 수정을 해 보세요';
+}
+function enter4() {
+  if (!S.rt || S.rt.pi !== S.pi) initRt();
+  var s = sc();
+  view.mount($("#slot4")); camButtons($("#slot4"), "v2");
+  buildEditor($("#ed4"), ed4Opts); live4(); why4();
+  setView(view4Data()); hud4Build(); res4(); title4();
+  PL.bind($("#slot4"), {
+    frame: function (t) { hudUpdate($("#hud4"), t); },
+    end: function () { finish4(); },
+    onUi: updCta
+  });
+  if (SHOT) {
+    // 캡처용: 제안을 차례로 적용해 모든 문제에서 통과하는 수정안을 찾음 (fix=1이면 첫 제안만)
+    if (!S.rt.done && QS.get("fix") !== "0") {
+      var sg = S.rt.sg || [], ok = function (p) { return BANK.every(function (b) { return E.run(b, p).ev.status === "pass"; }); };
+      for (var gi = 0; gi < sg.length; gi++) { S.rt.v2[sg[gi].key] = sg[gi].value; if (QS.get("fix") === "1" || ok(S.rt.v2)) break; }
+      S.rt.r2 = E.run(s, S.rt.v2); $("#ed4")._sync(); live4(); why4(); setView(view4Data()); hud4Build();
+    }
+    PL.seek(QS.get("t") != null ? +QS.get("t") : s.tEnd); finish4();
+  } else PL.seek(S.rt.done ? s.tEnd : 0);
+}
+function finish4() {
+  var rt = S.rt;
+  rt.done = true;
+  rt.reg = BANK.map(function (b) { return { no: b.no, st: E.run(b, rt.v2).ev.status }; });
+  S.hist.push({ problem: sc().code, from: rt.from, v1: rt.r1.ev.status, v2: rt.r2.ev.status, params: Object.assign({}, rt.v2) });
+  res4(); title4(); updCta();
+}
+function run4() { PL.seek(0); PL.play(); }
 
-/* 리포트·재시험 수치는 시뮬레이션에서 계산 */
-(function(){const m1=SIM_M.s1,m2=SIM_M.s2,mp=SIM_M.s1p;
-  $("#ev1").textContent="+"+f1(m1.C.tIn)+"분 안전영역 진입 · 최소 "+f1(m1.C.min)+"해리 (+"+f1(m1.C.tMin)+"분)";
-  $("#ev2").textContent="최소 거리 B "+f1(m2.B.min)+" · C "+f1(m2.C.min)+" · D "+f1(m2.D.min)+"해리";
-  $("#rv1").textContent="2차 충돌위험 · C와 최소 "+f1(m1.C.min)+"해리";
-  $("#imp").textContent="C 최소 거리 "+f1(m1.C.min)+" → "+f1(mp.C.min)+"해리 · 2차 충돌위험 해소";
-})();
-
-/* ---------- 화면 목록 ---------- */
-const IDS=["0","1","2","3","4","5"];
-const SCR=IDS.map(id=>document.getElementById("s"+id));
-const CTA={"0":"데모 시작","1":"두 전략에게 문제 내기","2":"위험 변화 보기","4":"오답 재시험 보기","5":"다시 처음으로 ↺"};
-buildPic($("#m1"),344,370);
-buildRetest($("#m5"),372,420);
-
-/* 3 재생 (a = 재생 초) */
-const HOLD=params.get("t")!=null;
-const render3=buildSim($("#m3"),1200,452);
-const st3={a:0,playing:false,done:false,last:0,raf:0,cap:{}};
-function upd3(a){st3.a=a;const t=simT(a);render3(t);const pre=a<=0&&!st3.playing&&!st3.done;setCap($("#cap3"),pre?CAP[0]:lastAt(CAP.slice(1),t),st3.cap);$("#cap3 .tm").textContent=pre?"":"+"+Math.floor(t)+"분";}
-function title3(){$("#t3").innerHTML=st3.done?"전략 1은 B를 피한 뒤, <span class=\"f\">C와 위험해졌어요</span>":"B를 피한 뒤, C의 위험은 어떻게 될까요?";
-  if(!SHOT){const h=$("#t3");h.style.animation="none";void h.offsetWidth;h.style.animation="";}}
-function loop3(now){if(!st3.playing)return;const dt=Math.min(.1,(now-st3.last)/1000);st3.last=now;const a=Math.min(DUR,st3.a+dt);upd3(a);
-  if(a>=DUR){st3.playing=false;st3.done=true;updCta();setTimeout(title3,300);return;}
-  st3.raf=requestAnimationFrame(loop3);}
-function play3(){if(st3.playing||st3.done)return;st3.playing=true;st3.last=performance.now();updCta();st3.raf=requestAnimationFrame(loop3);}
-function pause3(){st3.playing=false;cancelAnimationFrame(st3.raf);}
-function reset3(){pause3();st3.done=false;st3.cap={};upd3(0);title3();}
-function finish3(){pause3();st3.done=true;upd3(DUR);title3();}
-reset3();
-
-/* ---------- 내비게이션 ---------- */
-let cur=-1,looping=false;
-function go(i){
-  i=Math.max(0,Math.min(IDS.length-1,i));if(i===cur)return;const prev=cur;
-  if(IDS[prev]==="3")pause3();
-  SCR.forEach((s,j)=>{s.classList.toggle("on",j===i);s.classList.toggle("past",j<i);});
-  cur=i;const id=IDS[i];
-  if(id==="3"){if(SHOT)finish3();else if(!st3.done)reset3();}
-  $("#barFill").style.width=(i/(IDS.length-1)*100)+"%";
-  $$("#steps span").forEach((s,j)=>{s.classList.toggle("on",j+1===i);s.classList.toggle("done",j+1<i);});
-  ["#bar","#back","#steps"].forEach(q=>$(q).classList.toggle("hide",i===0));
-  history.replaceState(null,"","#"+id);
+/* ================= 내비게이션 ================= */
+var IDS = ["0", "1", "2", "3", "4"], SCR = IDS.map(function (id) { return document.getElementById("s" + id); }), cur = -1, looping = false;
+function go(i) {
+  i = Math.max(0, Math.min(IDS.length - 1, i)); if (i === cur) return;
+  PL.pause(); $("#modal").classList.remove("show");
+  SCR.forEach(function (s, j) { s.classList.toggle("on", j === i); s.classList.toggle("past", j < i); });
+  cur = i; var id = IDS[i];
+  if (id === "1") enter1(); else if (id === "2") enter2(); else if (id === "3") enter3(); else if (id === "4") enter4();
+  $("#barFill").style.width = (i / (IDS.length - 1) * 100) + "%";
+  $$("#steps span").forEach(function (s, j) { s.classList.toggle("on", j + 1 === i); s.classList.toggle("done", j + 1 < i); });
+  ["#bar", "#back", "#steps"].forEach(function (q) { $(q).classList.toggle("hide", i === 0); });
+  history.replaceState(null, "", location.pathname + location.search + "#" + id);
   updCta();
 }
-function updCta(){
-  const b=$("#cta"),id=IDS[cur];let label=CTA[id],busy=false;
-  if(id==="3"){label=st3.playing?"실행 중…":st3.done?"결과 리포트 보기":"두 전략 동시에 실행";busy=st3.playing;}
-  b.textContent=label;b.classList.toggle("busy",busy);
+function updCta() {
+  var b = $("#cta"), id = IDS[cur], label = "", busy = false;
+  if (id === "0") label = view ? "데모 시작" : "3D 지도 불러오는 중…";
+  else if (id === "1") label = "이 문제로 시험하기";
+  else if (id === "2") { label = PL.playing ? "실행 중…" : S.done2 ? "결과 리포트 보기" : "두 전략 실행"; busy = PL.playing; }
+  else if (id === "3") label = (S.runs && (S.runs.s1.ev.status !== "pass" || S.runs.s2.ev.status !== "pass")) ? "오답 재시험 하기" : "오답 재시험 화면 보기";
+  else if (id === "4") { label = PL.playing ? "재시험 중…" : S.rt && S.rt.done ? "다음 문제로 ↺" : "재시험 실행"; busy = PL.playing; }
+  b.textContent = label; b.classList.toggle("busy", busy);
 }
-function next(){
-  if(looping)return;const id=IDS[cur];
-  if(id==="3"){if(st3.playing)return;if(!st3.done)return play3();}
-  if(id==="5")return closeLoop();
-  go(cur+1);
+function next() {
+  if (looping || !view) return; var id = IDS[cur];
+  if (id === "2") { if (PL.playing) return; if (!S.done2) return run2(); }
+  if (id === "4") { if (PL.playing) return; if (!S.rt.done) return run4(); return closeLoop(); }
+  go(cur + 1);
 }
-function prev(){if(!looping&&cur>0)go(cur-1);}
-function closeLoop(){
-  looping=true;const fx=$("#loopFx");fx.classList.add("show");
-  setTimeout(()=>{reset3();looping=false;go(1);setTimeout(()=>fx.classList.remove("show"),150);
-    const t=$("#toast");t.classList.add("show");setTimeout(()=>t.classList.remove("show"),3600);},1300);
+function prev() { if (!looping && cur > 0) go(cur - 1); }
+function closeLoop() {
+  looping = true; var fx = $("#loopFx"); fx.classList.add("show");
+  setTimeout(function () {
+    S.pi = (S.pi + 1) % BANK.length; S.runs = null; S.done2 = false; S.rt = null; resetParams(); renderList(); renderShips();
+    looping = false; go(1); setTimeout(function () { fx.classList.remove("show"); }, 150);
+    var t = $("#toast"); t.classList.add("show"); setTimeout(function () { t.classList.remove("show"); }, 3600);
+  }, 1300);
 }
-$("#cta").onclick=next;$("#back").onclick=prev;
-$("#map3").addEventListener("click",()=>{if(IDS[cur]==="3"&&!st3.playing){if(st3.done)reset3();play3();}});
-addEventListener("keydown",e=>{if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){e.preventDefault();next();}else if(e.key==="ArrowLeft"||e.key==="PageUp"){e.preventDefault();prev();}});
-function fromHash(){const m=location.hash.match(/^#?(\d)/);if(!m)return 0;const i=IDS.indexOf(m[1]);return i<0?0:i;}
-addEventListener("hashchange",()=>go(fromHash()));
+$("#cta").onclick = function () { this.blur(); next(); };
+$("#back").onclick = function () { this.blur(); prev(); };
+addEventListener("keydown", function (e) {
+  if ($("#modal").classList.contains("show")) { if (e.key === "Escape") $("#modal").classList.remove("show"); return; }
+  var tg = e.target, tag = tg && tg.tagName;
+  if (tag === "INPUT" && (e.key === "ArrowRight" || e.key === "ArrowLeft")) return;
+  if (e.key === " " && (tag === "BUTTON" || tag === "INPUT")) return;
+  if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); next(); }
+  else if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); prev(); }
+});
+function fromHash() { var m = location.hash.match(/^#?(\d)/); if (!m) return 0; var i = IDS.indexOf(m[1]); return i < 0 ? 0 : i; }
+addEventListener("hashchange", function () { var i = fromHash(); if (i !== cur) go(i); });
 
-go(fromHash());
-if(HOLD&&IDS[cur]==="3"){const a=Math.max(0,Math.min(DUR,+params.get("t")||0));pause3();st3.done=a>=DUR;upd3(a);title3();updCta();}
-window.__SIM={s1:{B:SIM_M.s1.B.min,C:SIM_M.s1.C.min,Cin:SIM_M.s1.C.tIn,CtMin:SIM_M.s1.C.tMin,D:SIM_M.s1.D.min},s2:{B:SIM_M.s2.B.min,C:SIM_M.s2.C.min,D:SIM_M.s2.D.min},s1p:{B:SIM_M.s1p.B.min,C:SIM_M.s1p.C.min,D:SIM_M.s1p.D.min}};
+renderList(); renderShips();
+SCR[0].classList.add("on"); cur = 0; updCta(); ["#bar", "#back", "#steps"].forEach(function (q) { $(q).classList.add("hide"); });
+function start() {
+  if (view) return;
+  try { view = window.SeaView3D ? new window.SeaView3D({ getScale: function () { return SC; } }) : new FlatView(); if (!view.kind) view.kind = "3d"; }
+  catch (err) { console.warn("3D 뷰를 만들지 못해 2D로 표시합니다", err); view = new FlatView(); }
+  var i = fromHash(); cur = -1; go(i);
+  if (QS.get("play") === "1") setTimeout(next, 300); // 확인용: 열자마자 실행
+  window.__demo = { S: S, E: E, view: view, PL: PL, go: go };
+}
+if (window.SeaView3D) start();
+else { addEventListener("seaview-ready", start, { once: true }); setTimeout(start, 8000); }
 })();
+
+</script>
+<script type="module">
+/* =====================================================================
+   3D 해역 뷰 (Three.js). 좌표: 1 단위 = 1해리, X 동쪽, -Z 북쪽, Y 위
+   window.SeaView3D = class, 준비되면 "seaview-ready" 이벤트
+   ===================================================================== */
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { CSS2DRenderer, CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
+import { Line2 } from "three/addons/lines/Line2.js";
+import { LineMaterial } from "three/addons/lines/LineMaterial.js";
+import { LineGeometry } from "three/addons/lines/LineGeometry.js";
+
+const DEG = Math.PI / 180;
+const SHIP_SCALE = 6;          // 선박은 보기 쉽게 6배 확대
+const SEA = 0xcfe3f6, SKY = 0xeef5fc;
+
+function waterNormals(size) {
+  const data = new Uint8Array(size * size * 4);
+  const waves = [[3, 1, .9], [1, 4, .7], [5, -2, .5], [-2, 7, .35], [9, 3, .25]];
+  for (let j = 0; j < size; j++) for (let i = 0; i < size; i++) {
+    let dx = 0, dy = 0;
+    for (const [a, b, amp] of waves) {
+      const ph = 2 * Math.PI * (a * i + b * j) / size, c = Math.cos(ph) * amp;
+      dx += c * a; dy += c * b;
+    }
+    const n = new THREE.Vector3(-dx * .05, -dy * .05, 1).normalize(), k = (j * size + i) * 4;
+    data[k] = (n.x * .5 + .5) * 255; data[k + 1] = (n.y * .5 + .5) * 255; data[k + 2] = (n.z * .5 + .5) * 255; data[k + 3] = 255;
+  }
+  const tex = new THREE.DataTexture(data, size, size, THREE.RGBAFormat);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.needsUpdate = true;
+  return tex;
+}
+
+function hullShape(L, B) {
+  const s = new THREE.Shape();
+  s.moveTo(0, L / 2);
+  s.bezierCurveTo(B * .42, L * .36, B / 2, L * .2, B / 2, L * .05);
+  s.lineTo(B / 2, -L * .42); s.quadraticCurveTo(B / 2, -L / 2, B * .3, -L / 2);
+  s.lineTo(-B * .3, -L / 2); s.quadraticCurveTo(-B / 2, -L / 2, -B / 2, -L * .42);
+  s.lineTo(-B / 2, L * .05); s.bezierCurveTo(-B / 2, L * .2, -B * .42, L * .36, 0, L / 2);
+  return s;
+}
+function extrude(shape, h, mat) {
+  const g = new THREE.ExtrudeGeometry(shape, { depth: h, bevelEnabled: false, curveSegments: 10 });
+  g.rotateX(-Math.PI / 2);
+  const m = new THREE.Mesh(g, mat); m.castShadow = true; return m;
+}
+function box(w, h, l, mat, x, y, z) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, l), mat); m.position.set(x, y + h / 2, z); m.castShadow = true; return m;
+}
+const CONT = [0xd9534f, 0x3f7fbf, 0xe8a33d, 0x4c9f70, 0x8a6bbf, 0xc9ced6, 0x2f6f8f];
+
+// 선박 모델: bow → -Z
+function makeShip(type, lenM, beamM, color, opts = {}) {
+  const L = Math.max(.2, lenM / 1852 * SHIP_SCALE), B = Math.max(.045, (beamM || lenM / 7) / 1852 * SHIP_SCALE * 1.15);
+  const g = new THREE.Group();
+  const T = opts.ghost ? { transparent: true, opacity: .45, depthWrite: false } : {};
+  const hullMat = new THREE.MeshStandardMaterial(Object.assign({ color, roughness: .55, metalness: .05 }, T));
+  const deckMat = new THREE.MeshStandardMaterial(Object.assign({ color: 0xf4f6f8, roughness: .7 }, T));
+  const darkMat = new THREE.MeshStandardMaterial(Object.assign({ color: 0x46505c, roughness: .6 }, T));
+  const H = Math.max(.018, B * .38);
+  g.add(extrude(hullShape(L, B), H, hullMat));
+  const top = H;
+  if (type === "container") {
+    const rows = 7, len = L * .62, w = B * .78;
+    for (let r = 0; r < rows; r++) {
+      const z = -L * .32 + (r + .5) * len / rows + L * .02;
+      const h = H * (1.1 + ((r * 37) % 3) * .25);
+      const mat = new THREE.MeshStandardMaterial(Object.assign({ color: CONT[(r * 3 + (opts.seed || 0)) % CONT.length], roughness: .8 }, T));
+      g.add(box(w, h, len / rows * .9, mat, 0, top, z));
+    }
+    g.add(box(B * .82, H * 2.2, L * .07, deckMat, 0, top, L * .36));
+  } else if (type === "warship") {
+    g.add(box(B * .62, H * 1.4, L * .26, new THREE.MeshStandardMaterial(Object.assign({ color: 0x9aa6b2, roughness: .6 }, T)), 0, top, -L * .02));
+    g.add(box(B * .4, H * 1.2, L * .1, new THREE.MeshStandardMaterial(Object.assign({ color: 0xaab4bf, roughness: .6 }, T)), 0, top + H * 1.4, -L * .04));
+    g.add(box(B * .5, H * .9, L * .16, new THREE.MeshStandardMaterial(Object.assign({ color: 0x9aa6b2, roughness: .6 }, T)), 0, top, L * .2));
+    const mast = new THREE.Mesh(new THREE.CylinderGeometry(B * .03, B * .05, H * 3.2), darkMat); mast.position.set(0, top + H * 2.2, -L * .02); g.add(mast);
+  } else if (type === "tug") {
+    g.add(box(B * .7, H * 1.5, L * .3, deckMat, 0, top, -L * .12));
+    g.add(box(B * .5, H * 1, L * .18, deckMat, 0, top + H * 1.5, -L * .14));
+  } else if (type === "fishing") {
+    g.add(box(B * .7, H * 1.4, L * .26, deckMat, 0, top, L * .1));
+    const mast = new THREE.Mesh(new THREE.CylinderGeometry(B * .04, B * .05, H * 4), darkMat); mast.position.set(0, top + H * 2, -L * .18); g.add(mast);
+  } else if (type === "lpg" || type === "tanker") { // 일반 탱커 모양 (탱크 형식은 표현하지 않음)
+    g.add(box(B * .56, H * .5, L * .62, new THREE.MeshStandardMaterial(Object.assign({ color: 0xc9d1da, roughness: .7 }, T)), 0, top, -L * .06));
+    g.add(box(B * .1, H * .55, L * .6, darkMat, 0, top + H * .5, -L * .06));
+    g.add(box(B * .74, H * .8, L * .05, darkMat, 0, top, -L * .1));
+    g.add(box(B * .82, H * 2.2, L * .09, deckMat, 0, top, L * .37));
+  } else { // cargo / bulk / tanker / ferry
+    const n = 5;
+    for (let i = 0; i < n; i++) g.add(box(B * .66, H * .5, L * .1, darkMat, 0, top, -L * .33 + i * L * .13));
+    g.add(box(B * .82, H * 2.2, L * .08, deckMat, 0, top, L * .37));
+  }
+  g.userData.hullMat = hullMat; g.userData.baseColor = new THREE.Color(color); g.userData.L = L;
+  return g;
+}
+
+function lineMat(color, width, dashed, opacity = 1) {
+  const m = new LineMaterial({ color, linewidth: width, dashed: !!dashed, dashSize: .18, gapSize: .14, transparent: opacity < 1, opacity, worldUnits: false });
+  if (dashed) m.defines.USE_DASH = "";
+  return m;
+}
+function mkLine(pts, mat) {
+  const g = new LineGeometry(); g.setPositions(pts);
+  const l = new Line2(g, mat); l.computeLineDistances(); l.renderOrder = 2; return l;
+}
+function flat(track, y = .004) { const a = []; for (const p of track) a.push(p.x, y, -p.y); return a; }
+function label(text, cls) {
+  const d = document.createElement("div"); d.className = "lbl " + (cls || "");
+  const sp = document.createElement("span"); sp.textContent = text; d.appendChild(sp);
+  const o = new CSS2DObject(d); o.span = sp; return o;
+}
+
+class SeaView3D {
+  constructor(opts = {}) {
+    this.getScale = opts.getScale || (() => 1);
+    const el = this.el = document.createElement("div"); el.className = "sea3d";
+    const r = this.renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+    r.setClearColor(SKY); r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+    r.outputColorSpace = THREE.SRGBColorSpace;
+    el.appendChild(r.domElement);
+    const lr = this.labels = new CSS2DRenderer(); lr.domElement.className = "sea3d-labels"; el.appendChild(lr.domElement);
+    const sc = this.scene = new THREE.Scene(); sc.background = new THREE.Color(SKY); sc.fog = new THREE.Fog(SKY, 30, 80);
+    this.camera = new THREE.PerspectiveCamera(38, 1.6, .05, 400);
+    this.controls = new OrbitControls(this.camera, r.domElement);
+    Object.assign(this.controls, { enableDamping: true, dampingFactor: .08, maxPolarAngle: 1.45, minDistance: 1.2, maxDistance: 60, screenSpacePanning: false });
+    this.controls.addEventListener("start", () => { if (this.mode === "chase") this.mode = "free"; this.onUser && this.onUser(); });
+    sc.add(new THREE.HemisphereLight(0xffffff, 0xb9d3ec, 1.6));
+    const sun = this.sun = new THREE.DirectionalLight(0xffffff, 1.6); sun.position.set(-8, 14, 6); sun.castShadow = true;
+    sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -14, right: 14, top: 14, bottom: -14, near: 1, far: 60 });
+    sun.shadow.bias = -.0005; sc.add(sun); sc.add(sun.target);
+    this.normals = waterNormals(256); this.normals.repeat.set(40, 40);
+    const sea = this.sea = new THREE.Mesh(new THREE.PlaneGeometry(400, 400),
+      new THREE.MeshStandardMaterial({ color: SEA, roughness: .42, metalness: .05, normalMap: this.normals, normalScale: new THREE.Vector2(.35, .35) }));
+    sea.rotation.x = -Math.PI / 2; sea.receiveShadow = true; sc.add(sea);
+    this.world = new THREE.Group(); sc.add(this.world);
+    this.mode = "oblique"; this.t = 0; this.data = null; this.clock = new THREE.Clock();
+    this._loop = this._loop.bind(this); requestAnimationFrame(this._loop);
+    this._ro = new ResizeObserver(() => this.resize()); this._ro.observe(el);
+  }
+  mount(container) { if (this.el.parentNode !== container) container.appendChild(this.el); this.resize(); }
+  resize() {
+    const w = this.el.clientWidth, h = this.el.clientHeight; if (!w || !h) return;
+    const pr = Math.min(2.5, (window.devicePixelRatio || 1) * this.getScale());
+    this.renderer.setPixelRatio(pr); this.renderer.setSize(w, h, false);
+    this.renderer.domElement.style.width = w + "px"; this.renderer.domElement.style.height = h + "px";
+    this.labels.setSize(w, h); this.camera.aspect = w / h; this.camera.updateProjectionMatrix();
+    this.lineMats && this.lineMats.forEach(m => m.resolution.set(w * pr, h * pr));
+    this.size = [w, h];
+  }
+  _reg(m) { this.lineMats.push(m); const s = this.size || [800, 500], pr = this.renderer.getPixelRatio(); m.resolution.set(s[0] * pr, s[1] * pr); return m; }
+
+  /* d = {dt, safe, targets:[{id,name,kind,type,len,beam,track}], owns:[{key,label,color,type,len,beam,track,ghost,planned}], markers:[{x,y,text,until}], grid:true} */
+  setData(d) {
+    const W = this.world;
+    W.traverse(o => { if (o.element && o.element.parentNode) o.element.parentNode.removeChild(o.element); });
+    while (W.children.length) W.remove(W.children[0]);
+    this.lineMats = []; this.data = d;
+    // 범위
+    let x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+    const all = d.targets.map(t => t.track).concat(d.owns.map(o => o.track));
+    all.forEach(tr => tr.forEach(p => { x0 = Math.min(x0, p.x); x1 = Math.max(x1, p.x); y0 = Math.min(y0, p.y); y1 = Math.max(y1, p.y); }));
+    // 화면 맞춤은 사건이 벌어지는 구간(focus)만 사용
+    let fx0 = x0, fy0 = y0, fx1 = x1, fy1 = y1;
+    if (d.box) ({ x0: fx0, y0: fy0, x1: fx1, y1: fy1 } = d.box);
+    this.bounds = { x0, y0, x1, y1, cx: (fx0 + fx1) / 2, cy: (fy0 + fy1) / 2, size: Math.max(fx1 - fx0, fy1 - fy0, 3), w: fx1 - fx0, h: fy1 - fy0 };
+    // 격자 (1해리)
+    const gp = [], gx0 = Math.floor(x0) - 2, gx1 = Math.ceil(x1) + 2, gy0 = Math.floor(y0) - 2, gy1 = Math.ceil(y1) + 2;
+    for (let x = gx0; x <= gx1; x++) gp.push(x, .001, -gy0, x, .001, -gy1);
+    for (let y = gy0; y <= gy1; y++) gp.push(gx0, .001, -y, gx1, .001, -y);
+    const gg = new THREE.BufferGeometry(); gg.setAttribute("position", new THREE.Float32BufferAttribute(gp, 3));
+    W.add(new THREE.LineSegments(gg, new THREE.LineBasicMaterial({ color: 0xa9c7e6, transparent: true, opacity: .55 })));
+    this.sun.position.set(this.bounds.cx - 8, 14, -this.bounds.cy + 6); this.sun.target.position.set(this.bounds.cx, 0, -this.bounds.cy);
+    // 타선
+    this.tg = d.targets.map((T, i) => {
+      const line = mkLine(flat(T.track), this._reg(lineMat(0x7d8b99, 2.6, true, .95))); W.add(line);
+      const ship = makeShip(T.type, T.len, T.beam, 0x6b7684, { seed: i * 2 }); W.add(ship);
+      const lb = label(T.name, "tg"); lb.position.set(0, .28, 0); ship.add(lb);
+      return { T, ship, lb };
+    });
+    // 자선(전략별)
+    this.ow = d.owns.map(O => {
+      const col = new THREE.Color(O.color);
+      if (O.planned !== false) W.add(mkLine(flat(O.track, .006), this._reg(lineMat(col, 2.6, true, .55))));
+      const trail = mkLine(flat(O.track, .008), this._reg(lineMat(col, O.ghost ? 3.4 : 5.5, !!O.ghost, O.ghost ? .85 : 1)));
+      W.add(trail);
+      const ship = makeShip(O.type || "cargo", O.len, O.beam, col, { ghost: O.ghost }); W.add(ship);
+      const ring = new THREE.Mesh(new THREE.RingGeometry(d.safe * .975, d.safe, 96), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: .75, depthWrite: false, side: THREE.DoubleSide }));
+      ring.rotation.x = -Math.PI / 2; ring.position.y = .01; ring.renderOrder = 3;
+      const disc = new THREE.Mesh(new THREE.CircleGeometry(d.safe, 96), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: .07, depthWrite: false }));
+      disc.rotation.x = -Math.PI / 2; disc.position.y = .009; disc.renderOrder = 3;
+      if (!O.ghost) { W.add(ring); W.add(disc); }
+      const lb = label(O.label, O.ghost ? "own ghost" : "own"); lb.element.style.setProperty("--c", O.color); lb.position.set(0, .34, 0); ship.add(lb);
+      const warnMat = this._reg(lineMat(0xdc2626, 3.2, false));
+      const warn = mkLine([0, .02, 0, 1, .02, 0], warnMat); warn.visible = false; W.add(warn);
+      const wl = label("", "warn"); wl.visible = false; W.add(wl);
+      return { O, ship, ring, disc, trail, warn, wl, col };
+    });
+    // 표식
+    this.mk = (d.markers || []).map(M => {
+      const g = new THREE.Group(); g.position.set(M.x, .012, -M.y);
+      const r = new THREE.Mesh(new THREE.RingGeometry(.2, .24, 48), new THREE.MeshBasicMaterial({ color: 0xdc2626, transparent: true, opacity: .9, depthWrite: false }));
+      r.rotation.x = -Math.PI / 2; g.add(r);
+      const xm = new THREE.MeshBasicMaterial({ color: 0xdc2626 });
+      const a = new THREE.Mesh(new THREE.BoxGeometry(.26, .01, .04), xm); a.rotation.y = Math.PI / 4; g.add(a);
+      const b = a.clone(); b.rotation.y = -Math.PI / 4; g.add(b);
+      const lb = label(M.text, "hit"); lb.position.set(0, .3, 0); g.add(lb);
+      W.add(g); return { M, g };
+    });
+    this.setTime(this.t || 0);
+    if (!this.keepCam) this.cam(this.mode === "chase" ? "chase" : this.mode === "top" ? "top" : "oblique", true);
+  }
+  setTime(t) {
+    const d = this.data; if (!d) return; this.t = t;
+    const dt = d.dt, n = d.targets[0].track.length;
+    const at = (tr, tt) => { const f = Math.max(0, Math.min(tr.length - 1.001, tt / dt)), i = Math.floor(f), u = f - i, p = tr[i], q = tr[i + 1];
+      let dh = ((q.h - p.h) % 360 + 540) % 360 - 180; return { x: p.x + (q.x - p.x) * u, y: p.y + (q.y - p.y) * u, h: p.h + dh * u }; };
+    const idx = Math.max(1, Math.min(n - 1, Math.round(t / dt)));
+    const tp = this.tg.map(o => { const p = at(o.T.track, t); o.ship.position.set(p.x, 0, -p.y); o.ship.rotation.y = -p.h * DEG; o.p = p; o.hot = false; return p; });
+    this.ow.forEach(o => {
+      const p = at(o.O.track, t); o.p = p;
+      o.ship.position.set(p.x, 0, -p.y); o.ship.rotation.y = -p.h * DEG;
+      o.trail.geometry.instanceCount = idx;
+      o.ring.position.set(p.x, .01, -p.y); o.disc.position.set(p.x, .009, -p.y);
+      let worst = null;
+      if (!o.O.ghost) this.tg.forEach(g => { const dd = Math.hypot(g.p.x - p.x, g.p.y - p.y); if (dd < d.safe && (!worst || dd < worst.d)) worst = { g, d: dd }; });
+      const bad = !!worst;
+      o.ring.material.color.set(bad ? 0xdc2626 : o.col); o.disc.material.color.set(bad ? 0xdc2626 : o.col); o.disc.material.opacity = bad ? .16 : .07;
+      o.warn.visible = bad; o.wl.visible = bad;
+      if (bad) {
+        o.warn.geometry.setPositions([p.x, .03, -p.y, worst.g.p.x, .03, -worst.g.p.y]); o.warn.computeLineDistances();
+        o.wl.position.set((p.x + worst.g.p.x) / 2, .2, -(p.y + worst.g.p.y) / 2); o.wl.span.textContent = worst.g.T.name.replace(/^[A-Z] · /, "") + " " + worst.d.toFixed(2) + "해리";
+        worst.g.hot = true;
+      }
+    });
+    this.tg.forEach(g => { g.ship.userData.hullMat.color.set(g.hot ? 0xdc2626 : 0x6b7684); g.lb.element.classList.toggle("hot", g.hot); g.lb.visible = !g.hot; });
+    this.mk.forEach(m => { m.g.visible = m.M.until == null || t < m.M.until; });
+  }
+  cam(mode, instant) {
+    this.mode = mode; const b = this.bounds; if (!b) return;
+    const fov = this.camera.fov * DEG, asp = this.camera.aspect;
+    const need = Math.max(b.h, b.w / asp, 2.5);
+    const dist = need / (2 * Math.tan(fov / 2)) * (mode === "top" ? 1.05 : 0.8);
+    const el0 = 50 * DEG, az0 = 200 * DEG;
+    // 아래쪽(카메라 쪽) 내용이 시간 막대에 가리지 않도록 시선 중심을 카메라 쪽으로 조금 당김
+    const tgt = mode === "oblique" ? new THREE.Vector3(b.cx + Math.sin(az0) * need * .1, 0, -b.cy - Math.cos(az0) * need * .1) : new THREE.Vector3(b.cx, 0, -b.cy);
+    let pos;
+    if (mode === "top") pos = new THREE.Vector3(b.cx, dist, -b.cy + .001);
+    else if (mode === "chase") { this.controls.target.copy(tgt); this._chase(true); return; }
+    else pos = new THREE.Vector3(tgt.x + Math.sin(az0) * Math.cos(el0) * dist, Math.sin(el0) * dist, tgt.z - Math.cos(az0) * Math.cos(el0) * dist);
+    if (instant) { this.camera.position.copy(pos); this.controls.target.copy(tgt); this.controls.update(); this._anim = null; }
+    else this._anim = { p0: this.camera.position.clone(), t0: this.controls.target.clone(), p1: pos, t1: tgt, k: 0 };
+  }
+  _chase(instant) {
+    const o = this.ow && (this.ow.find(x => x.O.key === this.chaseKey) || this.ow.find(x => !x.O.ghost)); if (!o) return;
+    const p = o.p || o.O.track[0], h = p.h * DEG, fx = Math.sin(h), fz = -Math.cos(h);
+    const pos = new THREE.Vector3(p.x - fx * 2.4, 1.15, -p.y - fz * 2.4), tgt = new THREE.Vector3(p.x + fx * 2.2, 0, -p.y + fz * 2.2);
+    if (instant) { this.camera.position.copy(pos); this.controls.target.copy(tgt); }
+    else { this.camera.position.lerp(pos, .12); this.controls.target.lerp(tgt, .12); }
+  }
+  _loop() {
+    requestAnimationFrame(this._loop);
+    if (!this.el.isConnected || !this.el.offsetParent) return;
+    const e = this.clock.getElapsedTime(); this.normals.offset.set(e * .004, e * .007);
+    if (this._anim) { const a = this._anim; a.k = Math.min(1, a.k + .06); const s = a.k * a.k * (3 - 2 * a.k);
+      this.camera.position.lerpVectors(a.p0, a.p1, s); this.controls.target.lerpVectors(a.t0, a.t1, s); if (a.k >= 1) this._anim = null; }
+    if (this.mode === "chase") this._chase(false);
+    this.controls.update();
+    this.renderer.render(this.scene, this.camera); this.labels.render(this.scene, this.camera);
+  }
+  snapshot() { this.renderer.render(this.scene, this.camera); this.labels.render(this.scene, this.camera); }
+}
+window.SeaView3D = SeaView3D;
+window.dispatchEvent(new Event("seaview-ready"));
+
 </script>
 </body>
 </html>
