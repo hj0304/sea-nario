@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>씨나리오 데모</title>
+<title>헤답 데모</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css">
 <style>
 @font-face{font-family:"Pretendard Local";src:url("../../assets/PretendardVariable.ttf") format("truetype");font-weight:45 920;font-display:swap}
@@ -343,21 +343,39 @@ svg text{font-family:var(--font)}
 .rcnow{gap:14px}.rcnow .why{color:var(--fail);font-size:18px}
 .rcnote{margin-top:12px}
 #m1 .tip{cursor:grab}
+
+/* AI 등록: 단순화 */
+.mc{justify-content:center;gap:10px;padding:28px 34px}
+.mst{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:800}
+.mst.ok{color:var(--pass)}.mst.ng{color:var(--fail)}
+.mst .ck{width:28px;height:28px}
+.mname{font-size:40px;font-weight:800;letter-spacing:-.03em;margin-top:6px}
+.mfile{font-size:17px;font-weight:600;color:var(--gray);margin-bottom:14px}
+.mc .ckr{height:52px;font-size:19px}
+/* 전략 추천: 단순화 */
+.rcnow{font-size:22px;gap:10px}.rcnow b{color:var(--ink)}
+.rc{gap:10px;padding:22px 26px}
+.rc .top{height:30px}
+.rc .t{font-size:26px}
+.rc .a{min-height:0;font-size:18px}
+.rc .mt{gap:10px}
+.rc .rb b{font-size:24px}
+.rv .who{width:auto;min-width:200px}
 </style>
 </head>
 <body>
 <div id="stage">
   <div id="bar"><i id="barFill"></i></div>
   <button id="back" aria-label="뒤로"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#4e5968" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
-  <div id="steps"><span>상황 설정</span><i></i><span>AI 올리기</span><i></i><span>시뮬레이션</span><i></i><span>결과</span><i></i><span>전략 추천</span><i></i><span>재시험</span><i></i><span>비교</span></div>
+  <div id="steps"><span>상황 설정</span><i></i><span>AI 등록</span><i></i><span>시뮬레이션</span><i></i><span>결과</span><i></i><span>전략 추천</span><i></i><span>재시험</span><i></i><span>비교</span></div>
   <div id="note">예시 데이터 · 실제 수치 아님</div>
   <div id="toast">↺ 이번 기록이 다음 문제 세트와 회귀검증 이력에 들어갔어요</div>
 
   <!-- 1 메인 -->
   <section class="scr" id="s0">
     <div class="logo"><svg width="60" height="60" viewBox="0 0 40 40"><path d="M6 24c4.7-3.5 9.3-3.5 14 0s9.3 3.5 14 0" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round"/><path d="M6 15c4.7-3.5 9.3-3.5 14 0s9.3 3.5 14 0" stroke="#9fcbf5" stroke-width="3.4" fill="none" stroke-linecap="round"/></svg></div>
-    <h1 class="cover-t">씨나리오</h1>
-    <div class="cover-s"><b>바다의 다음 순간</b>을 읽다</div>
+    <h1 class="cover-t">헤답</h1>
+    <div class="cover-s"><b>바다의 답</b>을 찾다</div>
   </section>
 
   <!-- 2 상황 설정 -->
@@ -382,17 +400,17 @@ svg text{font-family:var(--font)}
     </div>
   </section>
 
-  <!-- 3 AI 올리기 -->
+  <!-- 3 AI 등록 -->
   <section class="scr" id="s2">
-    <h2 class="h1">시험할 <em>AI 자율운항 전략</em>을 올려요</h2>
-    <div class="sub">AI는 30초마다 지금 보이는 정보만 받고, 침로·속력 명령을 돌려줘요</div>
+    <h2 class="h1">시험할 <em>AI</em>를 등록해요</h2>
+    <div class="sub">AI는 지금 보이는 정보만 받고, 침로·속력을 정해요</div>
     <div class="vis">
       <div class="mdw">
         <div class="card up">
           <label class="drop" id="drop"><input type="file" id="mfile" accept=".js,.mjs,.txt,.onnx,.zip,.tar">
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#0b6bcb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
-            <b>모델 파일을 끌어다 놓거나 눌러서 선택</b><span>데모에서는 decide(obs) 함수가 든 .js를 바로 실행해요</span></label>
-          <div><div class="smh">샘플 모델로 해보기<button id="tpl">템플릿 받기 (.js)</button></div><div id="samples"></div></div>
+            <b>AI 파일 끌어다 놓기</b><span>.js · decide(obs)</span></label>
+          <div><div class="smh">샘플로 해보기<button id="tpl">템플릿 받기</button></div><div id="samples"></div></div>
         </div>
         <div class="card mc" id="mcard"></div>
       </div>
@@ -427,11 +445,11 @@ svg text{font-family:var(--font)}
   <!-- 6 전략 방안 추천 -->
   <section class="scr" id="s5">
     <h2 class="h1" id="t5"></h2>
+    <div class="sub">다른 배가 움직일 수 있는 30가지 경우로 시험했어요</div>
     <div class="vis">
       <div class="rcnow" id="rcnow"></div>
       <div class="rcs" id="rcs"></div>
       <div class="v2up" id="v2up"></div>
-      <div class="rcnote" id="rcnote"></div>
     </div>
   </section>
 
@@ -491,7 +509,7 @@ addEventListener("resize",fit);fit();
    화면은 북쪽이 위. 자선은 선회 15°/분, 감속·가속 2노트/분 제약 (가정)
    다른 배의 앞으로 움직임(직진·변침·감속·정지·가속)은 장면마다 '기록'으로 정해 두지만,
    전략·재평가·추천은 그 기록을 보지 않는다. 볼 수 있는 것은 각 시점의 위치·속력·방향뿐 */
-const DEG=Math.PI/180,DT=0.05,TEND=40,ARR=0.15,N=Math.round(TEND/DT)+1,SAFE=0.5,NEAR=2,TURN=15,ACC=2,REVIEW=5,HOR=12,NWORLD=30;
+const DEG=Math.PI/180,DT=0.05,TEND=40,ARR=0.15,COLL=0.1,N=Math.round(TEND/DT)+1,SAFE=0.5,NEAR=2,TURN=15,ACC=2,REVIEW=5,HOR=12,NWORLD=30;
 const dir=h=>[Math.sin(h*DEG),-Math.cos(h*DEG)];
 const nrm=a=>((a%360)+360)%360;
 const d180=a=>nrm(a+180)-180;
@@ -589,7 +607,9 @@ function evaluate(run,own,others,world){
   const track=run.track,iEnd=run.iArr>=0?run.iArr:N-1,per={};
   others.forEach(o=>{const ln=world[o.id];let mn=99,tm=0,tin=-1;const d=new Array(N);
     for(let i=0;i<N;i++){const v=Math.hypot(track[i].x-ln[i].x,track[i].y-ln[i].y);d[i]=v;if(i>iEnd)continue;if(v<mn){mn=v;tm=i*DT;}if(tin<0&&v<SAFE)tin=i*DT;}
-    per[o.id]={d,min:mn,tMin:tm,tIn:tin};});
+    let tc=-1;for(let i=0;i<=iEnd;i++)if(d[i]<COLL){tc=i*DT;break;}
+    per[o.id]={d,min:mn,tMin:tm,tIn:tin,tColl:tc};});
+  let coll=null;others.forEach(o=>{const tc=per[o.id].tColl;if(tc>=0&&(!coll||tc<coll.t))coll={id:o.id,t:tc};});
   const T0=T0of(own),arrived=run.iArr>=0,tArr=arrived?run.iArr*DT:null;
   const delay=arrived?Math.max(0,tArr-T0):isFinite(T0)?Math.max(0,TEND-T0):TEND;
   const D0=Math.hypot(dest.x-own.x,dest.y-own.y),ux=(dest.x-own.x)/(D0||1),uy=(dest.y-own.y)/(D0||1);
@@ -597,7 +617,7 @@ function evaluate(run,own,others,world){
   const extra=Math.max(0,(run.len||0)-(arrived?D0:0));
   const fails=others.filter(o=>per[o.id].min<SAFE).sort((a,b)=>per[a.id].tIn-per[b.id].tIn).map(o=>o.id);
   let worst=null;others.forEach(o=>{if(!worst||per[o.id].min<per[worst].min)worst=o.id;});
-  return{per,delay,dev,extra,arrived,tArr,T0,fails,worst,verdict:fails.length?"fail":(!arrived||delay>REVIEW)?"review":"pass"};
+  return{per,delay,dev,extra,arrived,tArr,T0,fails,worst,coll,verdict:fails.length?"fail":(!arrived||delay>REVIEW)?"review":"pass"};
 }
 const VNAME={pass:"통과",review:"검토 필요",fail:"실패",na:"판정 불가"};
 const pill=v=>`<span class="pill ${v==="review"?"warn":v}">${VNAME[v]}</span>`;
@@ -610,11 +630,11 @@ function defaultShips(){
   const o=run([]),s1=run([[.5,102,13]]),at=(a,t)=>a[Math.round(t/DT)];
   const back=(p,h,s,t)=>{const [u,v]=dir(h);return{x:+(p.x-u*s/60*t).toFixed(2),y:+(p.y-v*s/60*t).toFixed(2)};};
   const B=back(at(o,11),340,8,11);
-  const a=at(s1,16.5),nc=dir(192),C=back({x:a.x+nc[0]*.2,y:a.y+nc[1]*.2},260,6,16.5);
+  const C={x:3.99,y:-0.23};
   const o7=at(o,7),nd=dir(72-90),D=back({x:o7.x+nd[0]*.8,y:o7.y+nd[1]*.8},240,11,7);
   return[own,Object.assign({id:"B",type:"어선",len:22,spd:8,hdg:340},B),Object.assign({id:"C",type:"예인선",len:30,spd:6,hdg:260},C),Object.assign({id:"D",type:"화물선",len:180,spd:11,hdg:240},D)];
 }
-const DEFAULT_REC=1;
+const DEFAULT_REC=21;
 const defaultDest=()=>{const [u,v]=dir(72);return{x:+(u*5).toFixed(2),y:+(v*5).toFixed(2)};};
 let ships=defaultShips(),recSeed=DEFAULT_REC,dest=defaultDest();
 
@@ -787,7 +807,7 @@ const stratTxt=(st,own)=>"+"+st.start+"분 "+actTxt(st,own)+(st.re?" · 재평�
 const cmdTxt=(l,own)=>{const sp=Math.round(l.ts*2)/2,turn=turnTxt(d180(l.th-l.prev));
   return (Math.abs(d180(l.th-l.prev))>.5?turn+"(침로 "+pad3(l.th)+"°)":"침로 유지")+(Math.abs(l.ts-l.pts)>.25?" · "+sp+"노트로 "+(l.ts<l.pts?"감속":"가속"):"");};
 
-const API_DOC=`// ── 씨나리오 시험장 입력·출력 ──────────────────────────
+const API_DOC=`// ── 헤답 시험장 입력·출력 ──────────────────────────
 // 시험장은 30초(0.5분)마다 decide(obs)를 불러요.
 // obs = {
 //   t: 경과 시간(분),
@@ -815,25 +835,7 @@ function cpa(a, b) {
 }
 `;
 const SAMPLES=[
-  {id:"A",name:"크게 우회 v1",file:"sample_wide_detour.js",who:"샘플 · 멀리 돌아서 확실하게 피함",code:`// 샘플 모델 A — 크게 우회 v1
-// 목적지로 가다가 1해리 안으로 들어올 배가 보이면, 우현으로 60° 크게 돌아 14분 동안 유지한 뒤
-// 다시 목적지로 향해요. 안전하지만 멀리 돌아가요.
-${API_DOC}${CPA_SRC}
-let start = null, wide = null, speed = null;
-function decide(obs) {
-  if (speed === null) speed = obs.own.speed;
-  const goal = { heading: toward(obs.own, obs.destination), speed };
-  if (start === null) {
-    if (obs.t < 0.5) return goal;
-    const nearest = Math.min(...obs.ships.map(s => cpa(obs.own, s)));
-    if (nearest >= 1) return goal;
-    start = obs.t; wide = obs.own.heading + 60;
-  }
-  if (obs.t < start + 14) return { heading: wide, speed };
-  return goal;
-}
-`},
-  {id:"B",name:"단일 대상 회피 v1",file:"sample_single_target.js",who:"샘플 · 가장 위험한 배 하나만 보고 피함",code:`// 샘플 모델 B — 단일 대상 회피 v1
+  {id:"A",name:"단일 대상 회피 v1",file:"sample_single_target.js",who:"한 척만 보고 피해요",code:`// 샘플 모델 A — 단일 대상 회피 v1
 // 가장 가까워질 배 하나만 골라 우현으로 30° 돌고, 그 배를 지나치면 목적지로 돌아가요.
 // 다른 배는 보지 않아요.
 ${API_DOC}${CPA_SRC}
@@ -857,7 +859,7 @@ function decide(obs) {
   return passed ? goal : { heading: avoid, speed };
 }
 `},
-  {id:"C",name:"다선박 재평가 v1",file:"sample_multi_reeval.js",who:"샘플 · 30초마다 모든 배를 다시 봄",code:`// 샘플 모델 C — 다선박 재평가 v1
+  {id:"B",name:"다선박 재평가 v1",file:"sample_multi_reeval.js",who:"30초마다 다시 판단해요",code:`// 샘플 모델 B — 다선박 재평가 v1
 // 30초마다 모든 배를 다시 보고, 1해리 안으로 들어올 배가 있으면 목적지 방향에서 가장 덜 벗어나는 회피를 골라요.
 // 위험이 없으면 목적지로 곧장 가요.
 ${API_DOC}${CPA_SRC}
@@ -884,8 +886,26 @@ function decide(obs) {
   if (now - best.c > 0.05) cmd = { heading: best.h, speed: best.s };
   return cmd;
 }
+`},
+  {id:"C",name:"크게 우회 v1",file:"sample_wide_detour.js",who:"멀리 돌아서 피해요",code:`// 샘플 모델 C — 크게 우회 v1
+// 목적지로 가다가 1해리 안으로 들어올 배가 보이면, 우현으로 60° 크게 돌아 14분 동안 유지한 뒤
+// 다시 목적지로 향해요. 안전하지만 멀리 돌아가요.
+${API_DOC}${CPA_SRC}
+let start = null, wide = null, speed = null;
+function decide(obs) {
+  if (speed === null) speed = obs.own.speed;
+  const goal = { heading: toward(obs.own, obs.destination), speed };
+  if (start === null) {
+    if (obs.t < 0.5) return goal;
+    const nearest = Math.min(...obs.ships.map(s => cpa(obs.own, s)));
+    if (nearest >= 1) return goal;
+    start = obs.t; wide = obs.own.heading + 60;
+  }
+  if (obs.t < start + 14) return { heading: wide, speed };
+  return goal;
+}
 `}];
-const TEMPLATE=`// 씨나리오 시험용 자율운항 전략 템플릿
+const TEMPLATE=`// 헤답 시험용 자율운항 전략 템플릿
 // 이 파일의 decide(obs)를 내 AI의 판단으로 바꿔서 올려요.
 ${API_DOC}${CPA_SRC}
 function decide(obs) {
@@ -922,13 +942,13 @@ let model=null;
 function renderSamples(){
   $("#samples").innerHTML=SAMPLES.map(sm=>`<button class="smp${model&&model.sampleId===sm.id?" on":""}" data-s="${sm.id}"><span class="sb">${sm.id}</span><span><b>${sm.name}</b><small>${sm.who}</small></span></button>`).join("");}
 function renderModel(){
-  const m=model,own=ships[0];
+  const m=model;
   const ic=ok=>`<span class="ck ${ok?"ok":"ng"}">${ok?'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>':'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"><path d="M7 7l10 10M17 7L7 17"/></svg>'}</span>`;
-  $("#mcard").innerHTML=`<div class="mh"><span class="stb">v1</span><b>${m.name}</b><span class="src">${m.src==="sample"?"샘플 모델":"올린 파일"}</span>${m.ok?'<span class="pill pass">시험 준비 완료</span>':'<span class="pill fail">실행 불가</span>'}</div>
-    <div class="cks">${m.checks.map(c=>`<div class="ckr">${ic(c.ok)}<span class="k">${c.k}</span><span class="v">${c.v}</span></div>`).join("")}</div>
-    <div class="io"><div><span class="k">AI가 받는 것 · 30초마다</span>자선과 주변 배의 <b>지금</b> 위치·속력·방향</div><div><span class="k">AI가 돌려주는 것</span>목표 침로·속력</div></div>
-    <div class="fy">${m.ok?(m.first?"점검 실행 첫 명령: <b>+"+fT(m.first.t)+"분 "+cmdTxt(m.first,own)+"</b>":"점검 실행 중 명령 없음 (침로·속력 유지)"):"이 파일로는 시험을 시작할 수 없어요"}</div>
-    <div class="fn">다른 배가 앞으로 어떻게 움직일지는 AI에게 주지 않아요 · 선회·감속 제약은 시험장이 적용</div>`;
+  const bad=m.checks.filter(c=>!c.ok),resp=m.checks.find(c=>c.k==="응답");
+  const rows=m.ok?[{ok:true,k:"입출력",v:"형식이 맞아요"},{ok:true,k:"응답",v:resp?resp.v.replace(/^\d+번 호출 · 평균 /,""):""}]:bad;
+  $("#mcard").innerHTML=`<div class="mst ${m.ok?"ok":"ng"}">${ic(m.ok)}<span>${m.ok?"시험 준비 완료":"실행할 수 없어요"}</span></div>
+    <div class="mname">${m.name}</div><div class="mfile">${m.file}</div>
+    <div class="cks">${rows.map(c=>`<div class="ckr">${ic(c.ok)}<span class="k">${c.k}</span><span class="v">${c.v}</span></div>`).join("")}</div>`;
 }
 function setModel(m){model=m;renderSamples();renderModel();updCtaSafe();}
 function updCtaSafe(){try{if(cur>=0)updCta();}catch(_){}}
@@ -941,7 +961,7 @@ $("#mfile").addEventListener("change",e=>{const f=e.target.files[0];if(f)readMod
 (function(){const d=$("#drop");["dragenter","dragover"].forEach(t=>d.addEventListener(t,e=>{e.preventDefault();d.classList.add("over");}));
   ["dragleave","drop"].forEach(t=>d.addEventListener(t,e=>{e.preventDefault();d.classList.remove("over");}));
   d.addEventListener("drop",e=>{const f=e.dataTransfer.files[0];if(f)readModelFile(f,setModel);});})();
-$("#tpl").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([TEMPLATE],{type:"text/javascript"}));a.download="seanario_model_template.js";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
+$("#tpl").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([TEMPLATE],{type:"text/javascript"}));a.download="haedap_model_template.js";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);};
 
 /* ---------- 실제 기록 · 실행 · 강건성 ---------- */
 function world(others,seed,salt){const w={},beh={};others.forEach(o=>{const b=seed===0?{kind:"keep"}:drawBehavior(o,rng(hashStr(salt+":"+seed+":"+o.id)));beh[o.id]=b;w[o.id]=runOther(o,b);});return{w,beh};}
@@ -966,16 +986,16 @@ function recommend(sc){
   const base=robust(own,others,sc.model.factory,WORLDS,sc.primary);
   const timeMode=sc.v1.ev.verdict==="pass"||sc.v1.ev.verdict==="review";
   const score=timeMode?r=>(r.rate>=base.rate-1e-9?(r.delay<=REVIEW?3000:2000):0)+r.rate*1000-r.delay*5+Math.min(r.wmin,1.5)*5
-    :r=>r.rate*1000+Math.min(r.wmin,1.5)*20-r.delay*5-Math.max(0,r.delay-REVIEW)*30;
+    :r=>r.rate*1000+Math.min(r.wmin,1.5)*20-r.delay*5-Math.max(0,r.delay-REVIEW)*60;
   const mk=(kind,title,cfgs)=>{let b=null;cfgs.forEach(c=>{const st=Object.assign({start:.5,turn:30,dv:0,re:false,period:1,margin:1},c),r=robust(own,others,paramModel(st),WORLDS),s=score(r);if(!b||s>b.s+1e-9)b={kind,title,st,r,s};});return b;};
   const out=[];
-  out.push(mk("재평가","가면서 다시 판단하기",[{re:true,period:.5,margin:1},{re:true,period:1,margin:1.2}]));
+  out.push(mk("재평가","가면서 다시 판단하기",[{re:true,period:.5,margin:.8},{re:true,period:.5,margin:1},{re:true,period:1,margin:1.2}]));
   const both=[];[10,20].forEach(t=>both.push({turn:t,dv:-3,re:true,period:1,margin:1.2}));
-  out.push(mk("감속 + 재평가","처음엔 덜 돌고 감속, 가면서 조정",both));
+  out.push(mk("감속 + 재평가","감속하며 다시 판단",both));
   const one=[];[30,45,60].forEach(t=>[4,8].forEach(hold=>one.push({turn:t,dv:0,re:false,hold})));
-  out.push(mk("한 번에","한 번 크게 피한 뒤 목적지로",one));
+  out.push(mk("한 번에","크게 한 번 피하기",one));
   if(timeMode){const small=[];[10,20].forEach(t=>[.5,1].forEach(p=>small.push({turn:t,dv:0,re:true,period:p,margin:1})));
-    out.push(mk("작게 + 재평가","작게 돌고, 가면서 조정",small));}
+    out.push(mk("작게 + 재평가","작게 돌며 다시 판단",small));}
   out.forEach(c=>{c.desc=stratTxt(c.st,own).replace(/^\+(\S+)분 /,"<b>+$1분</b> ");});
   let cands=out.sort((a,b)=>b.s-a.s);
   let tm=timeMode;
@@ -1004,12 +1024,13 @@ function eventsFor(sc,run,name,intro){
   sc.others.forEach(o=>{const b=sc.actual.beh[o.id];if(b.kind!=="keep"&&b.t<TEND)ev.push({t:b.t,txt:J(o.id,"이/가")+" "+behaviorText(o,b),chip:"미리 몰랐던 움직임",cls:"warn"});});
   if(Pm){const m=run.ev.per[Pm];if(m.min>=SAFE)ev.push({t:m.tMin+.3,txt:J(Pm,"과/와")+"는 안전하게 지나갔어요",chip:Pm+" 최소 "+f1(m.min)+"해리",cls:"pass"});}
   if(run.iArr>=0&&!run.ev.fails.length){const e=run.ev;ev.push({t:e.tArr,txt:name+" 목적지 도착 · 곧장 갔을 때보다 "+f1(e.delay)+"분 늦게",chip:"도착 +"+f1(e.delay)+"분",cls:e.delay>REVIEW?"warn":"pass"});}
-  const f=run.ev.fails[0];
+  const f=run.ev.fails[0],cl=run.ev.coll;
+  if(cl)ev.push({t:cl.t,txt:J(cl.id,"과/와")+" 충돌했어요",chip:(cl.id!==Pm?"2차 충돌 · ":"충돌 · ")+cl.id,cls:"fail"});
   if(f){const m=run.ev.per[f];if(f!==Pm)ev.push({t:Math.max(.5,m.tIn-1.5),txt:"그런데 "+J(f,"과/와")+" 점점 가까워져요",chip:f+"와 거리 감소",cls:"warn"});
-    ev.push({t:m.tIn,txt:J(f,"이/가")+" 안전영역 안으로 들어왔어요",chip:(f!==Pm?"2차 충돌위험 · ":"안전영역 침범 · ")+f,cls:"fail"});}
+    if(!cl||cl.id!==f||cl.t-m.tIn>.3)ev.push({t:m.tIn,txt:J(f,"이/가")+" 안전영역 안으로 들어왔어요",chip:(f!==Pm?"2차 충돌위험 · ":"안전영역 침범 · ")+f,cls:"fail"});}
   return[ev[0]].concat(ev.slice(1).sort((a,b)=>a.t-b.t));
 }
-function animEnd(sc,runs){let te=8;runs.forEach(r=>{te=Math.max(te,(r.iArr>=0?r.iArr*DT:TEND)+.8);sc.others.forEach(o=>{const m=r.ev.per[o.id];if(m.tIn>=0)te=Math.max(te,m.tIn+1.5);});});return Math.min(TEND,te);}
+function animEnd(sc,runs){let te=8;runs.forEach(r=>{if(r.ghost)return;if(r.ev.coll){te=Math.max(te,r.ev.coll.t+.3);return;}te=Math.max(te,(r.iArr>=0?r.iArr*DT:TEND)+.8);sc.others.forEach(o=>{const m=r.ev.per[o.id];if(m.tIn>=0)te=Math.max(te,m.tIn+1.5);});});return Math.min(TEND,te);}
 const durOf=te=>Math.max(9,Math.min(15,te/2.4));
 
 /* 움직이는 지도: 다른 배는 지나온 길만 보인다 (앞으로 갈 길은 그리지 않음) */
@@ -1028,12 +1049,12 @@ function simView(svg,hudEl,lgdEl,sc,runs,tEnd){
     S("circle",{r:20*k,fill:"rgba(220,38,38,.08)",stroke:"#dc2626","stroke-width":2.2*k,"stroke-dasharray":`${5*k} ${4*k}`},hitG);
     S("path",{d:`M${-7*k} ${-7*k}L${7*k} ${7*k}M${7*k} ${-7*k}L${-7*k} ${7*k}`,stroke:"#dc2626","stroke-width":3.4*k,"stroke-linecap":"round"},hitG);
     const t=S("text",Object.assign({x:0,y:-30*k,"text-anchor":"middle"},LBL(k,"#dc2626",17)),hitG);t.textContent="지금처럼 가면 "+J(sc.primary,"과/와")+" 충돌";}
-  runs.filter(r=>r.ghost).forEach(r=>{S("polyline",{points:P(r.track,stop),fill:"none",stroke:r.col,"stroke-width":3.4*k,"stroke-dasharray":`${7*k} ${6*k}`,"stroke-linecap":"round",opacity:.85},svg);
+  runs.filter(r=>r.ghost).forEach(r=>{S("polyline",{points:P(r.track,r.ev.coll?Math.min(stop,nT(r.ev.coll.t)):stop),fill:"none",stroke:r.col,"stroke-width":3.4*k,"stroke-dasharray":`${7*k} ${6*k}`,"stroke-linecap":"round",opacity:.85},svg);
     const f=r.ev.fails[0];if(!f)return;const m=r.ev.per[f],p=L(r.track,m.tMin),c=L(W[f],m.tMin);
     S("circle",{cx:p.x,cy:p.y,r:SAFE,fill:"rgba(220,38,38,.06)",stroke:"#dc2626","stroke-width":2*k,"stroke-dasharray":`${5*k} ${4*k}`,opacity:.8},svg);
     S("line",{x1:p.x,y1:p.y,x2:c.x,y2:c.y,stroke:"#dc2626","stroke-width":2.2*k,opacity:.8},svg);
     const g=ownShip(svg,k,r.col,.7);g.setAttribute("transform",`translate(${p.x} ${p.y}) rotate(${p.h})`);g.setAttribute("opacity",.85);
-    const t=S("text",Object.assign({x:p.x-SAFE-8*k,y:p.y+6*k,"text-anchor":"end"},LBL(k,"#dc2626",17)),svg);t.textContent=r.name+" · "+f+"와 "+f1(m.min)+"해리";});
+    const t=S("text",Object.assign({x:p.x-SAFE-8*k,y:p.y+6*k,"text-anchor":"end"},LBL(k,"#dc2626",17)),svg);t.textContent=r.ev.coll?"v1 충돌":"v1 · "+f+"와 "+f1(m.min)+"해리";t.setAttribute("y",p.y-SAFE-8*k);t.setAttribute("x",p.x);t.setAttribute("text-anchor","middle");});
   const live=runs.filter(r=>!r.ghost);
   const OS=sc.others.map(o=>{const trail=S("polyline",{fill:"none",stroke:"#a7b1bc","stroke-width":2.6*k,"stroke-dasharray":`${6*k} ${5*k}`,"stroke-linecap":"round"},svg);
     const g=S("g",{},svg),hull=S("path",{d:shapeOf(o.type)(k*szOf(o)),fill:"#6b7684",stroke:"#fff","stroke-width":2*k,"stroke-linejoin":"round"},g);
@@ -1041,7 +1062,11 @@ function simView(svg,hudEl,lgdEl,sc,runs,tEnd){
   live.forEach(r=>{r.trk=S("polyline",{fill:"none",stroke:r.col,"stroke-width":4.5*k,"stroke-linecap":"round","stroke-linejoin":"round",opacity:.92},svg);
     r.zoneEl=S("circle",{r:SAFE,"stroke-width":2.2*k,"stroke-dasharray":`${6*k} ${5*k}`},svg);
     r.cl=S("line",{stroke:"#dc2626","stroke-width":2.6*k,"stroke-linecap":"round"},svg);r.clT=S("text",LBL(k,"#dc2626",21),svg);
-    r.ship=ownShip(svg,k,r.col);r.lab=S("text",Object.assign({"text-anchor":"middle"},LBL(k,r.col,19)),svg);r.lab.textContent=r.name;});
+    r.ship=ownShip(svg,k,r.col);r.lab=S("text",Object.assign({"text-anchor":"middle"},LBL(k,r.col,19)),svg);r.lab.textContent=r.name;
+    if(r.ev.coll){const p=L(r.track,r.ev.coll.t);r.boom=S("g",{transform:`translate(${p.x} ${p.y})`,opacity:0},svg);
+      S("circle",{r:34*k,fill:"rgba(220,38,38,.16)",stroke:"#dc2626","stroke-width":3*k},r.boom);
+      S("path",{d:[0,45,90,135,180,225,270,315].map(a=>{const c=Math.cos(a*DEG),s2=Math.sin(a*DEG);return`M${c*40*k} ${s2*40*k}L${c*52*k} ${s2*52*k}`;}).join(""),stroke:"#dc2626","stroke-width":4*k,"stroke-linecap":"round"},r.boom);
+      const bt=S("text",Object.assign({x:0,y:-62*k,"text-anchor":"middle"},LBL(k,"#dc2626",26)),r.boom);bt.textContent="충돌";}});
   hudEl.innerHTML=`<div class="hh">최소 거리 (해리)<span>${runs.map(r=>`<span class="stb" style="--sc:${r.col}">${r.short}</span>`).join("")}</span></div>`;
   const cells={};sc.others.forEach(o=>{const d=document.createElement("div");d.className="hr";
     d.innerHTML=`<span class="sb">${o.id}</span>${o.id} ${o.type}<span class="vv">${runs.map(()=>"<b></b>").join("")}</span>`;hudEl.appendChild(d);cells[o.id]=Array.from(d.querySelectorAll("b"));});
@@ -1057,7 +1082,8 @@ function simView(svg,hudEl,lgdEl,sc,runs,tEnd){
       if(hit){r.cl.setAttribute("x1",p.x);r.cl.setAttribute("y1",p.y);r.cl.setAttribute("x2",hit.q.x);r.cl.setAttribute("y2",hit.q.y);r.cl.style.opacity=1;
         r.clT.textContent=J(hit.o.id,"과/와")+" "+f1(hit.d)+"해리";r.clT.setAttribute("x",p.x+SAFE+12*k);r.clT.setAttribute("y",p.y+7*k);r.clT.style.opacity=1;}
       else{r.cl.style.opacity=0;r.clT.style.opacity=0;}
-      r.lab.setAttribute("x",p.x);r.lab.setAttribute("y",p.y-28*k);r.lab.style.opacity=r.iArr>=0&&t>=r.iArr*DT?0:1;});
+      r.lab.setAttribute("x",p.x);r.lab.setAttribute("y",p.y-28*k);r.lab.style.opacity=r.iArr>=0&&t>=r.iArr*DT?0:1;
+      if(r.boom){const on=t>=r.ev.coll.t;r.boom.setAttribute("opacity",on?1:0);if(on){r.lab.style.opacity=0;r.cl.style.opacity=0;r.clT.style.opacity=0;}}});
     OS.forEach(s=>{const arr=W[s.o.id],p=L(arr,t);s.trail.setAttribute("points",P(arr,n+1)+" "+p.x.toFixed(4)+","+p.y.toFixed(4));
       s.g.setAttribute("transform",`translate(${p.x} ${p.y}) rotate(${p.h})`);
       const red=!!bad[s.o.id],moved=s.b.kind!=="keep"&&t>=s.b.t;s.hull.setAttribute("fill",red?"#dc2626":moved?"#f08a3c":"#6b7684");s.lab.setAttribute("fill",red?"#dc2626":moved?"#c2410c":"#4e5968");
@@ -1091,6 +1117,7 @@ const PL={"3":Player("3"),"6":Player("6")};
 
 /* ---------- 4 시뮬레이션 · 5 결과 ---------- */
 function failTitle(name,ev,Pm){const f=ev.fails[0];
+  if(ev.coll)return ev.coll.id!==Pm&&Pm?J(name,"은/는")+" "+J(Pm,"을/를")+" 피한 뒤, <span class=\"f\">"+J(ev.coll.id,"과/와")+" 충돌했어요</span>":J(name,"은/는")+" <span class=\"f\">"+J(ev.coll.id,"과/와")+" 충돌했어요</span>";
   return f!==Pm?J(name,"은/는")+" "+J(Pm,"을/를")+" 피한 뒤, <span class=\"f\">"+J(f,"과/와")+" 위험해졌어요</span>":J(name,"은/는")+" <span class=\"f\">"+J(f,"을/를")+" 충분히 피하지 못했어요</span>";}
 function endCap(pl,run){if(run.ev.fails.length||run.ev.verdict==="na"||run.iArr>=0)return;const w=run.ev.worst;
   pl.caps.push({t:pl.tEnd-.4,txt:"모든 배와 안전영역을 지켰어요"+(w?" · 가장 가까웠던 배 "+w+" "+f1(run.ev.per[w].min)+"해리":""),chip:VNAME[run.ev.verdict],cls:run.ev.verdict==="pass"?"pass":"warn"});}
@@ -1121,7 +1148,8 @@ function fillReport(){
   let h=`<div class="hc"></div><div class="hc" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 9px">v1</span>${sc.model.name}<span class="unk">${surprises.length?"실행 중 드러난 움직임: "+surprises.map(o=>o.id+" "+behaviorShort(o,sc.actual.beh[o.id])+" (+"+fT(sc.actual.beh[o.id].t)+"분)").join(" · "):"다른 배는 모두 그대로 감"}</span>${pill(ev.verdict)}</div>`;
   const f=ev.fails[0];
   h+=`<div class="lay ${f?"l1":""} r2">① 안전성<small>위반이 확인되면 실패</small></div>`;
-  if(f){const m=ev.per[f];h+=cell("c1 l1 r2",(f!==Pm?"2차 충돌위험":"안전영역 침범")+" · 대상 "+f,"+"+f1(m.tIn)+"분 안전영역 진입 · 최소 "+f1(m.min)+"해리 (+"+f1(m.tMin)+"분)","ng");}
+  if(ev.coll){const c=ev.coll,m=ev.per[c.id];h+=cell("c1 l1 r2",(c.id!==Pm?"2차 충돌":"충돌")+" · 대상 "+c.id,"+"+f1(c.t)+"분 충돌 · 최소 "+f1(m.min)+"해리"+(c.id!==Pm&&Pm?" · "+J(Pm,"을/를")+" 피한 뒤 발생":""),"ng");}
+  else if(f){const m=ev.per[f];h+=cell("c1 l1 r2",(f!==Pm?"2차 충돌위험":"안전영역 침범")+" · 대상 "+f,"+"+f1(m.tIn)+"분 안전영역 진입 · 최소 "+f1(m.min)+"해리 (+"+f1(m.tMin)+"분)","ng");}
   else{const w=ev.worst,m=w&&ev.per[w];h+=cell("r2",ev.verdict==="na"?"판정 불가":"필수 조건 충족",w?"가장 가까운 배 "+w+" "+f1(m.min)+"해리 (+"+f1(m.tMin)+"분)":"주변 배 없음",ev.verdict==="na"?"mu":"ok");}
   const dg=diagnose(r,Pm,sc.own);
   h+='<div class="lay r3">② 행동 진단<small>AI 명령 기록으로 판단</small></div>'+cell("r3",dg[0],dg[1],"",1);
@@ -1134,23 +1162,21 @@ function fillReport(){
 
 /* ---------- 6 개선 방향 추천 ---------- */
 const bar=r=>{const p=Math.round(r.rate*100);return`<div class="rb"><b>${r.ok}/${r.n}</b><span class="bar"><i class="${p>=80?"":p>=50?"mid":"low"}" style="width:${p}%"></i></span></div>`;};
+const shortTxt=st=>st.re?(st.period<1?"30초":st.period+"분")+"마다 다시 판단"+(st.dv?" · "+Math.abs(st.dv)+"노트 감속":"")+" · "+st.margin+"해리 안이면 회피"
+  :turnTxt(st.turn)+" → "+(st.hold||8)+"분 뒤 목적지로";
 function renderRecs(){
-  const sc=SC,{base,cands}=REC,Pm=sc.primary;
-  $("#t5").innerHTML=REC.timeMode?J(sc.model.name,"은/는")+" 안전했지만, <em>더 빨리 도착</em>할 수 있어요":J(sc.model.name,"이/가")+" <em>약했던 곳</em>과 개선 방향이에요";
-  const why=Object.entries(base.why).sort((a,b)=>b[1]-a[1]).map(([id,n])=>(id===Pm?id+" 충돌위험 ":id+" 2차 충돌위험 ")+n+"번").join(" · ");
-  $("#rcnow").innerHTML=`<span class="stb" style="--sc:${COL}">v1</span><b>${sc.model.name}</b><span>가능한 움직임 ${base.n}가지 중 <b>${base.ok}가지</b>에서 안전</span>`+(REC.timeMode?`<span>평균 도착 지연 <b style="color:var(--warn-ink)">+${f1(base.delay)}분</b>${base.delay>REVIEW?" · 검토 기준(+"+REVIEW+"분) 초과":""}</span>`:"")+(why?`<span class="why">실패: ${why}</span>`:"");
+  const sc=SC,{base,cands}=REC;
+  $("#t5").innerHTML=REC.timeMode?"이렇게 바꾸면 <em>더 빨리 도착해요</em>":sc.v1.ev.coll?"이렇게 바꾸면 <em>충돌을 피해요</em>":"이렇게 바꾸면 <em>더 안전해요</em>";
+  $("#rcnow").innerHTML=`지금 <span class="stb" style="--sc:${COL}">v1</span><b>${base.ok}/${base.n}</b> 안전`+(REC.timeMode?` · 도착 +${f1(base.delay)}분`:"");
   $("#rcs").innerHTML=cands.map((c,i)=>`<button class="rc${i===sel?" on":""}" data-i="${i}">
-      <div class="top">${i===0?'<span class="best">추천</span>':""}<span class="kd">참고 전략 · ${c.kind}</span></div>
-      <div class="t">${c.title}</div><div class="a">${c.desc}</div>
-      <div class="mt"><span>가능한 움직임 ${c.r.n}가지 중 안전</span>${bar(c.r)}
-      <span>가장 나쁜 경우 최소 거리 <b>${f1(c.r.wmin)}해리</b></span>
-      <span>평균 도착 지연 <b style="${c.r.delay>REVIEW?"color:var(--warn-ink)":""}">+${f1(c.r.delay)}분</b>${REC.timeMode&&c.r.delay<base.delay-.05?` <b class="ok" style="color:var(--pass)">(${f1(c.r.delay-base.delay)}분)</b>`:""}${c.r.delay>REVIEW?" · 검토 기준 초과":""}</span></div></button>`).join("");
-  $("#rcnote").innerHTML=`올린 AI는 직접 고치지 않아요. 같은 입력만 쓰는 참고 전략을 다른 배의 <b>그대로·변침·감속·정지·가속</b> ${NWORLD}가지 경우로 시험해 개선 방향을 보여줘요 (실제 기록은 쓰지 않음)`;
+      <div class="top">${i===0?'<span class="best">추천</span>':""}</div>
+      <div class="t">${c.title}</div><div class="a">${shortTxt(c.st)}</div>
+      <div class="mt">${bar(c.r)}<span>도착 <b style="${c.r.delay>REVIEW?"color:var(--warn-ink)":""}">+${f1(c.r.delay)}분</b></span></div></button>`).join("");
   renderV2();
 }
-function renderV2(){const c=REC.cands[sel];
-  $("#v2up").innerHTML=`<span class="k">재시험할 v2</span>`+(V2FILE?`<span class="v2n"><b>${V2FILE.name}</b> · 올린 파일 ${V2FILE.ok?'<span class="pill pass">준비 완료</span>':'<span class="pill fail">실행 불가</span>'}</span><button class="ghost" id="v2clear">샘플로 되돌리기</button>`
-    :`<span class="v2n">선택한 참고 전략을 반영한 <b>샘플 v2</b> <small>(${c?c.title:""})</small></span>`)+`<label class="upbtn">개선한 모델 올리기<input type="file" id="v2file" accept=".js,.mjs,.txt,.onnx,.zip"></label>`;}
+function renderV2(){
+  $("#v2up").innerHTML=`<span class="k">v2</span>`+(V2FILE?`<span class="v2n"><b>${V2FILE.name}</b> ${V2FILE.ok?'<span class="pill pass">준비 완료</span>':'<span class="pill fail">실행 불가</span>'}</span><button class="ghost" id="v2clear">추천 전략으로</button>`
+    :`<span class="v2n">고른 추천 전략으로 재시험해요</span>`)+`<label class="upbtn">내 개선 모델 등록<input type="file" id="v2file" accept=".js,.mjs,.txt,.onnx,.zip"></label>`;}
 $("#rcs").addEventListener("click",e=>{const b=e.target.closest(".rc");if(!b)return;sel=+b.dataset.i;$$("#rcs .rc").forEach((x,i)=>x.classList.toggle("on",i===sel));renderV2();buildRetest();});
 $("#v2up").addEventListener("change",e=>{if(e.target.id!=="v2file")return;const f=e.target.files[0];if(!f)return;readModelFile(f,m=>{V2FILE=m;renderV2();if(m.ok)buildRetest();updCta();});});
 $("#v2up").addEventListener("click",e=>{if(e.target.id!=="v2clear")return;V2FILE=null;renderV2();buildRetest();updCta();});
@@ -1158,7 +1184,7 @@ $("#v2up").addEventListener("click",e=>{if(e.target.id!=="v2clear")return;V2FILE
 /* ---------- 7 재시험 · 8 비교 ---------- */
 function buildRetest(){
   const sc=SC,c=REC.cands[sel],useFile=V2FILE&&V2FILE.ok,mk2=useFile?V2FILE.factory:paramModel(c.st);
-  const name2=useFile?V2FILE.name:"샘플 v2",r2=runOn(sc.own,sc.others,mk2,sc.actual);
+  const name2=useFile?V2FILE.name:"추천 전략",r2=runOn(sc.own,sc.others,mk2,sc.actual);
   const v1=Object.assign({name:"v1 (첫 시도)",short:"v1",col:GHOST,ghost:true},sc.v1);
   const v2=Object.assign({name:"v2",short:"v2",col:COL,soft:SOFT},r2);
   RT={c,useFile,name2,v1,v2,rob:useFile?robust(sc.own,sc.others,mk2,WORLDS):c.r};
@@ -1167,7 +1193,7 @@ function buildRetest(){
   $("#rp6").textContent="같은 기록 #"+recSeed+" 재생";
   pl.caps=eventsFor(sc,r2,"v2","첫 시도 항적은 그대로 두고, v2를 같은 기록에 다시 넣어요");endCap(pl,r2);
   const f=sc.v1.ev.fails[0]||sc.v1.ev.worst,m=f&&r2.ev.per[f];
-  pl.tPre="v2("+name2+")로 같은 문제를 다시 풀어요";
+  pl.tPre=(useFile?J(name2,"으로/로"):"추천 전략으로")+" 같은 문제를 다시 풀어요";
   const saved=sc.v1.ev.delay-r2.ev.delay;
   pl.tDone=r2.ev.verdict==="na"||r2.ev.fails.length?doneTitle("v2",r2,sc.primary):REC.timeMode&&saved>.1?"v2는 안전을 지키면서 <em>"+f1(saved)+"분 일찍 도착했어요</em>":"v2는 <em>"+J(f,"과/와")+" "+f1(m.min)+"해리</em>를 지켰어요";
   pl.reset();
@@ -1176,10 +1202,10 @@ function buildRetest(){
 function fillCompare(){
   const sc=SC,{c,useFile,name2,v2,rob}=RT,e1=sc.v1.ev,e2=v2.ev,focus=e1.fails[0]||e1.worst,m1=focus&&e1.per[focus],m2=focus&&e2.per[focus],own=sc.own;
   const dd=e1.delay-e2.delay;
-  $("#t7").innerHTML="첫 시도와 비교하면, "+(e2.verdict==="fail"||e2.verdict==="na"?"아직 <span class=\"f\">고칠 게 남았어요</span>":e1.verdict==="fail"?"<em>안전 문제는 풀렸어요</em>":e1.verdict==="review"&&e2.verdict==="pass"?"<em>통과</em>로 바뀌고 <em>"+f1(dd)+"분 일찍 도착해요</em>":dd>.1?"<em>"+f1(dd)+"분 일찍 도착해요</em>":"큰 차이는 없어요");
+  $("#t7").innerHTML="첫 시도와 비교하면, "+(e2.verdict==="fail"||e2.verdict==="na"?"아직 <span class=\"f\">고칠 게 남았어요</span>":e1.verdict==="fail"?(e1.coll?"<em>충돌 없이 목적지에 도착해요</em>":"<em>안전 문제는 풀렸어요</em>"):e1.verdict==="review"&&e2.verdict==="pass"?"<em>통과</em>로 바뀌고 <em>"+f1(dd)+"분 일찍 도착해요</em>":dd>.1?"<em>"+f1(dd)+"분 일찍 도착해요</em>":"큰 차이는 없어요");
   $("#recNo7").textContent="#"+recSeed;
-  const desc1=e1.fails.length?(e1.fails[0]!==sc.primary?"2차 충돌위험":"안전영역 침범")+" · "+J(e1.fails[0],"과/와")+" "+f1(e1.per[e1.fails[0]].min)+"해리":(e1.arrived?"도착 +"+f1(e1.delay)+"분 늦음":"목적지 미도착");
-  const nm1=sc.model.name.length>10?sc.model.name.slice(0,10)+"…":sc.model.name,nm2=name2.length>10?name2.slice(0,10)+"…":name2;
+  const desc1=e1.coll?(e1.coll.id!==sc.primary?"2차 충돌":"충돌")+" · "+J(e1.coll.id,"과/와")+" 충돌 (+"+f1(e1.coll.t)+"분)":e1.fails.length?(e1.fails[0]!==sc.primary?"2차 충돌위험":"안전영역 침범")+" · "+J(e1.fails[0],"과/와")+" "+f1(e1.per[e1.fails[0]].min)+"해리":(e1.arrived?"도착 +"+f1(e1.delay)+"분 늦음":"목적지 미도착");
+  const nm1=sc.model.name.length>14?sc.model.name.slice(0,14)+"…":sc.model.name,nm2=name2.length>14?name2.slice(0,14)+"…":name2;
   $("#rv1").innerHTML=`<span class="who" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 8px">v1</span>${nm1}</span>${pill(e1.verdict)}<span class="d ${e1.fails.length?"ng":""}">${desc1}</span>`;
   $("#rv2").innerHTML=`<span class="who" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 8px">v2</span>${nm2}</span>${pill(e2.verdict)}<span class="d">${useFile?"올린 파일":"참고 전략: "+c.title}</span>`;
   const ic={ok:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',wn:'<path d="M12 6v8M12 18.5v.3"/>',ng:'<path d="M7 7l10 10M17 7L7 17"/>'};
@@ -1188,7 +1214,7 @@ function fillCompare(){
   const tm=REC.timeMode&&!e1.fails.length&&!e2.fails.length&&e2.verdict!=="na";
   if(tm){h+=row(dd>.1?"ok":"wn","도착","+"+f1(e1.delay)+" → +"+f1(e2.delay)+"분 ("+(dd>0?"−":"+")+f1(Math.abs(dd))+"분)"+(e1.verdict==="review"&&e2.verdict==="pass"?" · 검토 사유 해소":"")+" · 추가 거리 "+f1(e1.extra)+" → "+f1(e2.extra)+"해리");
     const w2=e2.worst;h+=row(e2.per[w2].min>=SAFE?"ok":"ng","안전","모든 배와 안전영역 유지 · 가장 가까운 배 "+w2+" "+f1(e2.per[w2].min)+"해리 (안전영역 "+SAFE+"해리)");}
-  if(!tm&&m1&&m2)h+=row(m2.min>=SAFE?"ok":"ng",m2.min>m1.min?"개선":"변화",focus+" 최소 거리 "+f1(m1.min)+" → "+f1(m2.min)+"해리"+(m1.min<SAFE&&m2.min>=SAFE?(e1.fails[0]!==sc.primary?" · 2차 충돌위험 해소":" · 안전영역 침범 해소"):""));
+  if(!tm&&m1&&m2)h+=row(m2.min>=SAFE?"ok":"ng",m2.min>m1.min?"개선":"변화",focus+" 최소 거리 "+f1(m1.min)+" → "+f1(m2.min)+"해리"+(m1.min<SAFE&&m2.min>=SAFE?(e1.coll?" · 충돌 해소":e1.fails[0]!==sc.primary?" · 2차 충돌위험 해소":" · 안전영역 침범 해소"):""));
   const others=sc.others.filter(o=>o.id!==focus),worse=others.filter(o=>e2.per[o.id].min<SAFE||e2.per[o.id].min<e1.per[o.id].min-.15);
   if(!tm&&others.length)h+=worse.length?row(worse.some(o=>e2.per[o.id].min<SAFE)?"ng":"wn","회귀",worse.map(o=>o.id+" "+f1(e1.per[o.id].min)+" → "+f1(e2.per[o.id].min)).join(" · ")+"해리 · 다른 배와 거리 감소")
     :row("ok","회귀",others.map(o=>o.id).join("·")+" 안전 거리 유지 ("+others.map(o=>o.id+" "+f1(e2.per[o.id].min)).join(" · ")+"해리)");
@@ -1248,7 +1274,7 @@ function refresh(){const key=JSON.stringify([ships,dest,model.uid,recSeed]);if(k
 /* ---------- 화면 목록 ---------- */
 const IDS=["0","1","2","3","4","5","6","7"];
 const SCR=IDS.map(id=>document.getElementById("s"+id));
-const CTA={"0":"데모 시작","1":"AI 올리러 가기","2":"이 AI로 시험하기","4":"개선 방향 보기","5":"v2로 재시험","7":"다시 처음으로 ↺"};
+const CTA={"0":"데모 시작","1":"AI 등록하기","2":"이 AI로 시험하기","4":"개선 방향 보기","5":"v2로 재시험","7":"다시 처음으로 ↺"};
 renderRows();renderStrat();renderPic();renderPreview();
 requestAnimationFrame(()=>{renderPic();renderPreview();});
 
@@ -1272,7 +1298,7 @@ function go(i){
 function updCta(){
   const b=$("#cta"),id=IDS[cur],pl=PL[id];let label=CTA[id],busy=false;
   if(pl){label=pl.playing?"실행 중…":pl.done?(id==="3"?"결과 리포트 보기":"첫 시도와 비교하기"):(id==="3"?"시험 실행":"재시험 실행");busy=pl.playing;}
-  if(id==="2"&&!(model&&model.ok)){label="실행할 수 있는 AI를 올려 주세요";busy=true;}
+  if(id==="2"&&!(model&&model.ok)){label="실행할 수 있는 AI를 등록해 주세요";busy=true;}
   b.textContent=label;b.classList.toggle("busy",busy);
 }
 function next(){
