@@ -423,8 +423,6 @@ svg text{font-family:var(--font)}
         <div class="card pic"><svg id="m1" preserveAspectRatio="xMidYMid meet"></svg><div class="mlg"><span><i style="background:#dc2626"></i>충돌 위험</span><span><i style="background:#f08a3c"></i>근접</span><span><i style="background:#6b7684"></i>그 외</span></div></div>
       </div>
       <div class="conds">
-        <span class="cond"><b>관계</b><span id="rel"></span></span>
-        <span class="cond"><b>목적지</b><span id="dstInfo"></span></span>
         <span class="cond ex real" id="srcChip" style="display:none"></span>
       </div>
     </div>
@@ -452,7 +450,7 @@ svg text{font-family:var(--font)}
     <h2 class="h1" id="t3"></h2>
     <div class="vis">
       <div class="mapbox" id="map3"><svg id="m3" preserveAspectRatio="xMidYMid meet"></svg>
-        <div class="spdb" data-p="3"><span>배속</span><button data-x="1" class="on">1×</button><button data-x="2">2×</button><button data-x="4">4×</button></div>
+        <div class="spdb" data-p="3"><span>배속</span><button data-x="1">1×</button><button data-x="2" class="on">2×</button><button data-x="4">4×</button></div>
         <div class="hud" id="hud3"></div>
         <div class="rptag"><span id="rp3"></span></div>
         <div class="lgd" id="lgd3"></div>
@@ -489,7 +487,7 @@ svg text{font-family:var(--font)}
     <h2 class="h1" id="t6"></h2>
     <div class="vis">
       <div class="mapbox" id="map6"><svg id="m6" preserveAspectRatio="xMidYMid meet"></svg>
-        <div class="spdb" data-p="6"><span>배속</span><button data-x="1" class="on">1×</button><button data-x="2">2×</button><button data-x="4">4×</button></div>
+        <div class="spdb" data-p="6"><span>배속</span><button data-x="1">1×</button><button data-x="2" class="on">2×</button><button data-x="4">4×</button></div>
         <div class="hud" id="hud6"></div>
         <div class="rptag"><span id="rp6"></span></div>
         <div class="lgd" id="lgd6"></div>
@@ -642,7 +640,7 @@ function paramModel(st){return()=>{let sp=null,cmd=null,t0=null,next=Infinity,vs
 function L(arr,t){t=Math.max(0,Math.min(TEND,t));const f=t/DT,i=Math.min(Math.floor(f),N-2),u=f-i,p=arr[i],q=arr[i+1];return{x:p.x+(q.x-p.x)*u,y:p.y+(q.y-p.y)*u,h:p.h+(q.h-p.h)*u};}
 const nT=t=>Math.min(N,Math.round(t/DT)+1);
 
-/* 한 번의 실행 채점. 효율 = 목적지 도착 지연 (다른 배가 없을 때 곧장 간 시간과 비교) */
+/* 한 번의 실행 채점. 효율은 같은 장면의 기준선(안전하게 통과한 참고 전략 중 가장 빠른 도착)과 비교 */
 const T0of=own=>own.spd>0?Math.hypot(dest.x-own.x,dest.y-own.y)/(own.spd/60):Infinity;
 function evaluate(run,own,others,world){
   const track=run.track,iEnd=run.iArr>=0?run.iArr:N-1,per={};
@@ -846,8 +844,8 @@ function renderPic(){
   tips.filter(t=>t.on).forEach(({s,tp,col})=>{const [u,v]=dir(s.hdg),lx=tp.x+u*26*k,ly=tp.y+v*26*k+5*k;
     const t=S("text",Object.assign({x:lx,y:ly,"text-anchor":"middle","pointer-events":"none"},LBL(k,col,16)),svg);t.textContent=s.spd+"노트 · "+pad3(s.hdg)+"°";});
   const risk=[],near=[];st.others.forEach(o=>{const m=st.eo.per[o.id].min;if(m<SAFE)risk.push(o.id+" "+encounter(st.own,o));else if(m<NEAR)near.push(o.id);});
-  {const D0=Math.hypot(dest.x-A0.x,dest.y-A0.y),T0=T0of(A0);$("#dstInfo").textContent=f1(D0)+"해리 · 곧장 가면 "+(isFinite(T0)?Math.round(T0)+"분":"도착 못 함");}
-  $("#rel").textContent=risk.concat(near.length?[near.join("·")+" 근접"]:[]).join(" · ")||"가까운 배 없음 (위험 장면 아님)";
+  {const D0=Math.hypot(dest.x-A0.x,dest.y-A0.y),T0=T0of(A0);($("#dstInfo")||{}).textContent=f1(D0)+"해리 · 곧장 가면 "+(isFinite(T0)?Math.round(T0)+"분":"도착 못 함");}
+  ($("#rel")||{}).textContent=risk.concat(near.length?[near.join("·")+" 근접"]:[]).join(" · ")||"가까운 배 없음 (위험 장면 아님)";
 }
 /* 목적지 깃발 */
 function flag(svg,k,p,drag){const g=S("g",{class:drag?"dst":"",transform:`translate(${p.x} ${p.y})`},svg);
@@ -913,7 +911,7 @@ const API_DOC=`// ── 해답 시험장 입력·출력 ───────�
 // }
 // 돌려줄 값: { heading, speed }  목표 침로·속력. null이면 지금 명령 유지
 // 선회 15°/분 · 감속 2노트/분 제약은 시험장이 적용해요. 다른 배의 앞으로 움직임은 주지 않아요.
-// 평가: 안전영역 침범(실패) → 목적지 도착 지연(곧장 간 시간보다 +5분 넘으면 검토 필요)
+// 평가: 안전영역 침범(실패) → 목적지 도착(같은 장면 기준선보다 5분 넘게 늦으면 검토 필요)
 // ─────────────────────────────────────────────────────
 `;
 const CPA_SRC=`
@@ -1122,7 +1120,7 @@ function eventsFor(sc,run,name,intro){
     else if(i<3)ev.push({t:l.t+.01,txt:J(name,"이/가")+" 다시 판단: "+cmdTxt(l,own),chip:"모델 명령",cls:""});});
   sc.others.forEach(o=>{const b=sc.actual.beh[o.id];if(b.kind!=="keep"&&b.t<TEND)ev.push({t:b.t,txt:J(o.id,"이/가")+" "+behaviorText(o,b),chip:"미리 몰랐던 움직임",cls:"warn"});});
   if(Pm){const m=run.ev.per[Pm];if(m.min>=SAFE)ev.push({t:m.tMin+.3,txt:J(Pm,"과/와")+"는 안전하게 지나갔어요",chip:Pm+" 최소 "+f1(m.min)+"해리",cls:"pass"});}
-  if(run.iArr>=0&&!run.ev.fails.length){const e=run.ev;ev.push({t:e.tArr,txt:name+" 목적지 도착 · 곧장 갔을 때보다 "+f1(e.delay)+"분 늦게",chip:"도착 +"+f1(e.delay)+"분",cls:e.delay>REVIEW?"warn":"pass"});}
+  if(run.iArr>=0&&!run.ev.fails.length){const e=run.ev;ev.push({t:e.tArr,txt:name+" 목적지 도착",chip:"출발 후 "+Math.round(e.tArr)+"분",cls:e.verdict==="review"?"warn":"pass"});}
   const f=run.ev.fails[0],cl=run.ev.coll;
   if(cl)ev.push({t:cl.t,txt:J(cl.id,"과/와")+" 충돌했어요",chip:"충돌 · "+cl.id,cls:"fail"});
   if(f){const m=run.ev.per[f];if(f!==Pm)ev.push({t:Math.max(.5,m.tIn-1.5),txt:(avoidedFirst(run.ev,Pm)?"그런데 ":"")+J(f,"과/와")+" 점점 가까워져요",chip:f+"와 거리 감소",cls:"warn"});
@@ -1163,8 +1161,7 @@ function simView(svg,hudEl,lgdEl,sc,runs,tEnd){
     r.cl=S("line",{stroke:"#dc2626","stroke-width":2.6*k,"stroke-linecap":"round"},svg);r.clT=S("text",LBL(k,"#dc2626",21),svg);
     r.ship=ownShip(svg,k,r.col);r.lab=S("text",Object.assign({"text-anchor":"middle"},LBL(k,r.col,19)),svg);r.lab.textContent=r.name;
     if(r.ev.coll){const p=L(r.track,r.ev.coll.t);r.boom=S("g",{transform:`translate(${p.x} ${p.y})`,opacity:0},svg);
-      S("circle",{r:34*k,fill:"rgba(220,38,38,.16)",stroke:"#dc2626","stroke-width":3*k},r.boom);
-      const bt=S("text",Object.assign({x:0,y:-62*k,"text-anchor":"middle"},LBL(k,"#dc2626",26)),r.boom);bt.textContent="충돌";}});
+      const bt=S("text",Object.assign({x:0,y:-SAFE-14*k,"text-anchor":"middle"},LBL(k,"#dc2626",26)),r.boom);bt.textContent="충돌";}});
   hudEl.innerHTML=`<div class="hh">최소 거리 (해리)<span>${runs.map(r=>`<span class="stb" style="--sc:${r.col}">${r.short}</span>`).join("")}</span></div>`;
   const cells={};sc.others.forEach(o=>{const d=document.createElement("div");d.className="hr";
     d.innerHTML=`<span class="sb">${o.id}</span><span class="hn">${o.id} ${o.name||o.type}</span><span class="vv">${runs.map(()=>"<b></b>").join("")}</span>`;hudEl.appendChild(d);cells[o.id]=Array.from(d.querySelectorAll("b"));});
@@ -1195,7 +1192,7 @@ function simView(svg,hudEl,lgdEl,sc,runs,tEnd){
   };
 }
 
-let MUL=1;
+let MUL=2;
 document.addEventListener("click",e=>{const b=e.target.closest(".spdb button");if(!b)return;e.stopPropagation();MUL=+b.dataset.x;
   $$(".spdb button").forEach(x=>x.classList.toggle("on",+x.dataset.x===MUL));});
 /* 재생기 (4 시뮬레이션, 7 재시험 공통). 자막이 바뀌는 사건 근처에서는 천천히 재생해 읽을 시간을 준다 */
@@ -1227,7 +1224,7 @@ function failTitle(name,ev,Pm){const f=ev.fails[0],seq=avoidedFirst(ev,Pm);
 function endCap(pl,run){if(run.ev.fails.length||run.ev.verdict==="na"||run.iArr>=0)return;const w=run.ev.worst;
   pl.caps.push({t:pl.tEnd-.4,txt:"모든 배와 안전영역을 지켰어요"+(w?" · 가장 가까웠던 배 "+w+" "+f1(run.ev.per[w].min)+"해리":""),chip:VNAME[run.ev.verdict],cls:run.ev.verdict==="pass"?"pass":"warn"});}
 function doneTitle(name,run,Pm){const ev=run.ev;
-  return ev.verdict==="na"?J(name,"은/는")+" <span class=\"f\">응답 오류로 판정할 수 없어요</span>":ev.fails.length?failTitle(name,ev,Pm):ev.verdict==="pass"?J(name,"은/는")+" <em>안전하게 목적지에 도착했어요</em>":!ev.arrived?J(name,"은/는")+" 안전했지만 <span class=\"f\">"+TEND+"분 안에 도착하지 못했어요</span>":J(name,"은/는")+" 안전했지만 <span class=\"f\">도착이 "+f1(ev.delay)+"분 늦었어요</span>";}
+  return ev.verdict==="na"?J(name,"은/는")+" <span class=\"f\">응답 오류로 판정할 수 없어요</span>":ev.fails.length?failTitle(name,ev,Pm):ev.verdict==="pass"?J(name,"은/는")+" <em>안전하게 목적지에 도착했어요</em>":!ev.arrived?J(name,"은/는")+" 안전했지만 <span class=\"f\">"+TEND+"분 안에 도착하지 못했어요</span>":J(name,"은/는")+" 안전했지만 <span class=\"f\">기준선보다 "+f1(ev.delay-REFD)+"분 늦게 도착했어요</span>";}
 function buildSim(){
   const sc=SC,pl=PL["3"],Pm=sc.primary,nm=sc.model.name,v1=Object.assign({name:nm,short:shortNm(nm,"1차"),col:COL,soft:SOFT},sc.v1);
   pl.tEnd=animEnd(sc,[v1]);pl.dur=durOf(pl.tEnd);
@@ -1261,7 +1258,7 @@ function fillReport(){
   h+='<div class="lay r4">③ 운항 효율<small>목적지 도착 기준</small></div>';
   h+=f||ev.verdict==="na"?cell("r4","비교 제외","안전을 점수로 상쇄하지 않아요","mu")
     :!ev.arrived?cell("r4","목적지 미도착",TEND+"분 안에 도착하지 못함 → 검토 사유")
-    :cell("r4","기준선보다 "+(ev.delay-REFD>.05?"+"+f1(ev.delay-REFD)+"분 늦게":"빠르거나 같게")+" 도착","기준선(같은 장면에서 안전하게 통과한 참고 전략 중 가장 빠른 도착) +"+f1(REFD)+"분 · 이 모델 +"+f1(ev.delay)+"분"+(ev.verdict==="review"?" → "+REVIEW+"분 넘게 늦어 검토 사유":""));
+    :cell("r4","기준선보다 "+(ev.delay-REFD>.05?"+"+f1(ev.delay-REFD)+"분 늦게":"빠르거나 같게")+" 도착","기준선(같은 장면에서 안전하게 통과한 참고 전략 중 가장 빠른 도착) "+f1(ev.T0+REFD)+"분 · 이 모델 "+f1(ev.tArr)+"분 (출발 후 도착 시간)"+(ev.verdict==="review"?" → "+REVIEW+"분 넘게 늦어 검토 사유":""));
   $("#rep").innerHTML=h;
   $("#t4").innerHTML=ev.coll?J(ev.coll.id,"과/와")+" 충돌해 <span class=\"f\">실패</span>했어요":f?J(f,"과/와")+" 안전영역이 겹쳐 <span class=\"f\">실패</span>했어요"
     :ev.verdict==="na"?"응답 오류로 <span class=\"f\">판정할 수 없어요</span>":ev.verdict==="review"?"안전했지만 "+(ev.arrived?"도착이 늦어":"도착하지 못해")+" <em>검토가 필요</em>해요":"안전하게 도착해 <em>통과</em>했어요";
@@ -1292,12 +1289,12 @@ function recMap(svg,st){
 function renderRecs(){
   const sc=SC,{base,cands}=REC,P=sc.primary,F=(sc.v1.ev.coll&&sc.v1.ev.coll.id)||sc.v1.ev.fails[0]||null,SEQ=avoidedFirst(sc.v1.ev,P);
   $("#t5").innerHTML="이 모델이 <em>참고할 만한 전략</em>이에요";
-  $("#s5sub").textContent="다른 배 움직임을 가정한 "+base.n+"가지 경우 · 지금 모델 "+base.ok+"/"+base.n+" 안전"+(REC.timeMode?" · 도착 +"+f1(base.delay)+"분":"")+" · 잠정 결과";
+  $("#s5sub").textContent="다른 배 움직임을 가정한 "+base.n+"가지 경우 · 지금 모델 "+base.ok+"/"+base.n+" 안전"+(REC.timeMode?" · 평균 도착 "+f1(T0of(sc.own)+base.delay)+"분":"")+" · 잠정 결과";
   $("#rcs").innerHTML=cands.map((c,i)=>{const tx=recText(c,P,F,SEQ);return`<button class="rc${i===sel?" on":""}" data-i="${i}">
       <div class="top">${i===0?'<span class="best">추천</span>':""}</div>
       <div class="t">${tx.t}</div><div class="a">${tx.a}</div>
       <div class="mm"><svg data-i="${i}" preserveAspectRatio="xMidYMid meet"></svg><div class="ml"><span><i class="n"></i>이 전략</span><span><i></i>지금 모델</span><span>다른 배가 그대로 갈 때</span></div></div>
-      <div class="mt">${bar(c.r)}<span>도착 <b style="${c.r.delay>REVIEW?"color:var(--warn-ink)":""}">+${f1(c.r.delay)}분</b></span></div></button>`;}).join("");
+      <div class="mt">${bar(c.r)}<span>평균 도착 <b style="${c.r.delay-REFD>REVIEW?"color:var(--warn-ink)":""}">${f1(T0of(sc.own)+c.r.delay)}분</b></span></div></button>`;}).join("");
   $$("#rcs .mm svg").forEach(svg=>recMap(svg,cands[+svg.dataset.i].st));
   renderV2();
 }
@@ -1331,7 +1328,7 @@ function fillCompare(){
   const dd=e1.delay-e2.delay;
   $("#t7").innerHTML="1차 시도와 비교하면, "+(e2.verdict==="fail"||e2.verdict==="na"?"아직 <span class=\"f\">고칠 게 남았어요</span>":e1.verdict==="fail"?(e1.coll?"<em>충돌 없이 목적지에 도착해요</em>":"<em>안전 문제는 풀렸어요</em>"):e1.verdict==="review"&&e2.verdict==="pass"?"<em>통과</em>로 바뀌고 <em>"+f1(dd)+"분 일찍 도착해요</em>":dd>.1?"<em>"+f1(dd)+"분 일찍 도착해요</em>":"큰 차이는 없어요");
   $("#recNo7").textContent=recLabel();
-  const desc1=e1.coll?J(e1.coll.id,"과/와")+" 충돌 (+"+f1(e1.coll.t)+"분)":e1.fails.length?(e1.fails[0]!==sc.primary?"충돌위험":"안전영역 침범")+" · "+J(e1.fails[0],"과/와")+" "+f1(e1.per[e1.fails[0]].min)+"해리":(e1.arrived?"도착 +"+f1(e1.delay)+"분 늦음":"목적지 미도착");
+  const desc1=e1.coll?J(e1.coll.id,"과/와")+" 충돌 (+"+f1(e1.coll.t)+"분)":e1.fails.length?(e1.fails[0]!==sc.primary?"충돌위험":"안전영역 침범")+" · "+J(e1.fails[0],"과/와")+" "+f1(e1.per[e1.fails[0]].min)+"해리":(!e1.arrived?"목적지 미도착":e1.verdict==="review"?"기준선보다 "+f1(e1.delay-REFD)+"분 늦게 도착":"출발 후 "+f1(e1.tArr)+"분 도착");
   const nm1=sc.model.name.length>14?sc.model.name.slice(0,14)+"…":sc.model.name,nm2=name2.length>14?name2.slice(0,14)+"…":name2;
   $("#rv1").innerHTML=`<span class="who" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 8px">1차 시도</span>${nm1}</span>${pill(e1.verdict)}<span class="d ${e1.fails.length?"ng":""}">${desc1}</span>`;
   $("#rv2").innerHTML=`<span class="who" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 8px">2차 시도</span>${nm2}</span>${pill(e2.verdict)}<span class="d">${useFile?"올린 파일":"참고 전략: "+c.title}</span>`;
@@ -1339,7 +1336,7 @@ function fillCompare(){
   const row=(cls,k,txt)=>`<div class="dr ${cls}"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">${ic[cls]}</svg></span><span class="k">${k}</span>${txt}</div>`;
   let h="";
   const tm=REC.timeMode&&!e1.fails.length&&!e2.fails.length&&e2.verdict!=="na";
-  if(tm){h+=row(dd>.1?"ok":"wn","도착","+"+f1(e1.delay)+" → +"+f1(e2.delay)+"분 ("+(dd>0?"−":"+")+f1(Math.abs(dd))+"분)"+(e1.verdict==="review"&&e2.verdict==="pass"?" · 검토 사유 해소":"")+" · 추가 거리 "+f1(e1.extra)+" → "+f1(e2.extra)+"해리");
+  if(tm){h+=row(dd>.1?"ok":"wn","도착",f1(e1.tArr)+"분 → "+f1(e2.tArr)+"분 ("+(dd>0?"−":"+")+f1(Math.abs(dd))+"분)"+(e1.verdict==="review"&&e2.verdict==="pass"?" · 검토 사유 해소":"")+" · 추가 거리 "+f1(e1.extra)+" → "+f1(e2.extra)+"해리");
     const w2=e2.worst;h+=row(e2.per[w2].min>=SAFE?"ok":"ng","안전","모든 배와 안전영역 유지 · 가장 가까운 배 "+w2+" "+f1(e2.per[w2].min)+"해리 (안전영역 "+SAFE+"해리)");}
   if(!tm&&m1&&m2)h+=row(m2.min>=SAFE?"ok":"ng",m2.min>m1.min?"개선":"변화",focus+" 최소 거리 "+f1(m1.min)+" → "+f1(m2.min)+"해리"+(m1.min<SAFE&&m2.min>=SAFE?(e1.coll?" · 충돌 해소":e1.fails[0]!==sc.primary?" · 충돌위험 해소":" · 안전영역 침범 해소"):""));
   const others=sc.others.filter(o=>o.id!==focus),worse=others.filter(o=>e2.per[o.id].min<SAFE||e2.per[o.id].min<e1.per[o.id].min-.15);
