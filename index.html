@@ -41,7 +41,7 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <body>
 <nav class="tabs"><div><a href="./summary.html">한 장 요약</a><a href="./" aria-current="page">전체 기획안</a><a href="./mockup.html">데모</a><a href="./deck.html">발표자료</a></div></nav>
 <main>
-<h1>씨나리오 (SEA-nario) 기획안 v7</h1>
+<h1>씨나리오 (SEA-nario) 기획안 v8</h1>
 <p>2026-10-07 · SSAFY 해양 X AI 아이디어 해커톤 · 주제 2 · 팀 통합 기획안 v1.0 기준</p>
 <blockquote>
 <p><strong>실제 다선박 위험 장면으로 AI의 판단을 시험하고, 실패 원인과 재시험 이력을 축적하는 검증 문제은행</strong></p>
@@ -150,7 +150,7 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 <ol>
 <li><strong>여러 의무를 함께 적용하기 어렵다.</strong> COLREG의 조우별 항법 규칙은 두 선박 사이의 의무로 쓰여 있습니다(15조 "When two power-driven vessels are crossing", 17조 "Where one of two vessels is to keep out of the way")(<a target="_blank" rel="noopener" href="https://www.navcen.uscg.gov/navigation-rules-amalgamated">USCG</a>). 그래서 다선박에서는 "두 척 조우에서의 피항선이 동시에 다른 조우에서는 유지선이 될 수 있다"는 연구가 있고(<a target="_blank" rel="noopener" href="https://www.mdpi.com/2077-1312/12/8/1289">Lyu 외, JMSE 2024</a>), 다선박 조우에 대해 구체적 지침이 부족하다는 지적도 있습니다(<a target="_blank" rel="noopener" href="https://doi.org/10.1016/j.oceaneng.2015.06.054">Zhang 외, Ocean Engineering 2015</a>). COLREG의 일반 원칙(8조 등)은 다선박에서도 그대로 적용되며, 규칙 해석은 전문가 검토를 거칩니다.</li>
 <li><strong>하나의 회피가 다른 위험을 바꾼다.</strong> Zhang 외(2015)는 다선박에서 "한 배의 규칙 위반이 다른 배들의 회피를 더 어렵게 만들 수 있다"고 했습니다. 2017년 USS Fitzgerald는 우현의 화물선 3척 모두에 대해 피항선이었지만, 한 척 앞을 가로지른 뒤 다른 한 척과 충돌했습니다(7명 사망)(<a target="_blank" rel="noopener" href="https://www.ntsb.gov/investigations/AccidentReports/Reports/MAR2002.pdf">NTSB MAR-20/02</a>).</li>
-<li><strong>현장에서 흔하고, 지금은 사람에게 넘긴다.</strong> 일본 MEGURI2040 실증선은 하루 약 500척이 다니는 도쿄만에서 한 번 항해하는 동안 충돌회피를 107번 했고, 일시적으로 수동 전환한 때가 있었다고 밝혔습니다(<a target="_blank" rel="noopener" href="https://en.nippon-foundation.or.jp/news/articles/2022/20220602-74388.html">닛폰재단</a>, <a target="_blank" rel="noopener" href="https://www.monohakobi.com/en/wp-content/uploads/2026/01/20251201-05_seminar_DFFASplus_v.pdf">NYK·MTI</a>). 이 실증선들은 2026년 3월 상업 운항을 시작했지만(<a target="_blank" rel="noopener" href="https://www.mol.co.jp/en/pr/2026/26032.html">MOL</a>), 개발사는 교통 혼잡이 높고 충돌 위험이 클 때는 사람이 개입하도록 설계했다고 말합니다(<a target="_blank" rel="noopener" href="https://www.nyk.com/english/stories/04/02/20260428.html">NYK</a>). MASS Code도 작동 한계에 "반경 6해리 안에 X척 이하" 같은 허용 교통밀도를 예로 듭니다(Annex 2 §4.2). 어떤 다선박 상황에서 AI가 약한지 알아야 언제 사람에게 넘길지도 정할 수 있습니다.</li>
+<li><strong>현장에서 흔하고, 지금은 사람이 개입한다.</strong> 일본 MEGURI2040 실증선은 하루 약 500척이 다니는 도쿄만에서 한 번 항해하는 동안 충돌회피를 107번 했고, 일시적으로 수동 전환한 때가 있었다고 밝혔습니다(<a target="_blank" rel="noopener" href="https://en.nippon-foundation.or.jp/news/articles/2022/20220602-74388.html">닛폰재단</a>, <a target="_blank" rel="noopener" href="https://www.monohakobi.com/en/wp-content/uploads/2026/01/20251201-05_seminar_DFFASplus_v.pdf">NYK·MTI</a>). 이 실증선들은 2026년 3월 상업 운항을 시작했지만(<a target="_blank" rel="noopener" href="https://www.mol.co.jp/en/pr/2026/26032.html">MOL</a>), 개발사는 교통 혼잡이 높고 충돌 위험이 클 때는 사람이 개입하도록 설계했다고 말합니다(<a target="_blank" rel="noopener" href="https://www.nyk.com/english/stories/04/02/20260428.html">NYK</a>). MASS Code도 작동 한계에 "반경 6해리 안에 X척 이하" 같은 허용 교통밀도를 예로 듭니다(Annex 2 §4.2). 어떤 다선박 상황에서 AI가 약한지 알아야 언제 사람에게 제어권을 인계할지도 정할 수 있습니다.</li>
 <li><strong>검증 자료를 체계화할 필요가 있다.</strong> 충돌회피 시험 시나리오 생성 국제표준 ISO/AWI 25927은 개발 중이고(<a target="_blank" rel="noopener" href="https://www.iso.org/standard/92071.html">ISO</a>), 사람이 설계한 기존 시험 시나리오는 "보통 100개 이하"이며 실제 교통을 담기에 단순하다는 연구가 있습니다(<a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/pii/S0968090X25002505">Xin 외, TR-C 2025</a>). AIS 기반 시나리오 생성 연구는 이미 있으므로(<a target="_blank" rel="noopener" href="https://arxiv.org/abs/2603.28067">Sun 외, arXiv 2603.28067</a>), 새 생성 기법보다 <strong>한국 연안 사례·공통 평가 기준·실패 기록·회귀검증을 연결하는 사용 흐름</strong>을 차별화 가설로 둡니다.</li>
 </ol>
 <p>항로·기상과 고장 대응은 같은 구조로 넓힐 수 있어 이후 단계 과제로 둡니다.</p>
@@ -624,6 +624,174 @@ img.shot{width:100%;height:auto;display:block;border:1px solid var(--line);borde
 </tbody>
 </table>
 <p><strong>제안</strong>: 네 단계 판정 체계, 로그 스키마, MVP 목표, 유료 기능, 단계별 일정. <strong>미확인</strong>: 실제 데이터 확보량, 평가 정확도, 기관 협력, 고객 지불 의향, 공식 인증 활용 가능성. 미검증 시장 규모·사고 감소율·보험료 절감률은 제시하지 않습니다.</p>
+<h2>용어 정리</h2>
+<p>일반 독자가 처음 들을 수 있는 전문 용어를 정리했습니다.</p>
+<table>
+<thead>
+<tr>
+<th>분류</th>
+<th>용어</th>
+<th>뜻</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>항법·규칙</td>
+<td><strong>COLREG (국제해상충돌예방규칙)</strong></td>
+<td>국제해사기구(IMO)가 정한 선박 충돌 예방 규칙. 누가 피하고 누가 침로를 유지할지, 어떻게 피할지를 정함</td>
+</tr>
+<tr>
+<td>항법·규칙</td>
+<td><strong>조우</strong></td>
+<td>두 선박 이상이 충돌 위험이 생길 만큼 서로 가까워지는 상황. 마주침(정면)·횡단·추월로 나눔</td>
+</tr>
+<tr>
+<td>항법·규칙</td>
+<td><strong>다선박 조우</strong></td>
+<td>자선을 포함해 3척 이상이 동시에 서로 위험관계를 이루는 조우</td>
+</tr>
+<tr>
+<td>항법·규칙</td>
+<td><strong>피항선 / 유지선</strong></td>
+<td>피항선(give-way vessel)은 다른 선박을 피해야 하는 선박, 유지선(stand-on vessel)은 침로와 속력을 유지해야 하는 선박</td>
+</tr>
+<tr>
+<td>항법·규칙</td>
+<td><strong>횡단 · 추월 · 마주침</strong></td>
+<td>COLREG가 나누는 조우 유형. 횡단은 진로가 엇갈리는 경우, 추월은 뒤에서 앞지르는 경우, 마주침은 정면으로 마주 오는 경우</td>
+</tr>
+<tr>
+<td>항법·규칙</td>
+<td><strong>침로 · 변침</strong></td>
+<td>침로(course)는 선박이 나아가는 방향, 변침은 침로를 바꾸는 것</td>
+</tr>
+<tr>
+<td>항법·규칙</td>
+<td><strong>우현 / 좌현</strong></td>
+<td>선박 앞쪽(선수)을 바라볼 때 오른쪽이 우현, 왼쪽이 좌현</td>
+</tr>
+<tr>
+<td>항법·규칙</td>
+<td><strong>자선 / 타선</strong></td>
+<td>자선(own ship)은 시험 대상 AI가 조종하는 선박, 타선은 주변의 다른 선박</td>
+</tr>
+<tr>
+<td>항법·규칙</td>
+<td><strong>해리 · 노트</strong></td>
+<td>해리(NM)는 바다의 거리 단위로 1해리 = 1.852km, 노트(kn)는 1시간에 1해리를 가는 속력</td>
+</tr>
+<tr>
+<td>데이터·지표</td>
+<td><strong>AIS (선박자동식별장치)</strong></td>
+<td>선박이 자신의 식별 정보와 위치·속력·방향을 무선으로 자동 송신하는 장치. 어선은 10톤 이상이 탑재 의무</td>
+</tr>
+<tr>
+<td>데이터·지표</td>
+<td><strong>V-Pass</strong></td>
+<td>주로 소형 어선의 출입항과 위치를 알리는 국내 장치. 원본은 공개되지 않고 AIS와 합친 비식별 항적도로만 공개됨</td>
+</tr>
+<tr>
+<td>데이터·지표</td>
+<td><strong>항적 · 시계열</strong></td>
+<td>항적은 선박이 지나간 경로, 시계열은 시간 순서대로 쌓인 기록</td>
+</tr>
+<tr>
+<td>데이터·지표</td>
+<td><strong>SOG · COG · 선수방향 · ROT</strong></td>
+<td>SOG는 대지속력, COG는 실제로 움직이는 방향(대지침로), 선수방향(Heading)은 배 앞쪽이 향한 방향, ROT는 회전하는 빠르기(선회율). 바람·조류 때문에 COG와 선수방향은 다를 수 있음</td>
+</tr>
+<tr>
+<td>데이터·지표</td>
+<td><strong>CPA · DCPA · TCPA</strong></td>
+<td>지금 침로·속력이 유지된다고 할 때 두 선박이 가장 가까워지는 지점(CPA), 그때의 거리(DCPA), 그때까지 남은 시간(TCPA)</td>
+</tr>
+<tr>
+<td>데이터·지표</td>
+<td><strong>안전영역 (Safety Domain)</strong></td>
+<td>선박 크기·속력·선종에 따라 다른 선박이 침범하면 안 되는 자선 주변 영역</td>
+</tr>
+<tr>
+<td>데이터·지표</td>
+<td><strong>2차 충돌위험</strong></td>
+<td>첫 번째 선박을 피하는 행동 때문에 다른 선박과 새로 생기거나 커진 충돌 위험</td>
+</tr>
+<tr>
+<td>제도·기관</td>
+<td><strong>IMO · MSC</strong></td>
+<td>IMO는 해운 안전 규범을 만드는 유엔 산하 국제해사기구, MSC는 그 산하 해사안전위원회</td>
+</tr>
+<tr>
+<td>제도·기관</td>
+<td><strong>MASS · MASS Code</strong></td>
+<td>MASS는 자율운항선박(Maritime Autonomous Surface Ship), MASS Code는 2026년 IMO가 채택한 자율운항선박 국제 규범(현재 비강제)</td>
+</tr>
+<tr>
+<td>제도·기관</td>
+<td><strong>운항 한계 (OE)</strong></td>
+<td>자율운항 시스템이 안전하게 작동하도록 정한 해역·기상·교통 조건의 범위. 벗어나면 미리 정한 대비 상태로 전환</td>
+</tr>
+<tr>
+<td>제도·기관</td>
+<td><strong>원격운항센터 · 제어권 인계</strong></td>
+<td>원격운항센터(ROC)는 육상에서 자율운항선박을 감독·조종하는 시설, 제어권 인계는 시스템에서 사람(선원·원격운항자)에게 조종을 넘기는 것</td>
+</tr>
+<tr>
+<td>제도·기관</td>
+<td><strong>선급</strong></td>
+<td>선박의 설계·건조·운항 안전 기준을 정하고 검사·인증하는 기관(예: DNV, 한국선급)</td>
+</tr>
+<tr>
+<td>제도·기관</td>
+<td><strong>KRISO · S-TAS</strong></td>
+<td>KRISO는 선박해양플랜트연구소, S-TAS는 KRISO의 가상환경·시나리오 기반 자율운항 시험평가 체계</td>
+</tr>
+<tr>
+<td>제도·기관</td>
+<td><strong>ISO/AWI 25927</strong></td>
+<td>자율운항선박 충돌회피 시험 시나리오 생성 절차를 정하는 국제표준. 2026년 등록, 개발 중</td>
+</tr>
+<tr>
+<td>검증 방법</td>
+<td><strong>시나리오 · 문제은행</strong></td>
+<td>시나리오는 AI를 시험하는 데 쓰는 해상 상황, 문제은행은 검증된 시나리오를 모아 관리·공유하는 저장소</td>
+</tr>
+<tr>
+<td>검증 방법</td>
+<td><strong>시뮬레이션 · 타선 고정 Replay</strong></td>
+<td>시뮬레이션은 컴퓨터로 가상 실행하는 것. 타선 고정 Replay는 주변 선박을 실제 기록 항적대로만 움직이고 자선만 AI 판단대로 움직이는 방식(타선의 반응은 재현 못 함)</td>
+</tr>
+<tr>
+<td>검증 방법</td>
+<td><strong>회귀검증</strong></td>
+<td>모델을 고친 뒤 예전에 실패했던 같은 문제로 다시 시험해, 고쳐졌는지와 새 실패가 생겼는지 확인하는 것</td>
+</tr>
+<tr>
+<td>검증 방법</td>
+<td><strong>행동 진단 · 잠정 판정</strong></td>
+<td>행동 진단은 회피 시점·반복 조정 등 판단 과정을 안전 판정과 따로 기록한 값, 잠정 판정은 전문가 검토 전의 자동 판정</td>
+</tr>
+<tr>
+<td>검증 방법</td>
+<td><strong>동역학 · 시드</strong></td>
+<td>동역학은 선회율·가감속 같은 선박 움직임 계산 모델, 시드는 같은 실행을 똑같이 재현하기 위해 고정하는 난수 값</td>
+</tr>
+<tr>
+<td>검증 방법</td>
+<td><strong>스키마 · 어댑터</strong></td>
+<td>스키마는 데이터를 주고받는 형식 약속, 어댑터는 시뮬레이터와 시험 대상 같은 다른 시스템을 연결하는 부품</td>
+</tr>
+<tr>
+<td>검증 방법</td>
+<td><strong>MVP · 개념검증</strong></td>
+<td>MVP는 핵심 기능만 갖춘 최소 제품, 개념검증(PoC)은 아이디어가 실제로 작동하는지 보여 주는 시연</td>
+</tr>
+<tr>
+<td>검증 방법</td>
+<td><strong>LLM</strong></td>
+<td>글을 이해하고 생성하는 대규모 언어모델. 씨나리오에서는 근거 설명 초안에만 쓰고 판정에는 쓰지 않음</td>
+</tr>
+</tbody>
+</table>
 </main>
 </body>
 </html>
