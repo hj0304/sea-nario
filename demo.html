@@ -392,6 +392,7 @@ svg text{font-family:var(--font)}
 .smp.real .sb{background:#b45309}.smp.real.on .sb{background:var(--blue)}
 #samples .smp{height:52px;margin-bottom:6px}#samples .smp small{font-size:13px}
 .hud .hr .hn{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rc .mt .rk{font-size:14px;font-weight:600;color:var(--gray)}
 </style>
 </head>
 <body>
@@ -1164,7 +1165,7 @@ function simView(svg,hudEl,lgdEl,sc,runs,tEnd){
   hudEl.innerHTML=`<div class="hh">최소 거리 (해리)<span>${runs.map(r=>`<span class="stb" style="--sc:${r.col}">${r.short}</span>`).join("")}</span></div>`;
   const cells={};sc.others.forEach(o=>{const d=document.createElement("div");d.className="hr";
     d.innerHTML=`<span class="sb">${o.id}</span><span class="hn">${o.id} ${o.name||o.type}</span><span class="vv">${runs.map(()=>"<b></b>").join("")}</span>`;hudEl.appendChild(d);cells[o.id]=Array.from(d.querySelectorAll("b"));});
-  const ft=document.createElement("div");ft.className="ft";ft.textContent="빨간 칸 = 안전영역 침범";hudEl.appendChild(ft);
+  
   lgdEl.innerHTML=runs.map(r=>`<span><i style="border-top:${r.ghost?"3px dashed":"4px solid"} ${r.col}"></i>${r.name}</span>`).join("")+`<span><i></i>다른 배 (지나온 길)</span><span><i class="z"></i>안전영역 ${SAFE}해리</span>`;
   return function render(t){
     const n=Math.min(N-1,Math.floor(t/DT)),bad={};
@@ -1228,7 +1229,7 @@ function buildSim(){
   const sc=SC,pl=PL["3"],Pm=sc.primary,nm=sc.model.name,v1=Object.assign({name:nm,short:shortNm(nm,"1차"),col:COL,soft:SOFT},sc.v1);
   pl.tEnd=animEnd(sc,[v1]);pl.dur=durOf(pl.tEnd);
   pl.render=simView($("#m3"),$("#hud3"),$("#lgd3"),sc,[v1],pl.tEnd);
-  $("#rp3").textContent=(recSeed===0?"실제 항적 재생 · ":"")+"다른 배 움직임은 실행 중에 드러나요";
+  $("#rp3").textContent=recSeed===0?"실제 항적 재생":"";$("#rp3").parentNode.style.display=recSeed===0?"":"none";
   pl.caps=eventsFor(sc,sc.v1,nm,"모델은 다른 배가 어떻게 움직일지 모르는 채로 출발해요");endCap(pl,sc.v1);
   pl.tPre="등록한 모델로 시험을 시작해요";
   pl.tDone=doneTitle(nm,sc.v1,Pm);
@@ -1246,7 +1247,7 @@ function diagnose(run,Pm,own){const ev=run.ev,f=ev.fails[0],n=run.log.length,fir
 function fillReport(){
   const sc=SC,Pm=sc.primary,r=sc.v1,ev=r.ev,cell=(cls,m,d,mcls,tag)=>`<div class="cl ${cls}"><div class="m ${mcls||""}">${m}${tag?' <span class="tag">진단값</span>':""}</div><div class="d">${d}</div></div>`;
   const surprises=sc.others.filter(o=>sc.actual.beh[o.id].kind!=="keep");
-  let h=`<div class="hc"></div><div class="hc" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 9px">1차 시도</span>${sc.model.name}<span class="unk">${surprises.length?"실행 중 드러난 움직임: "+surprises.map(o=>o.id+" "+behaviorShort(o,sc.actual.beh[o.id])+" (+"+fT(sc.actual.beh[o.id].t)+"분)").join(" · "):"다른 배는 모두 그대로 감"}</span>${pill(ev.verdict)}</div>`;
+  let h=`<div class="hc"></div><div class="hc" style="--sc:${COL}"><span class="stb" style="width:auto;padding:0 9px">1차 시도</span>${sc.model.name}<span class="unk">${surprises.length?"시험 중 "+surprises.map(o=>J(o.id,"이/가")+" "+fT(sc.actual.beh[o.id].t)+"분에 "+behaviorText(o,sc.actual.beh[o.id])).join(" · "):"시험 중 다른 배는 모두 그대로 갔어요"}</span>${pill(ev.verdict)}</div>`;
   const f=ev.fails[0];
   h+=`<div class="lay ${f?"l1":""} r2">① 안전성<small>위반이 확인되면 실패</small></div>`;
   if(ev.coll){const c=ev.coll,m=ev.per[c.id];h+=cell("c1 l1 r2","충돌 · 대상 "+c.id,"+"+f1(c.t)+"분 충돌 · 최소 "+f1(m.min)+"해리"+(avoidedFirst(ev,Pm)?" · "+J(Pm,"을/를")+" 피한 뒤 발생":""),"ng");}
@@ -1255,7 +1256,7 @@ function fillReport(){
   const dg=diagnose(r,Pm,sc.own);
   h+='<div class="lay r3">② 행동 진단<small>모델 명령 기록으로 판단</small></div>'+cell("r3",dg[0],dg[1],"",1);
   h+='<div class="lay r4">③ 운항 효율<small>목적지 도착 기준</small></div>';
-  h+=f||ev.verdict==="na"?cell("r4","비교 제외","안전을 점수로 상쇄하지 않아요","mu")
+  h+=f||ev.verdict==="na"?cell("r4","따지지 않음",ev.verdict==="na"?"판정할 수 없어 도착 시간도 보지 않아요":(ev.coll?"충돌로":"안전영역 침범으로")+" 실패해서 도착 시간은 따지지 않아요","mu")
     :!ev.arrived?cell("r4","목적지 미도착",TEND+"분 안에 도착하지 못함 → 검토 사유")
     :cell("r4","기준선보다 "+(ev.delay-REFD>.05?"+"+f1(ev.delay-REFD)+"분 늦게":"빠르거나 같게")+" 도착","기준선(같은 장면에서 안전하게 통과한 참고 전략 중 가장 빠른 도착) "+f1(ev.T0+REFD)+"분 · 이 모델 "+f1(ev.tArr)+"분 (출발 후 도착 시간)"+(ev.verdict==="review"?" → "+REVIEW+"분 넘게 늦어 검토 사유":""));
   $("#rep").innerHTML=h;
@@ -1288,12 +1289,12 @@ function recMap(svg,st){
 function renderRecs(){
   const sc=SC,{base,cands}=REC,P=sc.primary,F=(sc.v1.ev.coll&&sc.v1.ev.coll.id)||sc.v1.ev.fails[0]||null,SEQ=avoidedFirst(sc.v1.ev,P);
   $("#t5").innerHTML="이 모델이 <em>참고할 만한 전략</em>이에요";
-  $("#s5sub").textContent="다른 배 움직임을 가정한 "+base.n+"가지 경우 · 지금 모델 "+base.ok+"/"+base.n+" 안전"+(REC.timeMode?" · 평균 도착 "+f1(T0of(sc.own)+base.delay)+"분":"")+" · 잠정 결과";
+  $("#s5sub").textContent="";$("#s5sub").style.display="none";
   $("#rcs").innerHTML=cands.map((c,i)=>{const tx=recText(c,P,F,SEQ);return`<button class="rc${i===sel?" on":""}" data-i="${i}">
       <div class="top">${i===0?'<span class="best">추천</span>':""}</div>
       <div class="t">${tx.t}</div><div class="a">${tx.a}</div>
-      <div class="mm"><svg data-i="${i}" preserveAspectRatio="xMidYMid meet"></svg><div class="ml"><span><i class="n"></i>이 전략</span><span><i></i>지금 모델</span><span>다른 배가 그대로 갈 때</span></div></div>
-      <div class="mt">${bar(c.r)}<span>평균 도착 <b style="${c.r.delay-REFD>REVIEW?"color:var(--warn-ink)":""}">${f1(T0of(sc.own)+c.r.delay)}분</b></span></div></button>`;}).join("");
+      <div class="mm"><svg data-i="${i}" preserveAspectRatio="xMidYMid meet"></svg><div class="ml"><span><i class="n"></i>이 전략</span><span><i></i>지금 모델</span></div></div>
+      <div class="mt"><span class="rk">다른 배 움직임 ${c.r.n}가지 중 안전</span>${bar(c.r)}<span>평균 도착 <b style="${c.r.delay-REFD>REVIEW?"color:var(--warn-ink)":""}">${f1(T0of(sc.own)+c.r.delay)}분</b></span></div></button>`;}).join("");
   $$("#rcs .mm svg").forEach(svg=>recMap(svg,cands[+svg.dataset.i].st));
   renderV2();
 }
